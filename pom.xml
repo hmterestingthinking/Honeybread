@@ -11,7 +11,6 @@
     <modules>
         <module>honeybread-core</module>
         <module>honeybread-common</module>
-        <module>honeybead-mgmtadmin</module>
         <module>honeybread-mgmtadmin</module>
         <module>honeybread-worker</module>
         <module>honeybread-channel</module>
