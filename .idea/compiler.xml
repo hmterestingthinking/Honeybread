@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="honeybread-channel" />
+        <module name="honeybread-mgmtadmin" />
+        <module name="honeybread-common" />
+        <module name="honeybread-worker" />
+        <module name="honeybread-core" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="honeybead-mgmtadmin" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
