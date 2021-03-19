@@ -1,1 +1,16 @@
-/.idea/
+.project
+.classpath
+.settings
+.idea
+.idea_modules
+*.iml
+*.ipr
+*.iws
+RUNNING_PID
+nohup.out
+tmp
+**/*.swp
+**/target
+**/lib
+**/logs
+**/pom.xml.versionsBackup
