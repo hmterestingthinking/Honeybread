@@ -1,0 +1,28 @@
+package com.whatsub.honeybread.mgmtadmin.domain.category;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.whatsub.honeybread.core.domain.category.Category;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Value;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotBlank;
+
+@Value
+public class CategoryRequest {
+
+    @NotBlank(message = "카테고리 명은 빈 값이 올 수 없습니다.")
+    @Length(min = 2, max = 50, message = "카테고리 명은 2자 이상 50자 이하로 구성되어야 합니다.")
+    String name;
+
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public CategoryRequest(String name) {
+        this.name = name;
+    }
+
+    public Category toEntity() {
+        return new Category(name);
+    }
+}
