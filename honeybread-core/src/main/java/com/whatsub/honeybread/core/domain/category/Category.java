@@ -1,10 +1,7 @@
 package com.whatsub.honeybread.core.domain.category;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,4 +16,8 @@ public class Category extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
+
+    public Category(String name) {
+        this.name = name;
+    }
 }
