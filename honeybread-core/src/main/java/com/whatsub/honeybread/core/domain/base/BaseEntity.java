@@ -1,6 +1,7 @@
 package com.whatsub.honeybread.core.domain.base;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of = "id")
+@Getter
 public class BaseEntity implements Serializable {
 
     @Id
