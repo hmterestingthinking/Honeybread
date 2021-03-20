@@ -20,14 +20,14 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.function.Function;
 
-abstract class Querydsl4RepositorySupport {
+abstract class QuerydslRepositorySupport {
 
     private final Class domainClass;
     private Querydsl querydsl;
     private EntityManager entityManager;
     private JPAQueryFactory queryFactory;
 
-    public Querydsl4RepositorySupport(Class<?> domainClass) {
+    public QuerydslRepositorySupport(Class<?> domainClass) {
         Assert.notNull(domainClass, "Domain class must not be null!");
         this.domainClass = domainClass;
     }
@@ -78,7 +78,7 @@ abstract class Querydsl4RepositorySupport {
         return PageableExecutionUtils.getPage(content, pageable,
                 jpaQuery::fetchCount);
     }
-    
+
     protected <T> Page<T> applyPagination(Pageable pageable,
                                           Function<JPAQueryFactory, JPAQuery> contentQuery, Function<JPAQueryFactory,
             JPAQuery> countQuery) {
