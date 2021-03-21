@@ -25,8 +25,7 @@ class CategoryService {
     // 수정
     @Transactional
     public void update(final Long id, final CategoryRequest request) {
-        Category findCategory = repository.findById(id)
-            .orElseThrow(() -> new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND));
+        Category findCategory = findCategory(id);
 
         validateDuplicateCategory(request);
 
@@ -34,10 +33,19 @@ class CategoryService {
     }
 
     // 삭제
+    @Transactional
+    public void delete(final Long id) {
+        repository.delete(findCategory(id));
+    }
 
     private void validateDuplicateCategory(CategoryRequest request) {
         if (repository.existsByName(request.getName())) {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_CATEGORY);
         }
+    }
+
+    private Category findCategory(Long id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 }

@@ -6,7 +6,6 @@ import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
@@ -124,6 +123,40 @@ class CategoryServiceTest {
     }
 
     // 삭제
+    @Test
+    void 삭제요청시_해당카테고리가_있다면_삭제_성공() {
+        // given
+        final Long categoryId = 1L;
+        final Category mockCategory = mock(Category.class);
+
+        given(repository.findById(anyLong())).willReturn(Optional.of(mockCategory));
+
+        // when
+        service.delete(categoryId);
+
+        // then
+        verify(repository).findById(anyLong());
+        verify(repository).delete(any(Category.class));
+    }
+
+    @Test
+    void 삭제요청시_해당카테고리가_없다면_예외_발생() {
+        // given
+        final Long categoryId = 1L;
+
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when
+        HoneyBreadException ex = assertThrows(
+            HoneyBreadException.class,
+            () -> service.delete(categoryId)
+        );
+
+        // then
+        verify(repository).findById(anyLong());
+
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
+    }
 
     private CategoryRequest generateRequest(String name) {
         return new CategoryRequest(name);

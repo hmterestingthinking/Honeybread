@@ -17,8 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -251,8 +250,48 @@ class CategoryControllerTest {
         result.andExpect(status().isNotFound());
     }
 
-
     // 삭제
+    @Test
+    void 카테고리가_존재할경우_수정에_성공한다() throws Exception {
+        // given
+        final Long categoryId = 1L;
+
+        doNothing().when(service).delete(anyLong());
+
+        // when
+        ResultActions result = mockMvc.perform(
+            delete(BASE_URL + "/" + categoryId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(service).delete(anyLong());
+
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void 카테고리가_존재하지_않을경우_수정에_실패한다() throws Exception {
+        // given
+        final Long categoryId = 1L;
+
+        doAnswer(mock -> {
+            throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
+        }).when(service).delete(anyLong());
+
+        // when
+        ResultActions result = mockMvc.perform(
+            delete(BASE_URL + "/" + categoryId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(service).delete(anyLong());
+
+        result.andExpect(status().isNotFound());
+    }
 
     private CategoryRequest generateRequest(String name) {
         return new CategoryRequest(name);

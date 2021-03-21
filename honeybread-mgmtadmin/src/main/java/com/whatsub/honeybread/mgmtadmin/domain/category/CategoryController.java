@@ -57,4 +57,13 @@ class CategoryController {
     }
 
     // 삭제
+    @ApiOperation(
+        value = "카테고리 삭제",
+        tags = MgmtAdminSwaggerTags.CATEGORY
+    )
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteCategory(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }
