@@ -19,6 +19,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CategoryController.class)
@@ -34,6 +35,61 @@ class CategoryControllerTest {
 
     @MockBean
     CategoryService service;
+
+    @MockBean
+    CategoryQueryService queryService;
+
+    // 목록 조회
+
+    // 상세 조회
+    @Test
+    void 카테고리가_존재한다면_조회에_성공한다() throws Exception {
+        // given
+        final Long categoryId = 1L;
+
+        CategoryResponse 카테고리_응답 = CategoryResponse.builder()
+            .id(categoryId)
+            .name("한식")
+            .build();
+
+        given(queryService.getCategory(anyLong())).willReturn(카테고리_응답);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            get(BASE_URL + "/" + categoryId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(queryService).getCategory(anyLong());
+
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(카테고리_응답.getId()))
+            .andExpect(jsonPath("$.name").value(카테고리_응답.getName()));
+    }
+
+    @Test
+    void 카테고리가_존재하지_않는다면_조회에_실패한다() throws Exception {
+        // given
+        final Long categoryId = 1L;
+
+        doAnswer(mock -> {
+            throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
+        }).when(queryService).getCategory(anyLong());
+
+        // when
+        ResultActions result = mockMvc.perform(
+            get(BASE_URL + "/" + categoryId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(queryService).getCategory(anyLong());
+
+        result.andExpect(status().isNotFound());
+    }
 
     @Test
     void 중복되는_카테고리가_없다면_등록에_성공한다() throws Exception {

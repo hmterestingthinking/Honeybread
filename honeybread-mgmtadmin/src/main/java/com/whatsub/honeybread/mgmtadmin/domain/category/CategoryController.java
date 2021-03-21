@@ -19,10 +19,20 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 class CategoryController {
     private final CategoryService service;
+    private final CategoryQueryService queryService;
 
     // 목록 조회
 
     // 상세 조회
+    @ApiOperation(
+        value = "카테고리 조회",
+        tags = MgmtAdminSwaggerTags.CATEGORY
+    )
+    @GetMapping("{id}")
+    public ResponseEntity<CategoryResponse> getCategory(@PathVariable Long id) {
+        CategoryResponse response = queryService.getCategory(id);
+        return ResponseEntity.ok(response);
+    }
 
     @ApiOperation(
         value = "카테고리 등록",
