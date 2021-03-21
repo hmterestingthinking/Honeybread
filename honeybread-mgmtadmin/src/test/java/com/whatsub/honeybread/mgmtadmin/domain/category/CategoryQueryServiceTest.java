@@ -4,32 +4,56 @@ import com.whatsub.honeybread.core.domain.category.Category;
 import com.whatsub.honeybread.core.domain.category.CategoryRepository;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestConstructor;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @SpringBootTest(classes = CategoryQueryService.class)
+@RequiredArgsConstructor
 class CategoryQueryServiceTest {
 
-    @Autowired
-    CategoryQueryService queryService;
+    final CategoryQueryService queryService;
 
     @MockBean
     CategoryRepository repository;
 
-    // 목록 조회
+    @Test
+    void 목록_조회_요청시_존재하는_카테고리의_수만큼_조회_성공() {
+        // given
+        final List<Long> categoryIds = LongStream.range(1, 10)
+            .boxed()
+            .collect(Collectors.toList());
+        final List<Category> mockCategories = generateMockCategories(categoryIds);
 
-    // 상세 조회
+        given(repository.findAllById(anyList())).willReturn(mockCategories);
+
+        // when
+        List<CategoryResponse> response = queryService.getCategories(categoryIds);
+
+        // then
+        verify(repository).findAllById(anyList());
+
+        assertThat(CollectionUtils.isEmpty(response)).isFalse();
+        assertThat(response.size()).isEqualTo(categoryIds.size());
+    }
+
     @Test
     void 상세조회_요청시_해당카테고리가_있다면_조회_성공() {
         // given
@@ -69,5 +93,17 @@ class CategoryQueryServiceTest {
         verify(repository).findById(anyLong());
 
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
+    }
+
+    private List<Category> generateMockCategories(List<Long> categoryIds) {
+        return categoryIds.stream()
+            .map(id -> {
+                Category mock = mock(Category.class);
+
+                given(mock.getId()).willReturn(id);
+                given(mock.getName()).willReturn("카테고리" + id);
+                return mock;
+            })
+            .collect(Collectors.toList());
     }
 }

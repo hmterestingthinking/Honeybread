@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Api(tags = HoneyBreadSwaggerTags.ALL)
 @RestController
@@ -22,6 +23,15 @@ class CategoryController {
     private final CategoryQueryService queryService;
 
     // 목록 조회
+    @ApiOperation(
+        value = "카테고리 목록 조회",
+        tags = MgmtAdminSwaggerTags.CATEGORY
+    )
+    @GetMapping
+    public ResponseEntity<List<CategoryResponse>> getCategories(@RequestParam List<Long> categoryIds) {
+        List<CategoryResponse> response = queryService.getCategories(categoryIds);
+        return ResponseEntity.ok(response);
+    }
 
     // 상세 조회
     @ApiOperation(

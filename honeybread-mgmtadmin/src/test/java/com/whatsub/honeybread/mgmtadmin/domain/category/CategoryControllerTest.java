@@ -1,8 +1,10 @@
 package com.whatsub.honeybread.mgmtadmin.domain.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.whatsub.honeybread.core.domain.category.Category;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -10,8 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -22,16 +31,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @WebMvcTest(CategoryController.class)
+@RequiredArgsConstructor
 class CategoryControllerTest {
 
     static final String BASE_URL = "/categories";
 
-    @Autowired
-    MockMvc mockMvc;
+    final MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper mapper;
+    final ObjectMapper mapper;
 
     @MockBean
     CategoryService service;
@@ -40,6 +49,42 @@ class CategoryControllerTest {
     CategoryQueryService queryService;
 
     // 목록 조회
+    @Test
+    void 카테고리_목록조회() throws Exception {
+        // given
+        final List<Long> categoryIds = LongStream.range(0, 10)
+            .boxed()
+            .collect(Collectors.toList());
+        final List<CategoryResponse> mockCategories = generateMockCategories(categoryIds);
+
+        given(queryService.getCategories(anyList())).willReturn(mockCategories);
+
+        // when
+        String[] queryParams = categoryIds.stream()
+            .map(String::valueOf)
+            .toArray(String[]::new);
+
+        ResultActions result = mockMvc.perform(
+            get(BASE_URL)
+                .param("categoryIds", queryParams)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(queryService).getCategories(anyList());
+
+        result.andExpect(status().isOk());
+    }
+
+    private List<CategoryResponse> generateMockCategories(final List<Long> categoryIds) {
+        return categoryIds.stream()
+            .map(id -> CategoryResponse.builder()
+                .id(id)
+                .name("카테고리" + id)
+                .build())
+            .collect(Collectors.toList());
+    }
 
     // 상세 조회
     @Test
