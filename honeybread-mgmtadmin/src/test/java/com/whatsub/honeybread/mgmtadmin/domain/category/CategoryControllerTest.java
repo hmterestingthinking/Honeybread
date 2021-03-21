@@ -80,10 +80,14 @@ class CategoryControllerTest {
         result.andExpect(status().is4xxClientError());
     }
 
-    @Test
-    void 카테고리명이_2글자_이하라면_등록에_실패한다() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "한",
+        "한식중식양식일식abcdefghijklmnopqrstuvwxyz123456789010가나다라마바사아자차카"
+    })
+    void 카테고리명이_2글자_이하_50자초과라면_등록에_실패한다(String name) throws Exception {
         // given
-        CategoryRequest 카테고리_생성_요청 = generateRequest("한");
+        CategoryRequest 카테고리_생성_요청 = generateRequest(name);
 
         // when
         ResultActions result = mockMvc.perform(
