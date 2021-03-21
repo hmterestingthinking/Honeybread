@@ -2,7 +2,9 @@ package com.whatsub.honeybread.mgmtadmin.domain.category;
 
 import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
+import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,10 @@ class CategoryController {
     // 상세 조회
 
     // 등록
+    @ApiOperation(
+        value = "카테고리 등록",
+        tags = MgmtAdminSwaggerTags.CATEGORY
+    )
     @PostMapping
     public ResponseEntity createCategory(@Valid @RequestBody CategoryRequest request, BindingResult result) {
         if (result.hasErrors()) {
