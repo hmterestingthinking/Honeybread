@@ -2,6 +2,8 @@ package com.whatsub.honeybread.mgmtadmin.domain.category;
 
 import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
+import com.whatsub.honeybread.mgmtadmin.domain.category.dto.CategoryRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.category.dto.CategoryResponse;
 import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

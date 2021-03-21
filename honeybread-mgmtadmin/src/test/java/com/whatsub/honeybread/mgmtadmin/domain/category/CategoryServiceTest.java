@@ -4,6 +4,7 @@ import com.whatsub.honeybread.core.domain.category.Category;
 import com.whatsub.honeybread.core.domain.category.CategoryRepository;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
+import com.whatsub.honeybread.mgmtadmin.domain.category.dto.CategoryRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

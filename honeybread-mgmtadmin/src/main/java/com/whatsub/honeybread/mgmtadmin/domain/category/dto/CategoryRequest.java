@@ -1,4 +1,4 @@
-package com.whatsub.honeybread.mgmtadmin.domain.category;
+package com.whatsub.honeybread.mgmtadmin.domain.category.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.whatsub.honeybread.core.domain.category.Category;

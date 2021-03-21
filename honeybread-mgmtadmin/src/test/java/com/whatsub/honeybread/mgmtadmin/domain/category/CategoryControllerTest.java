@@ -1,25 +1,23 @@
 package com.whatsub.honeybread.mgmtadmin.domain.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatsub.honeybread.core.domain.category.Category;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
+import com.whatsub.honeybread.mgmtadmin.domain.category.dto.CategoryRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.category.dto.CategoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +46,6 @@ class CategoryControllerTest {
     @MockBean
     CategoryQueryService queryService;
 
-    // 목록 조회
     @Test
     void 카테고리_목록조회() throws Exception {
         // given
@@ -77,16 +74,6 @@ class CategoryControllerTest {
         result.andExpect(status().isOk());
     }
 
-    private List<CategoryResponse> generateMockCategories(final List<Long> categoryIds) {
-        return categoryIds.stream()
-            .map(id -> CategoryResponse.builder()
-                .id(id)
-                .name("카테고리" + id)
-                .build())
-            .collect(Collectors.toList());
-    }
-
-    // 상세 조회
     @Test
     void 카테고리가_존재한다면_조회에_성공한다() throws Exception {
         // given
@@ -392,5 +379,14 @@ class CategoryControllerTest {
 
     private CategoryRequest generateRequest(String name) {
         return new CategoryRequest(name);
+    }
+
+    private List<CategoryResponse> generateMockCategories(final List<Long> categoryIds) {
+        return categoryIds.stream()
+            .map(id -> CategoryResponse.builder()
+                .id(id)
+                .name("카테고리" + id)
+                .build())
+            .collect(Collectors.toList());
     }
 }
