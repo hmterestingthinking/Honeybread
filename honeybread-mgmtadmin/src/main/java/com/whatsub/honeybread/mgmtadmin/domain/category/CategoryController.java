@@ -39,6 +39,22 @@ class CategoryController {
     }
 
     // 수정
+    @ApiOperation(
+        value = "카테고리 수정",
+        tags = MgmtAdminSwaggerTags.CATEGORY
+    )
+    @PutMapping("{id}")
+    public ResponseEntity updateCategory(
+        @PathVariable Long id,
+        @Valid @RequestBody CategoryRequest request,
+        BindingResult result
+    ) {
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
+        }
+        service.update(id, request);
+        return ResponseEntity.ok().build();
+    }
 
     // 삭제
 }

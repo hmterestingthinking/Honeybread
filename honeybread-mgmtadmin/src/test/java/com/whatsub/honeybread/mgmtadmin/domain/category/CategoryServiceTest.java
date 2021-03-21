@@ -11,10 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -62,6 +63,65 @@ class CategoryServiceTest {
     }
 
     // 수정
+    @Test
+    void 수정요청시_중복되는_카테고리가_없다면_수정_성공() {
+        // given
+        final Long categoryId = 1L;
+        final Category mockCategory = mock(Category.class);
+
+        CategoryRequest 카테고리_수정_요청 = generateRequest("한식을 중식으로 수정");
+
+        given(repository.findById(anyLong())).willReturn(Optional.of(mockCategory));
+        given(repository.existsByName(anyString())).willReturn(false);
+
+        // when
+        service.update(categoryId, 카테고리_수정_요청);
+
+        // then
+        verify(repository).findById(anyLong());
+        verify(repository).existsByName(anyString());
+        verify(mockCategory).update(any(Category.class));
+    }
+
+    @Test
+    void 수정요청시_중복되는_카테고리가_있다면_예외_발생() {
+        // given
+        final Long categoryId = 1L;
+        final Category mockCategory = mock(Category.class);
+
+        CategoryRequest 카테고리_수정_요청 = generateRequest("한식을 중식으로 수정");
+
+        given(repository.findById(anyLong())).willReturn(Optional.of(mockCategory));
+        given(repository.existsByName(anyString())).willReturn(true);
+
+        // when
+        HoneyBreadException ex = assertThrows(
+            HoneyBreadException.class,
+            () -> service.update(categoryId, 카테고리_수정_요청)
+        );
+
+        // then
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.DUPLICATE_CATEGORY);
+    }
+
+    @Test
+    void 수정요청시_해당카테고리가_없다면_예외_발생() {
+        // given
+        final Long categoryId = 1L;
+
+        CategoryRequest 카테고리_수정_요청 = generateRequest("한식을 중식으로 수정");
+
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when
+        HoneyBreadException ex = assertThrows(
+            HoneyBreadException.class,
+            () -> service.update(categoryId, 카테고리_수정_요청)
+        );
+
+        // then
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
+    }
 
     // 삭제
 
