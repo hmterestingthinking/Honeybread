@@ -35,8 +35,6 @@ class CategoryControllerTest {
     @MockBean
     CategoryService service;
 
-
-    // 등록
     @Test
     void 중복되는_카테고리가_없다면_등록에_성공한다() throws Exception {
         // given
@@ -129,7 +127,6 @@ class CategoryControllerTest {
         result.andExpect(status().isCreated());
     }
 
-    // 수정
     @Test
     void 중복되는_카테고리가_없다면_수정에_성공한다() throws Exception {
         // given
@@ -250,9 +247,8 @@ class CategoryControllerTest {
         result.andExpect(status().isNotFound());
     }
 
-    // 삭제
     @Test
-    void 카테고리가_존재할경우_수정에_성공한다() throws Exception {
+    void 카테고리가_존재할경우_삭제에_성공한다() throws Exception {
         // given
         final Long categoryId = 1L;
 
@@ -272,7 +268,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void 카테고리가_존재하지_않을경우_수정에_실패한다() throws Exception {
+    void 카테고리가_존재하지_않을경우_삭제에_실패한다() throws Exception {
         // given
         final Long categoryId = 1L;
 

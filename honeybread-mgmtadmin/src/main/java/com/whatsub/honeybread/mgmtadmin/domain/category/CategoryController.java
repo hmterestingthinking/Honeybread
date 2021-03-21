@@ -24,7 +24,6 @@ class CategoryController {
 
     // 상세 조회
 
-    // 등록
     @ApiOperation(
         value = "카테고리 등록",
         tags = MgmtAdminSwaggerTags.CATEGORY
@@ -38,7 +37,6 @@ class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 수정
     @ApiOperation(
         value = "카테고리 수정",
         tags = MgmtAdminSwaggerTags.CATEGORY
@@ -56,7 +54,6 @@ class CategoryController {
         return ResponseEntity.ok().build();
     }
 
-    // 삭제
     @ApiOperation(
         value = "카테고리 삭제",
         tags = MgmtAdminSwaggerTags.CATEGORY

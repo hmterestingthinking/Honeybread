@@ -61,7 +61,6 @@ class CategoryServiceTest {
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.DUPLICATE_CATEGORY);
     }
 
-    // 수정
     @Test
     void 수정요청시_중복되는_카테고리가_없다면_수정_성공() {
         // given
@@ -122,7 +121,6 @@ class CategoryServiceTest {
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
     }
 
-    // 삭제
     @Test
     void 삭제요청시_해당카테고리가_있다면_삭제_성공() {
         // given

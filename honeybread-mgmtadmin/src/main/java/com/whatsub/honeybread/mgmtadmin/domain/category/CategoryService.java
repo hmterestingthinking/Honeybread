@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 class CategoryService {
     private final CategoryRepository repository;
 
-    // 등록
     @Transactional
     public Long create(final CategoryRequest request) {
         validateDuplicateCategory(request);
@@ -22,7 +21,6 @@ class CategoryService {
         return repository.save(request.toEntity()).getId();
     }
 
-    // 수정
     @Transactional
     public void update(final Long id, final CategoryRequest request) {
         Category findCategory = findCategory(id);
@@ -32,7 +30,6 @@ class CategoryService {
         findCategory.update(request.toEntity());
     }
 
-    // 삭제
     @Transactional
     public void delete(final Long id) {
         repository.delete(findCategory(id));
