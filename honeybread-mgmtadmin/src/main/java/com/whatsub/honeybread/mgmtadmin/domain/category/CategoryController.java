@@ -57,7 +57,7 @@ class CategoryController {
         tags = MgmtAdminSwaggerTags.CATEGORY
     )
     @PostMapping
-    public ResponseEntity createCategory(@Valid @RequestBody CategoryRequest request, BindingResult result) {
+    public ResponseEntity<Void> createCategory(@Valid @RequestBody CategoryRequest request, BindingResult result) {
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -70,7 +70,7 @@ class CategoryController {
         tags = MgmtAdminSwaggerTags.CATEGORY
     )
     @PutMapping("{id}")
-    public ResponseEntity updateCategory(
+    public ResponseEntity<Void> updateCategory(
         @PathVariable Long id,
         @Valid @RequestBody CategoryRequest request,
         BindingResult result
@@ -87,7 +87,7 @@ class CategoryController {
         tags = MgmtAdminSwaggerTags.CATEGORY
     )
     @DeleteMapping("{id}")
-    public ResponseEntity deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.ok().build();
     }

@@ -1,7 +1,10 @@
 package com.whatsub.honeybread.core.domain.category;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,7 +1,6 @@
 package com.whatsub.honeybread.mgmtadmin.domain.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatsub.honeybread.core.domain.category.Category;
 import com.whatsub.honeybread.core.domain.category.dto.CategorySearch;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
@@ -80,7 +79,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    public void 검색_요청시_검색조건이_있다면_해당하는_목록_조회에_성공한다() throws Exception {
+    void 검색_요청시_검색조건이_있다면_해당하는_목록_조회에_성공한다() throws Exception {
         // given
         final int size = 10;
         final List<CategoryResponse> mockCategories = generateMockCategories(size);
