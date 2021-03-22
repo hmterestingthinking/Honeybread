@@ -20,11 +20,11 @@ public class Category extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    public Category(String name) {
+    public Category(final String name) {
         this.name = name;
     }
 
-    public void update(Category category) {
+    public void update(final Category category) {
         this.name = category.getName();
     }
 }

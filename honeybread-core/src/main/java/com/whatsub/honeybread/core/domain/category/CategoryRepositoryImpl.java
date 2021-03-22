@@ -16,7 +16,7 @@ public class CategoryRepositoryImpl extends QuerydslRepositorySupport implements
     }
 
     @Override
-    public Page<Category> getCategories(Pageable pageable, CategorySearch search) {
+    public Page<Category> getCategories(final Pageable pageable, final CategorySearch search) {
         return applyPagination(pageable,
             query -> query.from(category)
                 .where(
@@ -25,7 +25,7 @@ public class CategoryRepositoryImpl extends QuerydslRepositorySupport implements
         );
     }
 
-    private BooleanExpression likeName(String name) {
+    private BooleanExpression likeName(final String name) {
         return StringUtils.isBlank(name) ? null : category.name.like(name);
     }
 }
