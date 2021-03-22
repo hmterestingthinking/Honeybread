@@ -6,10 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -49,5 +47,20 @@ public class Store extends BaseEntity {
     private StoreStatus status;
 
     private BankAccount bankAccount;
+
+    @OneToMany(mappedBy = "store")
+    private List<StoreCategory> categories;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StorePayMethod> payMethods;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoreOperation> operations;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoreHoliday> holidays;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoreBreakTime> breakTimes;
 
 }

@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Getter
@@ -17,7 +19,9 @@ import javax.persistence.Table;
 @Table(name = "store_categories")
 public class StoreCategory extends BaseEntity {
 
-    private Long storeId;
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     private Long categoryId;
 

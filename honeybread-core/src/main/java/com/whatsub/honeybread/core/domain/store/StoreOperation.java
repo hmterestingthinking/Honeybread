@@ -16,7 +16,9 @@ import javax.persistence.*;
 @Table(name = "store_operations")
 public class StoreOperation extends BaseEntity {
 
-    private Long storeId;
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @Enumerated(EnumType.STRING)
     private DayType dayType;

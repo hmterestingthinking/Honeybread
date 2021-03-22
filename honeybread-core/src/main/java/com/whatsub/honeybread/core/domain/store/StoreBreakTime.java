@@ -16,7 +16,9 @@ import javax.persistence.*;
 @Table(name = "store_break_times")
 public class StoreBreakTime extends BaseEntity {
 
-    private Long storeId;
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @Enumerated(EnumType.STRING)
     private DayType dayType;
