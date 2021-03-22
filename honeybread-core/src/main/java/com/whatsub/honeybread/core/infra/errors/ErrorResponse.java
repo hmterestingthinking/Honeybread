@@ -1,11 +1,13 @@
 package com.whatsub.honeybread.core.infra.errors;
 
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.validation.Errors;
 
 import java.util.List;
 
 @Value
+@RequiredArgsConstructor
 public class ErrorResponse {
     String message;
     int status;
@@ -22,13 +24,6 @@ public class ErrorResponse {
 
     static ErrorResponse of(ErrorCode errorCode, List<ErrorField> errorFields) {
         return new ErrorResponse(errorCode, errorFields);
-    }
-
-    private ErrorResponse(String message, int status, List<ErrorField> errors, String code) {
-        this.message = message;
-        this.status = status;
-        this.errors = errors;
-        this.code = code;
     }
 
     private ErrorResponse(ErrorCode errorCode, List<ErrorField> errorFields) {
