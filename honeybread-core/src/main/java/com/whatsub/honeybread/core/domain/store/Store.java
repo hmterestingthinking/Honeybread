@@ -24,7 +24,7 @@ public class Store extends BaseEntity {
 
     private String tel;
 
-    private Long seller_id;
+    private Long sellerId;
 
     @Enumerated(EnumType.STRING)
     private OperationStatus operationStatus;
