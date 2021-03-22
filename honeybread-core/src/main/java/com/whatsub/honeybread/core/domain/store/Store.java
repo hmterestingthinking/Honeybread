@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -32,9 +31,7 @@ public class Store extends BaseEntity {
 
     private boolean workPublicHoliday;
 
-    private LocalDateTime tempCloseStartAt;
-
-    private LocalDateTime tempCloseEndAt;
+    private StoreTempClosure storeTempClosure;
 
     private String imageUrl;
 
@@ -44,22 +41,13 @@ public class Store extends BaseEntity {
 
     private String announcement;
 
-    private String businessLicenseNum;
+    private BusinessLicense business;
 
-    private String businessStoreName;
-
-    private String zipNo;
-
-    private String lnbrMnnm;
-
-    private String addressDetail;
+    private Address address;
 
     @Enumerated(EnumType.STRING)
     private StoreStatus status;
 
-    @Enumerated(EnumType.STRING)
-    private BankType bankType;
-
-    private String accountNumber;
+    private BankAccount bankAccount;
 
 }

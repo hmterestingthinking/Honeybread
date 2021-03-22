@@ -1,16 +1,13 @@
 package com.whatsub.honeybread.core.domain.store;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
+import com.whatsub.honeybread.core.domain.model.TimePeriod;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
-import java.time.LocalDateTime;
+import javax.persistence.*;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -27,8 +24,9 @@ public class StoreHoliday extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DayType dayType;
 
-    private LocalDateTime startAt;
-
-    private LocalDateTime endAt;
+    @AttributeOverrides({
+            @AttributeOverride(name = "from", column = @Column(name = "start_at")),
+            @AttributeOverride(name = "to", column = @Column(name = "end_at"))})
+    private TimePeriod holidayPeriod;
 
 }
