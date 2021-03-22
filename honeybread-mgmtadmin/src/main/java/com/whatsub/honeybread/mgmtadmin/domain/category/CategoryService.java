@@ -18,16 +18,13 @@ class CategoryService {
     @Transactional
     public Long create(final CategoryRequest request) {
         validateDuplicateCategory(request);
-
         return repository.save(request.toEntity()).getId();
     }
 
     @Transactional
     public void update(final Long id, final CategoryRequest request) {
         Category findCategory = findCategory(id);
-
         validateDuplicateCategory(request);
-
         findCategory.update(request.toEntity());
     }
 

@@ -2,6 +2,7 @@ package com.whatsub.honeybread.mgmtadmin.domain.category;
 
 import com.whatsub.honeybread.core.domain.category.Category;
 import com.whatsub.honeybread.core.domain.category.CategoryRepository;
+import com.whatsub.honeybread.core.domain.category.dto.CategorySearch;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.category.dto.CategoryResponse;
@@ -9,8 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +23,7 @@ import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -36,23 +40,49 @@ class CategoryQueryServiceTest {
     CategoryRepository repository;
 
     @Test
-    void 목록_조회_요청시_존재하는_카테고리의_수만큼_조회_성공() {
+    void 검색_요청시_검색조건이_없다면_SIZE_만큼_조회_성공() {
         // given
-        final List<Long> categoryIds = LongStream.range(1, 10)
-            .boxed()
-            .collect(Collectors.toList());
-        final List<Category> mockCategories = generateMockCategories(categoryIds);
+        final int size = 10;
+        final List<Category> mockCategories = generateMockCategories(size);
 
-        given(repository.findAllById(anyList())).willReturn(mockCategories);
+        PageRequest pageRequest = PageRequest.of(0, size);
+        CategorySearch search = new CategorySearch();
+
+        given(repository.getCategories(any(Pageable.class), any(CategorySearch.class)))
+            .willReturn(new PageImpl<>(mockCategories, pageRequest, mockCategories.size()));
 
         // when
-        List<CategoryResponse> response = queryService.getCategories(categoryIds);
+        Page<CategoryResponse> response = queryService.getCategories(pageRequest, search);
 
         // then
-        verify(repository).findAllById(anyList());
+        verify(repository).getCategories(any(Pageable.class), any(CategorySearch.class));
 
-        assertThat(CollectionUtils.isEmpty(response)).isFalse();
-        assertThat(response.size()).isEqualTo(categoryIds.size());
+        assertThat(response.getTotalElements()).isEqualTo(size);
+        assertThat(response.getContent().size()).isEqualTo(size);
+    }
+
+    @Test
+    void 검색요청시_검색조건이_있다면_해당하는_목록_조회_성공() {
+        // given
+        final int size = 10;
+        final List<Category> mockCategories = generateMockCategories(size);
+        final List<Category> willSearchCategories = mockCategories.subList(1, 2);
+
+        PageRequest pageRequest = PageRequest.of(0, size);
+        CategorySearch search = new CategorySearch();
+        search.setName("카테고리1");
+
+        given(repository.getCategories(any(Pageable.class), any(CategorySearch.class)))
+            .willReturn(new PageImpl<>(willSearchCategories, pageRequest, willSearchCategories.size()));
+
+        // when
+        Page<CategoryResponse> response = queryService.getCategories(pageRequest, search);
+
+        // then
+        verify(repository).getCategories(any(Pageable.class), any(CategorySearch.class));
+
+        assertThat(response.getTotalElements()).isEqualTo(1);
+        assertThat(response.getContent().size()).isEqualTo(1);
     }
 
     @Test
@@ -96,11 +126,10 @@ class CategoryQueryServiceTest {
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
     }
 
-    private List<Category> generateMockCategories(List<Long> categoryIds) {
-        return categoryIds.stream()
-            .map(id -> {
+    private List<Category> generateMockCategories(final int size) {
+        return LongStream.range(0, size)
+            .mapToObj(id -> {
                 Category mock = mock(Category.class);
-
                 given(mock.getId()).willReturn(id);
                 given(mock.getName()).willReturn("카테고리" + id);
                 return mock;

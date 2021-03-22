@@ -1,6 +1,8 @@
 package com.whatsub.honeybread.mgmtadmin.domain.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.whatsub.honeybread.core.domain.category.Category;
+import com.whatsub.honeybread.core.domain.category.dto.CategorySearch;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.category.dto.CategoryRequest;
@@ -11,6 +13,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
@@ -47,31 +52,62 @@ class CategoryControllerTest {
     CategoryQueryService queryService;
 
     @Test
-    void 카테고리_목록조회() throws Exception {
+    void 검색_요청시_검색조건이_없다면_SIZE_만큼_조회에_성공한다() throws Exception {
         // given
-        final List<Long> categoryIds = LongStream.range(0, 10)
-            .boxed()
-            .collect(Collectors.toList());
-        final List<CategoryResponse> mockCategories = generateMockCategories(categoryIds);
+        final int size = 10;
+        final List<CategoryResponse> mockCategories = generateMockCategories(size);
 
-        given(queryService.getCategories(anyList())).willReturn(mockCategories);
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        given(queryService.getCategories(any(Pageable.class), any(CategorySearch.class)))
+            .willReturn(new PageImpl<>(mockCategories, pageRequest, mockCategories.size()));
 
         // when
-        String[] queryParams = categoryIds.stream()
-            .map(String::valueOf)
-            .toArray(String[]::new);
-
         ResultActions result = mockMvc.perform(
             get(BASE_URL)
-                .param("categoryIds", queryParams)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
 
         // then
-        verify(queryService).getCategories(anyList());
+        verify(queryService).getCategories(any(Pageable.class), any(CategorySearch.class));
 
-        result.andExpect(status().isOk());
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$.content").isNotEmpty())
+            .andExpect(jsonPath("$.content.length()").value(size))
+            .andExpect(jsonPath("$.content[0].id").exists())
+            .andExpect(jsonPath("$.content[0].name").exists());
+    }
+
+    @Test
+    public void 검색_요청시_검색조건이_있다면_해당하는_목록_조회에_성공한다() throws Exception {
+        // given
+        final int size = 10;
+        final List<CategoryResponse> mockCategories = generateMockCategories(size);
+        final List<CategoryResponse> willSearchCategories = mockCategories.subList(1, 2);
+
+        PageRequest pageRequest = PageRequest.of(0, size);
+        CategorySearch search = new CategorySearch();
+        search.setName("카테고리1");
+
+        given(queryService.getCategories(any(Pageable.class), any(CategorySearch.class)))
+            .willReturn(new PageImpl<>(willSearchCategories, pageRequest, willSearchCategories.size()));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            get(BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(queryService).getCategories(any(Pageable.class), any(CategorySearch.class));
+
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$.content").isNotEmpty())
+            .andExpect(jsonPath("$.content.length()").value(willSearchCategories.size()))
+            .andExpect(jsonPath("$.content[0].id").exists())
+            .andExpect(jsonPath("$.content[0].name").value(search.getName()));
     }
 
     @Test
@@ -381,9 +417,9 @@ class CategoryControllerTest {
         return new CategoryRequest(name);
     }
 
-    private List<CategoryResponse> generateMockCategories(final List<Long> categoryIds) {
-        return categoryIds.stream()
-            .map(id -> CategoryResponse.builder()
+    private List<CategoryResponse> generateMockCategories(final int size) {
+        return LongStream.range(0, size)
+            .mapToObj(id -> CategoryResponse.builder()
                 .id(id)
                 .name("카테고리" + id)
                 .build())
