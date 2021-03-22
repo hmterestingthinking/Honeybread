@@ -33,13 +33,13 @@ class CategoryService {
         repository.delete(findCategory(id));
     }
 
-    private void validateDuplicateCategory(CategoryRequest request) {
+    private void validateDuplicateCategory(final CategoryRequest request) {
         if (repository.existsByName(request.getName())) {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_CATEGORY);
         }
     }
 
-    private Category findCategory(Long id) {
+    private Category findCategory(final Long id) {
         return repository.findById(id)
             .orElseThrow(() -> new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND));
     }

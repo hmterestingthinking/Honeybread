@@ -157,7 +157,7 @@ class CategoryServiceTest {
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
     }
 
-    private CategoryRequest generateRequest(String name) {
+    private CategoryRequest generateRequest(final String name) {
         return new CategoryRequest(name);
     }
 }

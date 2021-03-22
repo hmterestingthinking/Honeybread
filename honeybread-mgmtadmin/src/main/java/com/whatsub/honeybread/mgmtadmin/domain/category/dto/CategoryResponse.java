@@ -13,7 +13,7 @@ public class CategoryResponse {
     Long id;
     String name;
 
-    public static CategoryResponse of(Category entity) {
+    public static CategoryResponse of(final Category entity) {
         return new CategoryResponse(entity.getId(), entity.getName());
     }
 }

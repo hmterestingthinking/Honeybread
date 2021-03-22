@@ -22,7 +22,7 @@ public class CategoryRequest {
     String name;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public CategoryRequest(String name) {
+    public CategoryRequest(final String name) {
         this.name = name;
     }
 
