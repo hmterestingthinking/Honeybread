@@ -33,9 +33,9 @@ class UserStoreFavoriteServiceTest {
     StoreRepository storeRepository;
 
     @Test
-    void 스토어가_없으면_등록_실패() {
+    void 존재하지_않는_스토어면_등록_실패() {
         // given
-        해당_스토어는_없다();
+        존재하지_않는_스토어();
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::찜_등록);
@@ -45,10 +45,10 @@ class UserStoreFavoriteServiceTest {
     }
 
     @Test
-    void 유저가_스토어를_찜한적_없으면_등록_성공() {
+    void 존재하는_스토어_그리고_찜한적_없으면_등록_성공() {
         // given
-        해당_스토어가_있다();
-        찜한적_없다();
+        존재하는_스토어();
+        찜한적_없음();
         given(repository.save(any(UserStoreFavorite.class))).willReturn(mock(UserStoreFavorite.class));
 
         // when
@@ -60,10 +60,10 @@ class UserStoreFavoriteServiceTest {
     }
 
     @Test
-    void 유저가_스토어를_찜한적_있으면_등록_실패() {
+    void 존재하는_스토어지만_이미_찜했기에_등록_실패() {
         // given
-        해당_스토어가_있다();
-        찜한적_있다();
+        존재하는_스토어();
+        이미_찜했음();
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::찜_등록);
@@ -72,20 +72,20 @@ class UserStoreFavoriteServiceTest {
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.DUPLICATE_USER_STORE_FAVORITE);
     }
 
-    private void 찜한적_없다() {
-        given(repository.existsByUserIdAndStoreId(anyLong(), anyLong())).willReturn(false);
-    }
-
-    private void 찜한적_있다() {
-        given(repository.existsByUserIdAndStoreId(anyLong(), anyLong())).willReturn(true);
-    }
-
-    private void 해당_스토어는_없다() {
+    private void 존재하지_않는_스토어() {
         given(storeRepository.existsById(anyLong())).willReturn(false);
     }
 
-    private void 해당_스토어가_있다() {
+    private void 존재하는_스토어() {
         given(storeRepository.existsById(anyLong())).willReturn(true);
+    }
+
+    private void 찜한적_없음() {
+        given(repository.existsByUserIdAndStoreId(anyLong(), anyLong())).willReturn(false);
+    }
+
+    private void 이미_찜했음() {
+        given(repository.existsByUserIdAndStoreId(anyLong(), anyLong())).willReturn(true);
     }
 
     private void 찜_등록() {

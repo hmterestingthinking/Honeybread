@@ -28,16 +28,8 @@ class UserStoreFavoriteControllerTest {
     UserStoreFavoriteService userStoreFavoriteService;
 
     @Test
-    void 해당_스토어도_존재하고_찜한적도_없다면_등록_성공() throws Exception {
-        given(userStoreFavoriteService.create(anyLong(), anyLong())).willReturn(Long.MIN_VALUE);
-        ResultActions response = mockMvc.perform(post(CREATE_URL)).andDo(print());
-
-        verify(userStoreFavoriteService).create(anyLong(), anyLong());
-        response.andExpect(status().isCreated());
-    }
-
-    @Test
-    void 해당_스토어도_존재하지_않다면_등록_실패() throws Exception {
+    void 존재하지_않는_스토어면_등록_실패() throws Exception {
+        // given
         given(userStoreFavoriteService.create(anyLong(), anyLong())).willAnswer(mock -> {
             throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
         });
@@ -51,7 +43,21 @@ class UserStoreFavoriteControllerTest {
     }
 
     @Test
-    void 해당_스토어도_존재하는데_이미_찜했다면_등록_실패() throws Exception {
+    void 존재하는_스토어_그리고_찜한적_없으면_등록_성공() throws Exception {
+        // given
+        given(userStoreFavoriteService.create(anyLong(), anyLong())).willReturn(Long.MIN_VALUE);
+
+        // when
+        ResultActions response = mockMvc.perform(post(CREATE_URL)).andDo(print());
+
+        // then
+        verify(userStoreFavoriteService).create(anyLong(), anyLong());
+        response.andExpect(status().isCreated());
+    }
+
+    @Test
+    void 존재하는_스토어지만_이미_찜했기에_등록_실패() throws Exception {
+        // given
         given(userStoreFavoriteService.create(anyLong(), anyLong())).willAnswer(mock -> {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_USER_STORE_FAVORITE);
         });
