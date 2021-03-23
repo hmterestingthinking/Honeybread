@@ -17,7 +17,6 @@ public enum ErrorCode {
     DUPLICATE_CATEGORY(HttpStatus.CONFLICT, "-20001", "Duplicate Category"),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "-20002", "Category NotFound"),
 
-
     ;
     private final HttpStatus status;
     private final String code;
