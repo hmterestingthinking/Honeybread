@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -35,7 +36,7 @@ class UserStoreFavoriteControllerTest {
         });
 
         // when
-        ResultActions response = mockMvc.perform(post(CREATE_URL)).andDo(print());
+        ResultActions response = 찜등록_요청();
 
         // then
         verify(userStoreFavoriteService).create(anyLong(), anyLong());
@@ -48,7 +49,7 @@ class UserStoreFavoriteControllerTest {
         given(userStoreFavoriteService.create(anyLong(), anyLong())).willReturn(Long.MIN_VALUE);
 
         // when
-        ResultActions response = mockMvc.perform(post(CREATE_URL)).andDo(print());
+        ResultActions response = 찜등록_요청();
 
         // then
         verify(userStoreFavoriteService).create(anyLong(), anyLong());
@@ -63,11 +64,19 @@ class UserStoreFavoriteControllerTest {
         });
 
         // when
-        ResultActions response = mockMvc.perform(post(CREATE_URL)).andDo(print());
+        ResultActions response = 찜등록_요청();
 
         // then
         verify(userStoreFavoriteService).create(anyLong(), anyLong());
         response.andExpect(status().isConflict());
+    }
+
+    private ResultActions 찜등록_요청() throws Exception {
+        return mockMvc.perform(
+                post(CREATE_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
     }
 
 }

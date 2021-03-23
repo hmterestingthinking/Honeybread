@@ -1,10 +1,8 @@
 package com.whatsub.honeybread.mgmtadmin.domain.userstorefavorite;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
-@Getter
-@RequiredArgsConstructor
+@Value
 public class ChannelUserSession {
-    private final Long id;
+    private Long id;
 }
