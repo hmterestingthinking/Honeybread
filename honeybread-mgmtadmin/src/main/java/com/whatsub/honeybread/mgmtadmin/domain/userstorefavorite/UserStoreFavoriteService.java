@@ -25,8 +25,7 @@ public class UserStoreFavoriteService {
         if (userStoreFavoriteRepository.existsByUserIdAndStoreId(userId, storeId)) {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_USER_STORE_FAVORITE);
         }
-        UserStoreFavorite save = userStoreFavoriteRepository.save(new UserStoreFavorite(userId, storeId));
-        return save.getId();
+        return userStoreFavoriteRepository.save(new UserStoreFavorite(userId, storeId)).getId();
     }
 
 }
