@@ -20,7 +20,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.function.Function;
 
-abstract class QuerydslRepositorySupport {
+public abstract class QuerydslRepositorySupport {
 
     private final Class domainClass;
     private Querydsl querydsl;

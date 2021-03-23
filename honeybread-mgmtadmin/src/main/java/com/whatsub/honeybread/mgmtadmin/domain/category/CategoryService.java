@@ -1,8 +1,10 @@
 package com.whatsub.honeybread.mgmtadmin.domain.category;
 
+import com.whatsub.honeybread.core.domain.category.Category;
 import com.whatsub.honeybread.core.domain.category.CategoryRepository;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
+import com.whatsub.honeybread.mgmtadmin.domain.category.dto.CategoryRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,16 +15,32 @@ import org.springframework.transaction.annotation.Transactional;
 class CategoryService {
     private final CategoryRepository repository;
 
-    // 등록
     @Transactional
     public Long create(final CategoryRequest request) {
-        if (repository.existsByName(request.getName())) {
-            throw new HoneyBreadException(ErrorCode.DUPLICATE_CATEGORY);
-        }
+        validateDuplicateCategory(request);
         return repository.save(request.toEntity()).getId();
     }
 
-    // 수정
+    @Transactional
+    public void update(final Long id, final CategoryRequest request) {
+        Category findCategory = findCategory(id);
+        validateDuplicateCategory(request);
+        findCategory.update(request.toEntity());
+    }
 
-    // 삭제
+    @Transactional
+    public void delete(final Long id) {
+        repository.delete(findCategory(id));
+    }
+
+    private void validateDuplicateCategory(final CategoryRequest request) {
+        if (repository.existsByName(request.getName())) {
+            throw new HoneyBreadException(ErrorCode.DUPLICATE_CATEGORY);
+        }
+    }
+
+    private Category findCategory(final Long id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND));
+    }
 }
