@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserStoreFavoriteControllerTest {
     static final String BASE_URL = "/stores/favorites";
     static final String CREATE_URL = BASE_URL + "/" + 1L;
+    static final String DELETE_URL = BASE_URL + "/" + 1L;
 
     @Autowired
     MockMvc mockMvc;
@@ -71,9 +73,60 @@ class UserStoreFavoriteControllerTest {
         response.andExpect(status().isConflict());
     }
 
+    @Test
+    void 존재하지_않는_스토어면_삭제_실패() throws Exception {
+        // given
+        given(userStoreFavoriteService.delete(anyLong(), anyLong())).willAnswer(mock -> {
+            throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
+        });
+
+        // when
+        ResultActions response = 찜삭제_요청();
+
+        // then
+        verify(userStoreFavoriteService).delete(anyLong(), anyLong());
+        response.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void 찜한적_없어서_삭제_실패() throws Exception {
+        // given
+        given(userStoreFavoriteService.delete(anyLong(), anyLong())).willAnswer(mock -> {
+            throw new HoneyBreadException(ErrorCode.USER_STORE_FAVORITE_NOT_FOUND);
+        });
+
+        // when
+        ResultActions response = 찜삭제_요청();
+
+        // then
+        verify(userStoreFavoriteService).delete(anyLong(), anyLong());
+        response.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void 존재하는_스토어_그리고_찜했으면_삭제_성공() throws Exception {
+        // given
+        given(userStoreFavoriteService.delete(anyLong(), anyLong())).willReturn(Long.MIN_VALUE);
+
+        // when
+        ResultActions response = 찜삭제_요청();
+
+        // then
+        verify(userStoreFavoriteService).delete(anyLong(), anyLong());
+        response.andExpect(status().isNoContent());
+    }
+
     private ResultActions 찜등록_요청() throws Exception {
         return mockMvc.perform(
                 post(CREATE_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+    }
+
+    private ResultActions 찜삭제_요청() throws Exception {
+        return mockMvc.perform(
+                delete(DELETE_URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
