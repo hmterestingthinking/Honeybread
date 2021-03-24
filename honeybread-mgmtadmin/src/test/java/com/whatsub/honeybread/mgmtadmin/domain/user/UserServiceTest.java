@@ -90,7 +90,7 @@ class UserServiceTest {
         final long id = 1L;
         final User user = createUser();
         final UserModifyRequest userModifyRequest =
-                new UserModifyRequest("changedPassword", "010-9999-9999", false, false);;
+                new UserModifyRequest("changedPassword", "010-9999-9999", false, false);
         final String expectEncodedPassword = "encodedPassword";
 
         given(userRepository.findById(id)).willReturn(Optional.of(user));
@@ -107,6 +107,21 @@ class UserServiceTest {
         assertEquals(userModifyRequest.isSmsAgreement(), user.isSmsAgreement());
         assertEquals(expectEncodedPassword, user.getPassword());
 
+    }
+    
+    @Test
+    public void 유저_삭제() {
+        //given
+        final long id = 1L;
+        final User user = createUser();
+
+        given(userRepository.findById(id)).willReturn(Optional.of(user));
+
+        //when
+        userService.delete(id);
+
+        //then
+        verify(userRepository).delete(user);
     }
 
     private User createUser() {

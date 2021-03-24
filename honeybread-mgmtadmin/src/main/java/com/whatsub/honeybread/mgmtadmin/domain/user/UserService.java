@@ -40,4 +40,8 @@ public class UserService {
         findUser.changeMarketingAgreement(userModifyRequest.isMarketingAgreement());
         findUser.changeSmsAgreement(userModifyRequest.isSmsAgreement());
     }
+
+    public void delete(long id) {
+        userRepository.delete(findById(id));
+    }
 }
