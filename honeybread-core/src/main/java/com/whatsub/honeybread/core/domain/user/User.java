@@ -46,4 +46,16 @@ public class User extends BaseEntity{
     public void encodePassword(String password) {
         this.password = password;
     }
+
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void changeMarketingAgreement(boolean marketingAgreement) {
+        this.marketingAgreement = marketingAgreement;
+    }
+
+    public void changeSmsAgreement(boolean smsAgreement) {
+        this.smsAgreement = smsAgreement;
+    }
 }

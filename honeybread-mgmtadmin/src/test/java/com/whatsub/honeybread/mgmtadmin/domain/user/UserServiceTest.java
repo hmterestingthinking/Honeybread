@@ -4,6 +4,7 @@ import com.whatsub.honeybread.core.domain.user.User;
 import com.whatsub.honeybread.core.domain.user.UserRepository;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
+import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserModifyRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,7 +59,8 @@ class UserServiceTest {
         given(userRepository.existsByEmail(user.getEmail())).willReturn(true);
 
         //when
-        HoneyBreadException honeyBreadException = assertThrows(HoneyBreadException.class, () -> userService.register(user));
+        HoneyBreadException honeyBreadException =
+                assertThrows(HoneyBreadException.class, () -> userService.register(user));
 
         //then
         verify(userRepository).existsByEmail(anyString());
@@ -84,17 +86,40 @@ class UserServiceTest {
     @Test
     public void 유저_이메일이_없으면_에러() {
         //given
-        final User user
-                = createUser();
+        final User user = createUser();
         given(userRepository.findByEmail(user.getEmail()))
                 .willThrow(new HoneyBreadException(ErrorCode.USER_NOT_FOUND));
 
         //when
-        HoneyBreadException honeyBreadException
-                = assertThrows(HoneyBreadException.class, () -> userService.findByEmail(user.getEmail()));
+        HoneyBreadException honeyBreadException =
+                assertThrows(HoneyBreadException.class, () -> userService.findByEmail(user.getEmail()));
 
         //then
         assertEquals(ErrorCode.USER_NOT_FOUND, honeyBreadException.getErrorCode());
+    }
+
+    @Test
+    public void 유저_정보_수정() {
+        //given
+        final User user = createUser();
+        final UserModifyRequest userModifyRequest =
+                new UserModifyRequest("changedPassword", "010-9999-9999", false, false);;
+        final String expectEncodedPassword = "encodedPassword";
+
+        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(passwordEncoder.encode(userModifyRequest.getPassword())).willReturn(expectEncodedPassword);
+
+        //when
+        userService.update(user.getEmail(), userModifyRequest);
+
+        //then
+        verify(userRepository).findByEmail(user.getEmail());
+        verify(passwordEncoder).encode(anyString());
+        assertEquals(userModifyRequest.getPhoneNumber(), user.getPhoneNumber());
+        assertEquals(userModifyRequest.isMarketingAgreement(), user.isMarketingAgreement());
+        assertEquals(userModifyRequest.isSmsAgreement(), user.isSmsAgreement());
+        assertEquals(expectEncodedPassword, user.getPassword());
+
     }
 
     private User createUser() {
