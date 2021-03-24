@@ -28,4 +28,15 @@ public class UserStoreFavoriteService {
         return userStoreFavoriteRepository.save(new UserStoreFavorite(userId, storeId)).getId();
     }
 
+    @Transactional
+    public Long delete(Long userId, Long storeId) {
+        if (!storeRepository.existsById(storeId)) {
+            throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
+        }
+        if (!userStoreFavoriteRepository.existsByUserIdAndStoreId(userId, storeId)) {
+            throw new HoneyBreadException(ErrorCode.USER_STORE_FAVORITE_NOT_FOUND);
+        }
+        return userStoreFavoriteRepository.deleteByUserIdAndStoreId(userId, storeId);
+    }
+
 }
