@@ -28,13 +28,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
+    public User findById(long id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new HoneyBreadException(ErrorCode.USER_NOT_FOUND));
     }
 
-    public void update(String targetEmail, UserModifyRequest userModifyRequest) {
-        User findUser = findByEmail(targetEmail);
+    public void update(long id, UserModifyRequest userModifyRequest) {
+        User findUser = findById(id);
         findUser.encodePassword(passwordEncoder.encode(userModifyRequest.getPassword()));
         findUser.changePhoneNumber(userModifyRequest.getPhoneNumber());
         findUser.changeMarketingAgreement(userModifyRequest.isMarketingAgreement());

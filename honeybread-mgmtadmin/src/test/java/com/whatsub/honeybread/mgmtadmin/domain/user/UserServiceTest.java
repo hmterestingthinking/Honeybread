@@ -70,29 +70,15 @@ class UserServiceTest {
     }
     
     @Test
-    public void 유저_정보_이메일로_찾기() {
+    public void 등록되지_않은_유저_검색시_에러() {
         //given
-        final User user = createUser();
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
-
-        //when
-        User findUser = userService.findByEmail(user.getEmail());
-
-        //then
-        verify(userRepository).findByEmail(user.getEmail());
-        assertEquals(user, findUser);
-    }
-    
-    @Test
-    public void 유저_이메일이_없으면_에러() {
-        //given
-        final User user = createUser();
-        given(userRepository.findByEmail(user.getEmail()))
+        final long id = 1L;
+        given(userRepository.findById(id))
                 .willThrow(new HoneyBreadException(ErrorCode.USER_NOT_FOUND));
 
         //when
         HoneyBreadException honeyBreadException =
-                assertThrows(HoneyBreadException.class, () -> userService.findByEmail(user.getEmail()));
+                assertThrows(HoneyBreadException.class, () -> userService.findById(id));
 
         //then
         assertEquals(ErrorCode.USER_NOT_FOUND, honeyBreadException.getErrorCode());
@@ -101,19 +87,20 @@ class UserServiceTest {
     @Test
     public void 유저_정보_수정() {
         //given
+        final long id = 1L;
         final User user = createUser();
         final UserModifyRequest userModifyRequest =
                 new UserModifyRequest("changedPassword", "010-9999-9999", false, false);;
         final String expectEncodedPassword = "encodedPassword";
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(userRepository.findById(id)).willReturn(Optional.of(user));
         given(passwordEncoder.encode(userModifyRequest.getPassword())).willReturn(expectEncodedPassword);
 
         //when
-        userService.update(user.getEmail(), userModifyRequest);
+        userService.update(id, userModifyRequest);
 
         //then
-        verify(userRepository).findByEmail(user.getEmail());
+        verify(userRepository).findById(id);
         verify(passwordEncoder).encode(anyString());
         assertEquals(userModifyRequest.getPhoneNumber(), user.getPhoneNumber());
         assertEquals(userModifyRequest.isMarketingAgreement(), user.isMarketingAgreement());
