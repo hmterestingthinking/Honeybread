@@ -26,11 +26,20 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private String phoneNumber;
 
-    public static User createUser(String email, String password, String phoneNumber) {
+    @Column(nullable = false)
+    private boolean marketingAgreement;
+
+    @Column(nullable = false)
+    private boolean smsAgreement;
+
+    public static User createUser(String email, String password, String phoneNumber,
+                                  boolean marketingAgreement, boolean smsAgreement) {
         User user = new User();
         user.email = email;
         user.password = password;
         user.phoneNumber = phoneNumber;
+        user.marketingAgreement = marketingAgreement;
+        user.smsAgreement = smsAgreement;
         return user;
     }
 

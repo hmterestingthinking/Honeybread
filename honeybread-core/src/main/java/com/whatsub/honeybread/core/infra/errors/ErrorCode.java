@@ -13,6 +13,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "-10004", "Internal Server Error"),
 
     DUPLICATE_USER_EMAIL(HttpStatus.BAD_REQUEST, "-11001", "Duplicate User Email"),
+    USER_NOT_FOUND(HttpStatus.BAD_GATEWAY, "-11002", "User Not Found"),
 
     DUPLICATE_CATEGORY(HttpStatus.CONFLICT, "-20001", "Duplicate Category"),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "-20002", "Category NotFound"),

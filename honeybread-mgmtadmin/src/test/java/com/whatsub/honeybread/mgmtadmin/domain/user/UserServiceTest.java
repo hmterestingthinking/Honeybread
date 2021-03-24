@@ -11,7 +11,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestConstructor;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
@@ -33,7 +36,7 @@ class UserServiceTest {
     @Test
     public void 중복되는_이메일이없다면_등록_성공() {
         //given
-        final User user = User.createUser("test@honeybread.com", "testpasswd", "010-0000-0000");
+        final User user = createUser();
         given(userRepository.existsByEmail(user.getEmail())).willReturn(false);
         final String expectEncodedPassword = "encodedPassword";
         given(passwordEncoder.encode(user.getPassword())).willReturn(expectEncodedPassword);
@@ -51,7 +54,7 @@ class UserServiceTest {
     @Test
     public void 중복되는_이메일이있다면_등록_실패() {
         //given
-        final User user = User.createUser("test@honeybread.com", "testpasswd", "010-0000-0000");
+        final User user = createUser();
         given(userRepository.existsByEmail(user.getEmail())).willReturn(true);
 
         //when
@@ -63,5 +66,40 @@ class UserServiceTest {
         verify(userRepository, never()).save(user);
         assertEquals(ErrorCode.DUPLICATE_USER_EMAIL, honeyBreadException.getErrorCode());
     }
+    
+    @Test
+    public void 유저_정보_이메일로_찾기() {
+        //given
+        final User user = createUser();
+        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+
+        //when
+        User findUser = userService.findByEmail(user.getEmail());
+
+        //then
+        verify(userRepository).findByEmail(user.getEmail());
+        assertEquals(user, findUser);
+    }
+    
+    @Test
+    public void 유저_이메일이_없으면_에러() {
+        //given
+        final User user
+                = createUser();
+        given(userRepository.findByEmail(user.getEmail()))
+                .willThrow(new HoneyBreadException(ErrorCode.USER_NOT_FOUND));
+
+        //when
+        HoneyBreadException honeyBreadException
+                = assertThrows(HoneyBreadException.class, () -> userService.findByEmail(user.getEmail()));
+
+        //then
+        assertEquals(ErrorCode.USER_NOT_FOUND, honeyBreadException.getErrorCode());
+    }
+
+    private User createUser() {
+        return User.createUser("test@honeybread.com", "testpasswd", "010-0000-0000", true, true);
+    }
+
 
 }

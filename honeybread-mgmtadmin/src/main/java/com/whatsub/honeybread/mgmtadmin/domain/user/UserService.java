@@ -26,4 +26,8 @@ public class UserService {
         return user.getId();
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new HoneyBreadException(ErrorCode.USER_NOT_FOUND));
+    }
 }
