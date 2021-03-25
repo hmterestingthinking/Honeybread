@@ -38,10 +38,9 @@ public class UserService {
     @Transactional
     public void update(long id, UserModifyRequest userModifyRequest) {
         User findUser = findById(id);
-        findUser.encodePassword(userModifyRequest.getPassword(), passwordEncoder);
-        findUser.changePhoneNumber(userModifyRequest.getPhoneNumber());
-        findUser.changeMarketingAgreement(userModifyRequest.isMarketingAgreement());
-        findUser.changeSmsAgreement(userModifyRequest.isSmsAgreement());
+        User modifyUser = userModifyRequest.toUser(findUser.getEmail());
+        modifyUser.encodePassword(modifyUser.getPassword(), passwordEncoder);
+        findUser.update(modifyUser);
     }
 
     @Transactional

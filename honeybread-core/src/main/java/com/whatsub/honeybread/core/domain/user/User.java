@@ -48,15 +48,10 @@ public class User extends BaseEntity{
         this.password = passwordEncoder.encode(target);
     }
 
-    public void changePhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void changeMarketingAgreement(boolean marketingAgreement) {
-        this.marketingAgreement = marketingAgreement;
-    }
-
-    public void changeSmsAgreement(boolean smsAgreement) {
-        this.smsAgreement = smsAgreement;
+    public void update(User modifyUser) {
+        this.password = modifyUser.getPassword();
+        this.phoneNumber = modifyUser.getPhoneNumber();
+        this.marketingAgreement = modifyUser.isMarketingAgreement();
+        this.smsAgreement = modifyUser.isSmsAgreement();
     }
 }

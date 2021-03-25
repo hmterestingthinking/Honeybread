@@ -1,5 +1,6 @@
 package com.whatsub.honeybread.mgmtadmin.domain.user.dto;
 
+import com.whatsub.honeybread.core.domain.user.User;
 import io.swagger.annotations.ApiModel;
 import lombok.Value;
 
@@ -18,5 +19,9 @@ public class UserModifyRequest {
 
     boolean smsAgreement;
     boolean marketingAgreement;
+
+    public User toUser(String origin) {
+        return User.createUser(origin, this.password, this.phoneNumber, this.marketingAgreement, this.smsAgreement);
+    }
 
 }
