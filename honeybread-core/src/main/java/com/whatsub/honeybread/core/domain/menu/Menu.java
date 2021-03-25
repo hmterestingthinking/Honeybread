@@ -2,10 +2,7 @@ package com.whatsub.honeybread.core.domain.menu;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
 import com.whatsub.honeybread.core.domain.model.Money;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -32,7 +29,7 @@ public class Menu extends BaseEntity {
     // 설명
     private String description;
 
-    // 기본 판매 가격 Converter 정의 필요
+    // 기본 판매 가격
     @Column(nullable = false)
     private Money price;
 
@@ -55,4 +52,29 @@ public class Menu extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "menu_id")
     private List<MenuOptionGroup> optionGroups = List.of();
+
+    @Builder
+    public Menu(
+        Long storeId,
+        String name,
+        String imageUrl,
+        String description,
+        Money price,
+        boolean isMain,
+        boolean isBest,
+        Long menuGroupId,
+        Long categoryId,
+        List<MenuOptionGroup> optionGroups
+    ) {
+        this.storeId = storeId;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.price = price;
+        this.isMain = isMain;
+        this.isBest = isBest;
+        this.menuGroupId = menuGroupId;
+        this.categoryId = categoryId;
+        this.optionGroups = optionGroups;
+    }
 }

@@ -1,10 +1,7 @@
 package com.whatsub.honeybread.core.domain.menu;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,7 +12,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenuOptionGroup extends BaseEntity {
-    private static final int MINIMUM_SELECT_DEFAULT = 1;
+    public static final int MINIMUM_SELECT_DEFAULT = 1;
 
     // 옵션 타입 (기본옵션 (필수선택), 추가옵션)
     public enum Type {
@@ -43,4 +40,19 @@ public class MenuOptionGroup extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "menu_option_group_id")
     private List<MenuOption> options = List.of();
+
+    @Builder
+    public MenuOptionGroup(
+        String name,
+        Type type,
+        int minimumSelectCount,
+        int maximumSelectCount,
+        List<MenuOption> options
+    ) {
+        this.name = name;
+        this.type = type;
+        this.minimumSelectCount = minimumSelectCount;
+        this.maximumSelectCount = maximumSelectCount;
+        this.options = options;
+    }
 }
