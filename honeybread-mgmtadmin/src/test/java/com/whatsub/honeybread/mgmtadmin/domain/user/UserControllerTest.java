@@ -1,6 +1,9 @@
 package com.whatsub.honeybread.mgmtadmin.domain.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.whatsub.honeybread.core.domain.user.User;
+import com.whatsub.honeybread.core.infra.errors.ErrorCode;
+import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserModifyRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -132,17 +137,47 @@ class UserControllerTest {
     public void 유저_조회() throws Exception {
         //given
         final long id = 1L;
+        final User user = createUser();
+
+        given(userService.findById(id)).willReturn(user);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                delete(BASE_URL + "/" + id)
+                get(BASE_URL + "/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print());
 
         //then
-        verify(userService).delete(id);
-        resultActions.andExpect(status().isNoContent());
+        verify(userService).findById(id);
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.phoneNumber", is(user.getPhoneNumber())))
+                .andExpect(jsonPath("$.smsAgreement", is(user.isSmsAgreement())))
+                .andExpect(jsonPath("$.marketingAgreement", is(user.isMarketingAgreement())));
     }
 
+    @Test
+    public void 유저_조회시_없을경우_에러() throws Exception {
+        //given
+        final long id = 1L;
+
+        given(userService.findById(id)).willThrow(new HoneyBreadException(ErrorCode.USER_NOT_FOUND));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get(BASE_URL + "/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print());
+
+        //then
+        verify(userService).findById(id);
+        resultActions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is(ErrorCode.USER_NOT_FOUND.getMessage())));
+    }
+
+    private User createUser() {
+        return User.createUser("test@honeybread.com", "testpasswd", "010-0000-0000", true, true);
+    }
 }

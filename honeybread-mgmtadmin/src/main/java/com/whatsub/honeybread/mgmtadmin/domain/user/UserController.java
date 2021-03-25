@@ -3,6 +3,7 @@ package com.whatsub.honeybread.mgmtadmin.domain.user;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserModifyRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,12 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getUser(@PathVariable("id") long id) {
+        UserResponse userResponse = UserResponse.createUserResponse(userService.findById(id));
+        return ResponseEntity.ok(userResponse);
+    }
 
     @PostMapping
     public ResponseEntity<?> register(@Valid @RequestBody UserRequest request, BindingResult result) {
