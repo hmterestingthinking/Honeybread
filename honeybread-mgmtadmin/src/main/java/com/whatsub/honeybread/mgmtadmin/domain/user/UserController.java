@@ -43,7 +43,7 @@ public class UserController {
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
-        userService.register(request.toUser());
+        userService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

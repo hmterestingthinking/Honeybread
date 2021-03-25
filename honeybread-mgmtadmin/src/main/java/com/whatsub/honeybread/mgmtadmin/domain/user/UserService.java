@@ -5,6 +5,7 @@ import com.whatsub.honeybread.core.domain.user.UserRepository;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserModifyRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,13 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long register(User user) {
-        if(userRepository.existsByEmail(user.getEmail())){
+    public Long register(UserRequest userRequest) {
+        if(userRepository.existsByEmail(userRequest.getEmail())){
             throw new HoneyBreadException(ErrorCode.DUPLICATE_USER_EMAIL);
         }
-        userRepository.save(user);
+        User user = userRequest.toUser();
         user.encodePassword(user.getPassword(), passwordEncoder);
+        userRepository.save(user);
         return user.getId();
     }
 

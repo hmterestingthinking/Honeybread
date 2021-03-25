@@ -5,6 +5,7 @@ import com.whatsub.honeybread.core.domain.user.UserRepository;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserModifyRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.user.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
@@ -37,38 +39,37 @@ class UserServiceTest {
     @Test
     void 중복되는_이메일이없다면_등록_성공() {
         //given
-        final User user = createUser();
-        given(userRepository.existsByEmail(user.getEmail())).willReturn(false);
-        final String expectEncodedPassword = "encodedPassword";
-        given(passwordEncoder.encode(user.getPassword())).willReturn(expectEncodedPassword);
+        final UserRequest userRequest = createUserRequest();
+        given(userRepository.existsByEmail(userRequest.getEmail())).willReturn(false);
+        final String encodedPassword = "encodedPassword";
+        given(passwordEncoder.encode(userRequest.getPassword())).willReturn(encodedPassword);
 
         //when
-        userService.register(user);
+        userService.register(userRequest);
 
         //then
         verify(userRepository).existsByEmail(anyString());
         verify(passwordEncoder).encode(anyString());
-        verify(userRepository).save(user);
-        assertEquals(expectEncodedPassword, user.getPassword());
+        verify(userRepository).save(any(User.class));
     }
 
     @Test
     void 중복되는_이메일이있다면_등록_실패() {
         //given
-        final User user = createUser();
-        given(userRepository.existsByEmail(user.getEmail())).willReturn(true);
+        final UserRequest userRequest = createUserRequest();
+        given(userRepository.existsByEmail(userRequest.getEmail())).willReturn(true);
 
         //when
         HoneyBreadException honeyBreadException =
-                assertThrows(HoneyBreadException.class, () -> userService.register(user));
+                assertThrows(HoneyBreadException.class, () -> userService.register(userRequest));
 
         //then
         verify(userRepository).existsByEmail(anyString());
         verify(passwordEncoder, never()).encode(anyString());
-        verify(userRepository, never()).save(user);
+        verify(userRepository, never()).save(any(User.class));
         assertEquals(ErrorCode.DUPLICATE_USER_EMAIL, honeyBreadException.getErrorCode());
     }
-    
+
     @Test
     void 등록되지_않은_유저_검색시_에러() {
         //given
@@ -128,5 +129,8 @@ class UserServiceTest {
         return User.createUser("test@honeybread.com", "testpasswd", "010-0000-0000", true, true);
     }
 
+    private UserRequest createUserRequest() {
+        return new UserRequest("test@honeybread.com", "qwer1234!", "010-9999-9999", false, false);
+    }
 
 }
