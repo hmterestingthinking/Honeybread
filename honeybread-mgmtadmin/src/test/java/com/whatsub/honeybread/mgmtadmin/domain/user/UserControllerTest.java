@@ -15,8 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -110,6 +109,40 @@ class UserControllerTest {
         //then
         resultActions.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors", hasSize(2)));
+    }
+    
+    @Test
+    public void 유저_삭제() throws Exception {
+        //given
+        final long id = 1L;
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                delete(BASE_URL + "/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print());
+
+        //then
+        verify(userService).delete(id);
+        resultActions.andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void 유저_조회() throws Exception {
+        //given
+        final long id = 1L;
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                delete(BASE_URL + "/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print());
+
+        //then
+        verify(userService).delete(id);
+        resultActions.andExpect(status().isNoContent());
     }
 
 }
