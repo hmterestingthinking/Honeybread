@@ -1,23 +1,25 @@
 package com.whatsub.honeybread.mgmtadmin.domain.user.dto;
 
 import com.whatsub.honeybread.core.domain.user.User;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
+@Value
+@Builder
 public class UserResponse {
 
-    private String email;
-    private String phoneNumber;
-    private boolean smsAgreement;
-    private boolean marketingAgreement;
+    String email;
+    String phoneNumber;
+    boolean smsAgreement;
+    boolean marketingAgreement;
 
     public static UserResponse createUserResponse(User user) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.email = user.getEmail();
-        userResponse.marketingAgreement = user.isMarketingAgreement();
-        userResponse.phoneNumber = user.getPhoneNumber();
-        userResponse.smsAgreement = user.isSmsAgreement();
-        return userResponse;
+        return UserResponse.builder()
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .marketingAgreement(user.isMarketingAgreement())
+                .smsAgreement(user.isSmsAgreement())
+                .build();
     }
 
 }
