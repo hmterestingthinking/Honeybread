@@ -29,7 +29,7 @@ public class UserController {
             tags = MgmtAdminSwaggerTags.USER
     )
     @GetMapping("{id}")
-    public ResponseEntity<?> getUser(@PathVariable("id") long id) {
+    public ResponseEntity<UserResponse> getUser(@PathVariable("id") long id) {
         UserResponse userResponse = UserResponse.createUserResponse(userService.findById(id));
         return ResponseEntity.ok(userResponse);
     }
@@ -39,7 +39,7 @@ public class UserController {
             tags = MgmtAdminSwaggerTags.USER
     )
     @PostMapping
-    public ResponseEntity<?> register(@Valid @RequestBody UserRequest request, BindingResult result) {
+    public ResponseEntity<Void> register(@Valid @RequestBody UserRequest request, BindingResult result) {
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -52,7 +52,7 @@ public class UserController {
             tags = MgmtAdminSwaggerTags.USER
     )
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id,
+    public ResponseEntity<Void> update(@PathVariable("id") long id,
                                       @Valid @RequestBody UserModifyRequest userModifyRequest,
                                       BindingResult result) {
         if (result.hasErrors()) {
@@ -67,7 +67,7 @@ public class UserController {
             tags = MgmtAdminSwaggerTags.USER
     )
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
