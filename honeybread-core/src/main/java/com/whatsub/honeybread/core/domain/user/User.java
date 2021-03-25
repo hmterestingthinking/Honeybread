@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,8 +44,8 @@ public class User extends BaseEntity{
         return user;
     }
 
-    public void encodePassword(String password) {
-        this.password = password;
+    public void encodePassword(String target, PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(target);
     }
 
     public void changePhoneNumber(String phoneNumber) {
