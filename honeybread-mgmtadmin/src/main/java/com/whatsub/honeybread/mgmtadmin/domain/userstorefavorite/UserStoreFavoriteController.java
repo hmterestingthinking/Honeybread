@@ -32,7 +32,7 @@ public class UserStoreFavoriteController {
     @GetMapping
     public ResponseEntity<Page<StoreResponse>> getStores(
             @PageableDefault(size = 20, direction = Sort.Direction.DESC, sort = "createdAt") Pageable pageable) {
-        Page<StoreResponse> response = queryService.getUserStoreFavorite(pageable, channelUserSession.getId());
+        Page<StoreResponse> response = queryService.getStoresByUserId(pageable, channelUserSession.getId());
         return ResponseEntity.ok(response);
     }
 

@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserStoreFavoriteQueryService {
-    private final UserStoreFavoriteRepository userStoreFavoriteRepository;
+    private final UserStoreFavoriteRepository repository;
 
-    public Page<StoreResponse> getUserStoreFavorite(final Pageable pageable, final Long userId) {
-        Page<Store> storePage = userStoreFavoriteRepository.getStoresByUserId(pageable, userId);
+    public Page<StoreResponse> getStoresByUserId(final Pageable pageable, final Long userId) {
+        Page<Store> storePage = repository.getStoresByUserId(pageable, userId);
         return storePage.map(StoreResponse::toDto);
     }
 }

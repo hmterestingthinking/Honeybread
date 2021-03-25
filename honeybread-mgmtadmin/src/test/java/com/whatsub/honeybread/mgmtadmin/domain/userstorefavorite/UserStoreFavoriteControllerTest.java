@@ -55,7 +55,7 @@ class UserStoreFavoriteControllerTest {
 
         PageRequest pageRequest = PageRequest.of(0, size);
 
-        given(queryService.getUserStoreFavorite(any(Pageable.class), anyLong()))
+        given(queryService.getStoresByUserId(any(Pageable.class), anyLong()))
                 .willReturn(new PageImpl<>(조회될_스토어_목록, pageRequest, 조회될_스토어_목록.size()));
 
         // when
@@ -66,7 +66,7 @@ class UserStoreFavoriteControllerTest {
         ).andDo(print());
 
         // then
-        verify(queryService).getUserStoreFavorite(any(Pageable.class), anyLong());
+        verify(queryService).getStoresByUserId(any(Pageable.class), anyLong());
 
         조회_결과.andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty())

@@ -47,7 +47,7 @@ class UserStoreFavoriteQueryServiceTest {
                 .willReturn(new PageImpl<>(조회될_스토어_목록, pageRequest, 조회될_스토어_목록.size()));
 
         // when
-        Page<StoreResponse> 조회_결과 = queryService.getUserStoreFavorite(pageRequest, Long.MIN_VALUE);
+        Page<StoreResponse> 조회_결과 = queryService.getStoresByUserId(pageRequest, Long.MIN_VALUE);
 
         // then
         verify(repository).getStoresByUserId(any(Pageable.class), anyLong());
