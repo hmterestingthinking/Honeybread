@@ -35,7 +35,7 @@ class UserServiceTest {
     UserRepository userRepository;
 
     @Test
-    public void 중복되는_이메일이없다면_등록_성공() {
+    void 중복되는_이메일이없다면_등록_성공() {
         //given
         final User user = createUser();
         given(userRepository.existsByEmail(user.getEmail())).willReturn(false);
@@ -53,7 +53,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void 중복되는_이메일이있다면_등록_실패() {
+    void 중복되는_이메일이있다면_등록_실패() {
         //given
         final User user = createUser();
         given(userRepository.existsByEmail(user.getEmail())).willReturn(true);
@@ -70,7 +70,7 @@ class UserServiceTest {
     }
     
     @Test
-    public void 등록되지_않은_유저_검색시_에러() {
+    void 등록되지_않은_유저_검색시_에러() {
         //given
         final long id = 1L;
         given(userRepository.findById(id))
@@ -85,7 +85,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void 유저_정보_수정() {
+    void 유저_정보_수정() {
         //given
         final long id = 1L;
         final User user = createUser();
@@ -110,7 +110,7 @@ class UserServiceTest {
     }
     
     @Test
-    public void 유저_삭제() {
+    void 유저_삭제() {
         //given
         final long id = 1L;
         final User user = createUser();

@@ -15,7 +15,7 @@ class UserRepositoryTest {
     final UserRepository userRepository;
 
     @Test
-    public void 중복되는_이메일이_있는지_확인() {
+    void 중복되는_이메일이_있는지_확인() {
         //given
         final User user = createUser();
         userRepository.save(user);

@@ -39,7 +39,7 @@ class UserControllerTest {
     UserService userService;
 
     @Test
-    public void 유저_등록() throws Exception {
+    void 유저_등록() throws Exception {
         //given
         final UserRequest userRequest =
                 new UserRequest("test@honeybread.com", "qwer1234!", "010-9999-9999", false, false);
@@ -58,7 +58,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void 유저_등록시_유효성검사에_실패한다면_에러() throws Exception {
+    void 유저_등록시_유효성검사에_실패한다면_에러() throws Exception {
         //given
         final UserRequest userRequest =
                 new UserRequest("test#honeybread.com", "changedPassword", "010-99-9999", false, false);
@@ -77,7 +77,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void 유저_수정() throws Exception {
+    void 유저_수정() throws Exception {
         //given
         final long id = 1L;
         final UserModifyRequest userModifyRequest =
@@ -97,7 +97,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void 유저_수정시_유효성검사에_실패한다면_에러() throws Exception {
+    void 유저_수정시_유효성검사에_실패한다면_에러() throws Exception {
         //given
         final long id = 1L;
         final UserModifyRequest userModifyRequest =
@@ -117,7 +117,7 @@ class UserControllerTest {
     }
     
     @Test
-    public void 유저_삭제() throws Exception {
+    void 유저_삭제() throws Exception {
         //given
         final long id = 1L;
 
@@ -134,7 +134,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void 유저_조회() throws Exception {
+    void 유저_조회() throws Exception {
         //given
         final long id = 1L;
         final User user = createUser();
@@ -158,7 +158,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void 유저_조회시_없을경우_에러() throws Exception {
+    void 유저_조회시_없을경우_에러() throws Exception {
         //given
         final long id = 1L;
 

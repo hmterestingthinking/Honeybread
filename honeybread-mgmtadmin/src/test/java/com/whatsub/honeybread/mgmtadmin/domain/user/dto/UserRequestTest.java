@@ -32,7 +32,7 @@ class UserRequestTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"qwer1234!", "qwer1234!2", "!qwer1234"})
-    public void 비밀번호_정규식_성공(String password) {
+    void 비밀번호_정규식_성공(String password) {
         final UserRequest userRequest =
                 new UserRequest("test@honeybread.com", password, "010-9999-9999", false, false);
 
@@ -42,7 +42,7 @@ class UserRequestTest {
     
     @ParameterizedTest
     @ValueSource(strings = {"qwer1234", "qwer1234!5678910", "!qwer@#$%^", "qwerasdf"})
-    public void 비밀번호_정규식_실패(String password) {
+    void 비밀번호_정규식_실패(String password) {
         final UserRequest userRequest =
                 new UserRequest("test@honeybread.com", password, "010-9999-9999", false, false);
 
@@ -52,7 +52,7 @@ class UserRequestTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"010-0000-0000", "010-1234-1234"})
-    public void 휴대폰번호_정규식_성공(String phoneNumber) {
+    void 휴대폰번호_정규식_성공(String phoneNumber) {
         final UserRequest userRequest =
                 new UserRequest("test@honeybread.com", "qwer1234!", phoneNumber, false, false);
 
@@ -62,7 +62,7 @@ class UserRequestTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"010-0000-000", "010-12342-1234"})
-    public void 휴대폰번호_정규식_실패(String phoneNumber) {
+    void 휴대폰번호_정규식_실패(String phoneNumber) {
         final UserRequest userRequest =
                 new UserRequest("test@honeybread.com", "qwer1234!", phoneNumber, false, false);
 
