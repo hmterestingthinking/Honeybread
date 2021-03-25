@@ -12,12 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public Long register(User user) {
         if(userRepository.existsByEmail(user.getEmail())){
             throw new HoneyBreadException(ErrorCode.DUPLICATE_USER_EMAIL);
@@ -27,12 +28,12 @@ public class UserService {
         return user.getId();
     }
 
-    @Transactional(readOnly = true)
     public User findById(long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new HoneyBreadException(ErrorCode.USER_NOT_FOUND));
     }
 
+    @Transactional
     public void update(long id, UserModifyRequest userModifyRequest) {
         User findUser = findById(id);
         findUser.encodePassword(userModifyRequest.getPassword(), passwordEncoder);
@@ -41,6 +42,7 @@ public class UserService {
         findUser.changeSmsAgreement(userModifyRequest.isSmsAgreement());
     }
 
+    @Transactional
     public void delete(long id) {
         userRepository.delete(findById(id));
     }
