@@ -26,8 +26,7 @@ import java.util.stream.LongStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -141,9 +140,7 @@ class CategoryControllerTest {
         // given
         final Long categoryId = 1L;
 
-        doAnswer(mock -> {
-            throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
-        }).when(queryService).getCategory(anyLong());
+        given(queryService.getCategory(anyLong())).willThrow(new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -184,9 +181,8 @@ class CategoryControllerTest {
         // given
         CategoryRequest 카테고리_생성_요청 = generateRequest("한식");
 
-        given(service.create(any(CategoryRequest.class))).willAnswer(mock -> {
-            throw new HoneyBreadException(ErrorCode.DUPLICATE_CATEGORY);
-        });
+        given(service.create(any(CategoryRequest.class)))
+            .willThrow(new HoneyBreadException(ErrorCode.DUPLICATE_CATEGORY));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -256,7 +252,7 @@ class CategoryControllerTest {
         final Long categoryId = 1L;
         CategoryRequest 카테고리_수정_요청 = generateRequest("한식을 중식으로 수정");
 
-        doNothing().when(service).update(anyLong(), any(CategoryRequest.class));
+        willDoNothing().given(service).update(anyLong(), any(CategoryRequest.class));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -278,9 +274,8 @@ class CategoryControllerTest {
         final Long categoryId = 1L;
         CategoryRequest 카테고리_수정_요청 = generateRequest("한식을 중식으로 수정");
 
-        doAnswer(mock -> {
-            throw new HoneyBreadException(ErrorCode.DUPLICATE_CATEGORY);
-        }).when(service).update(anyLong(), any(CategoryRequest.class));
+        willThrow(new HoneyBreadException(ErrorCode.DUPLICATE_CATEGORY))
+            .given(service).update(anyLong(), any(CategoryRequest.class));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -330,7 +325,7 @@ class CategoryControllerTest {
         final Long categoryId = 1L;
         CategoryRequest 카테고리_수정_요청 = generateRequest(name);
 
-        doNothing().when(service).update(anyLong(), any(CategoryRequest.class));
+        willDoNothing().given(service).update(anyLong(), any(CategoryRequest.class));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -352,9 +347,8 @@ class CategoryControllerTest {
         final Long categoryId = 1L;
         CategoryRequest 카테고리_수정_요청 = generateRequest("한식에서 중식으로 수정");
 
-        doAnswer(mock -> {
-            throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
-        }).when(service).update(anyLong(), any(CategoryRequest.class));
+        willThrow(new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND))
+            .given(service).update(anyLong(), any(CategoryRequest.class));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -375,7 +369,7 @@ class CategoryControllerTest {
         // given
         final Long categoryId = 1L;
 
-        doNothing().when(service).delete(anyLong());
+        willDoNothing().given(service).delete(anyLong());
 
         // when
         ResultActions result = mockMvc.perform(
@@ -387,7 +381,7 @@ class CategoryControllerTest {
         // then
         verify(service).delete(anyLong());
 
-        result.andExpect(status().isOk());
+        result.andExpect(status().isNoContent());
     }
 
     @Test
@@ -395,9 +389,7 @@ class CategoryControllerTest {
         // given
         final Long categoryId = 1L;
 
-        doAnswer(mock -> {
-            throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
-        }).when(service).delete(anyLong());
+        willThrow(new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND)).given(service).delete(anyLong());
 
         // when
         ResultActions result = mockMvc.perform(
