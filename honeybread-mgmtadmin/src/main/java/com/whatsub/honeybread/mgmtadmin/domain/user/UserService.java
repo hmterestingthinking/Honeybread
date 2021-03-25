@@ -25,7 +25,7 @@ public class UserService {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_USER_EMAIL);
         }
         User user = userRequest.toUser();
-        user.encodePassword(user.getPassword(), passwordEncoder);
+        user.encodePassword(passwordEncoder);
         userRepository.save(user);
         return user.getId();
     }
@@ -39,7 +39,7 @@ public class UserService {
     public void update(long id, UserModifyRequest userModifyRequest) {
         User findUser = findById(id);
         User modifyUser = userModifyRequest.toUser(findUser.getEmail());
-        modifyUser.encodePassword(modifyUser.getPassword(), passwordEncoder);
+        modifyUser.encodePassword(passwordEncoder);
         findUser.update(modifyUser);
     }
 

@@ -44,8 +44,8 @@ public class User extends BaseEntity{
         return user;
     }
 
-    public void encodePassword(String target, PasswordEncoder passwordEncoder) {
-        this.password = passwordEncoder.encode(target);
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
     }
 
     public void update(User modifyUser) {
