@@ -12,7 +12,7 @@ public enum ErrorCode {
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "-10003", "Validation Error"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "-10004", "Internal Server Error"),
 
-    DUPLICATE_USER_EMAIL(HttpStatus.BAD_REQUEST, "-11001", "Duplicate User Email"),
+    DUPLICATE_USER_EMAIL(HttpStatus.CONFLICT, "-11001", "Duplicate User Email"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "-11002", "User Not Found"),
 
     DUPLICATE_CATEGORY(HttpStatus.CONFLICT, "-20001", "Duplicate Category"),
