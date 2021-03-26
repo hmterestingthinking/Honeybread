@@ -1,31 +1,23 @@
 package com.whatsub.honeybread.core.domain.store;
 
-import com.whatsub.honeybread.core.domain.base.BaseEntity;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "store_operations")
+@Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(callSuper = true)
-public class StoreOperation extends BaseEntity {
-
-    @ManyToOne
-    @JoinColumn(name = "store_id")
-    private Store store;
+@AllArgsConstructor
+@EqualsAndHashCode
+public class StoreOperation {
 
     @Enumerated(EnumType.STRING)
-    private DayType dayType;
+    private OperationStatus status;
 
     @AttributeOverrides({
-            @AttributeOverride(name = "from", column = @Column(name = "start_at")),
-            @AttributeOverride(name = "to", column = @Column(name = "end_at"))})
-    private TimePeriod operationPeriod;
+            @AttributeOverride(name = "from", column = @Column(name = "operation_start_at")),
+            @AttributeOverride(name = "to", column = @Column(name = "operation_end_at"))})
+    private TimePeriod period;
 
 }

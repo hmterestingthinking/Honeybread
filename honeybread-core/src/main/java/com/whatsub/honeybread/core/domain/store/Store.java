@@ -16,51 +16,29 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Store extends BaseEntity {
 
+    // 스토어 텍스트형식 id
     private String uuid;
 
-    private String name;
-
-    private String tel;
-
+    // 판매자
     private Long sellerId;
 
-    @Enumerated(EnumType.STRING)
-    private OperationStatus operationStatus;
+    // 기본 정보
+    private StoreBasic basic;
 
-    private boolean workPublicHoliday;
+    // 영업 정보
+    private StoreOperation operation;
 
-    private StoreTempClosure storeTempClosure;
-
-    private String imageUrl;
-
-    private String originCountry;
-
-    private String introduce;
-
-    private String announcement;
-
-    private BusinessLicense business;
-
-    private Address address;
-
+    // 상태
     @Enumerated(EnumType.STRING)
     private StoreStatus status;
 
-    private BankAccount bankAccount;
-
-    @OneToMany(mappedBy = "store")
+    // 카테고리
+    @OneToMany
+    @JoinColumn(name = "store_id")
     private List<StoreCategory> categories;
 
+    // 지원하는 결제 방식
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StorePayMethod> payMethods;
-
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StoreOperation> operations;
-
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StoreHoliday> holidays;
-
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StoreBreakTime> breakTimes;
 
 }
