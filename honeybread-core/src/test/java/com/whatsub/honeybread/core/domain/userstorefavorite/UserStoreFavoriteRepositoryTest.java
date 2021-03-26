@@ -62,6 +62,7 @@ class UserStoreFavoriteRepositoryTest {
         assertThat(유저A_조회된_찜목록.get(0)).isEqualTo(유저A의_첫번째_스토어_찜정보);
         assertThat(유저A_조회된_찜목록.get(1)).isEqualTo(유저A의_두번째_스토어_찜정보);
 
+        assertThat(유저B_조회된_찜목록.size()).isEqualTo(3);
         assertThat(유저B_조회된_찜목록.get(0)).isEqualTo(유저B의_두번째_스토어_찜정보);
         assertThat(유저B_조회된_찜목록.get(1)).isEqualTo(유저B의_세번째_스토어_찜정보);
         assertThat(유저B_조회된_찜목록.get(2)).isEqualTo(유저B의_네번째_스토어_찜정보);
