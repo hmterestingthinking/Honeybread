@@ -75,7 +75,7 @@ class UserStoreFavoriteControllerTest {
 
     private List<Long> 찜한_스토어_아이디_목록(final int startStoreId, final int size) {
         return LongStream.range(startStoreId, startStoreId + size)
-                .mapToObj(m -> m)
+                .boxed()
                 .collect(Collectors.toList());
     }
 

@@ -17,7 +17,7 @@ public class UserStoreFavoriteQueryService {
     private final UserStoreFavoriteRepository repository;
 
     public StoreIdsResponse getStoresByUserId(final Long userId) {
-        List<Long> storeIds = repository.findByUserId(userId).stream()
+        List<Long> storeIds = repository.findAllByUserId(userId).stream()
                 .map(UserStoreFavorite::getStoreId)
                 .collect(Collectors.toList());
         return new StoreIdsResponse(storeIds);

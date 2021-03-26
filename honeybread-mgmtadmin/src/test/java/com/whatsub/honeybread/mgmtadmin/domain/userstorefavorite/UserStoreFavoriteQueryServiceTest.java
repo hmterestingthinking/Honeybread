@@ -34,13 +34,13 @@ class UserStoreFavoriteQueryServiceTest {
         // given
         final int 저장할_찜_사이즈 = 10;
         List<UserStoreFavorite> 찜_목록 = 찜_목록(저장할_찜_사이즈);
-        given(repository.findByUserId(anyLong())).willReturn(찜_목록);
+        given(repository.findAllByUserId(anyLong())).willReturn(찜_목록);
 
         // when
         StoreIdsResponse 조회_결과 = queryService.getStoresByUserId(1L);
 
         // then
-        verify(repository).findByUserId(anyLong());
+        verify(repository).findAllByUserId(anyLong());
         assertThat(조회_결과.getStoreIds().size()).isEqualTo(저장할_찜_사이즈);
     }
 

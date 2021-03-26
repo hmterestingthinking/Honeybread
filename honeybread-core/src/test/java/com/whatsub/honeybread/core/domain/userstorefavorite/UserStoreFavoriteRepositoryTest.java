@@ -54,8 +54,8 @@ class UserStoreFavoriteRepositoryTest {
         repository.save(유저B의_네번째_스토어_찜정보);
 
         // when
-        List<UserStoreFavorite> 유저A_조회된_찜목록 = repository.findByUserId(유저A_아이디);
-        List<UserStoreFavorite> 유저B_조회된_찜목록 = repository.findByUserId(유저B_아이디);
+        List<UserStoreFavorite> 유저A_조회된_찜목록 = repository.findAllByUserId(유저A_아이디);
+        List<UserStoreFavorite> 유저B_조회된_찜목록 = repository.findAllByUserId(유저B_아이디);
 
         // then
         assertThat(유저A_조회된_찜목록.size()).isEqualTo(2);

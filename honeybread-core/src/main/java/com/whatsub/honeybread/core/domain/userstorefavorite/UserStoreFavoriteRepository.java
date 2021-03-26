@@ -9,5 +9,5 @@ public interface UserStoreFavoriteRepository extends JpaRepository<UserStoreFavo
 
     Long deleteByUserIdAndStoreId(Long userId, Long storeId);
 
-    List<UserStoreFavorite> findByUserId(Long userId);
+    List<UserStoreFavorite> findAllByUserId(Long userId);
 }
