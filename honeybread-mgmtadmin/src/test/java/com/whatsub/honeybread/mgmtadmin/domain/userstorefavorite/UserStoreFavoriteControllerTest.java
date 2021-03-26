@@ -30,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RequiredArgsConstructor
 class UserStoreFavoriteControllerTest {
     static final String BASE_URL = "/stores/favorites";
-    static final String STORE_ID_URL = BASE_URL + "/" + "store-id";
     static final String CREATE_URL = BASE_URL + "/" + 1L;
     static final String DELETE_URL = BASE_URL + "/" + 1L;
 
@@ -53,7 +52,7 @@ class UserStoreFavoriteControllerTest {
 
         // when
         ResultActions 조회_결과 = mockMvc.perform(
-                get(STORE_ID_URL)
+                get(BASE_URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
