@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -131,6 +132,27 @@ class UserControllerTest {
         //then
         verify(userService).delete(id);
         resultActions.andExpect(status().isNoContent());
+    }
+
+    @Test
+    void 유저_삭제시_없을경우_에러() throws Exception {
+        //given
+        final long id = 1L;
+
+        willThrow(new HoneyBreadException(ErrorCode.USER_NOT_FOUND))
+                .given(userService).delete(id);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                delete(BASE_URL + "/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print());
+
+        //then
+        verify(userService).delete(id);
+        resultActions.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", is(ErrorCode.USER_NOT_FOUND.getMessage())));
     }
 
     @Test

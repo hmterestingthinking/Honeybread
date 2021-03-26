@@ -124,6 +124,21 @@ class UserServiceTest {
         //then
         verify(userRepository).delete(user);
     }
+    
+    @Test
+    void 유저_삭제시_없을_경우_에러() {
+        //given
+        final long id = 1L;
+
+        given(userRepository.findById(id)).willThrow(new HoneyBreadException(ErrorCode.NOT_FOUND));
+
+        //when
+        HoneyBreadException honeyBreadException = assertThrows(HoneyBreadException.class,
+                () -> userService.delete(id));
+
+        //then
+        assertEquals(ErrorCode.NOT_FOUND, honeyBreadException.getErrorCode());
+    }
 
     private User createUser() {
         return User.createUser("test@honeybread.com", "testpasswd", "010-0000-0000", true, true);
