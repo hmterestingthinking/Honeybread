@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "store_pay_methos")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(callSuper = true)
 public class StorePayMethod extends BaseEntity {
 
     @ManyToOne

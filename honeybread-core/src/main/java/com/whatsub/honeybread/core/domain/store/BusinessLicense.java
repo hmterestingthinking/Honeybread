@@ -6,11 +6,11 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+@Embeddable
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Embeddable
+@AllArgsConstructor
 public class BusinessLicense {
 
     @Column(name = "business_license_number")

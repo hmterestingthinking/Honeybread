@@ -5,11 +5,11 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-@Getter
-@EqualsAndHashCode
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Address {
 
     private String zipNo;
