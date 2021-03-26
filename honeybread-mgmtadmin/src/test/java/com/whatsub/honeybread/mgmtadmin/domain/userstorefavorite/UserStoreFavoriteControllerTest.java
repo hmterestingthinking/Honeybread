@@ -1,29 +1,24 @@
 package com.whatsub.honeybread.mgmtadmin.domain.userstorefavorite;
 
-import com.whatsub.honeybread.core.domain.store.Store;
-import com.whatsub.honeybread.core.domain.store.dto.StoreResponse;
+import com.whatsub.honeybread.core.domain.store.dto.StoreIdsResponse;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,13 +27,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @WebMvcTest(UserStoreFavoriteController.class)
+@RequiredArgsConstructor
 class UserStoreFavoriteControllerTest {
     static final String BASE_URL = "/stores/favorites";
+    static final String STORE_ID_URL = BASE_URL + "/" + "store-id";
     static final String CREATE_URL = BASE_URL + "/" + 1L;
     static final String DELETE_URL = BASE_URL + "/" + 1L;
 
-    @Autowired
-    MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     @MockBean
     UserStoreFavoriteService service;
@@ -49,38 +45,37 @@ class UserStoreFavoriteControllerTest {
     @Test
     void 목록_조회_성공() throws Exception {
         // given
-        final int size = 10;
-        final List<StoreResponse> 스토어_목록 = 스토어_목록(size);
-        final List<StoreResponse> 조회될_스토어_목록 = 스토어_목록.subList(1, 2);
-
-        PageRequest pageRequest = PageRequest.of(0, size);
-
-        given(queryService.getStoresByUserId(any(Pageable.class), anyLong()))
-                .willReturn(new PageImpl<>(조회될_스토어_목록, pageRequest, 조회될_스토어_목록.size()));
+        final int 찜_개수 = 5;
+        final int 스토어_아이디_시작값 = 2;
+        Collection<Long> 찜한_스토어_아이디_목록 = 찜한_스토어_아이디_목록(스토어_아이디_시작값, 찜_개수);
+        given(queryService.getStoresByUserId(anyLong()))
+                .willReturn(new StoreIdsResponse(찜한_스토어_아이디_목록));
 
         // when
         ResultActions 조회_결과 = mockMvc.perform(
-                get(BASE_URL)
+                get(STORE_ID_URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
 
         // then
-        verify(queryService).getStoresByUserId(any(Pageable.class), anyLong());
+        verify(queryService).getStoresByUserId(anyLong());
 
         조회_결과.andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty())
-                .andExpect(jsonPath("$.content.length()").value(조회될_스토어_목록.size()))
-                .andExpect(jsonPath("$.content[0].storeId").exists());
+                .andExpect(jsonPath("$.storeIds").isNotEmpty())
+                .andExpect(jsonPath("$.storeIds.length()").value(찜한_스토어_아이디_목록.size()))
+                .andExpect(jsonPath("$.storeIds[0]").value(2))
+                .andExpect(jsonPath("$.storeIds[1]").value(3))
+                .andExpect(jsonPath("$.storeIds[2]").value(4))
+                .andExpect(jsonPath("$.storeIds[3]").value(5))
+                .andExpect(jsonPath("$.storeIds[4]").value(6))
+                .andExpect(jsonPath("$.storeIds[5]").doesNotExist())
+        ;
     }
 
-    private List<StoreResponse> 스토어_목록(final int size) {
-        return LongStream.range(0, size)
-                .mapToObj(id -> {
-                    Store mock = mock(Store.class);
-                    given(mock.getId()).willReturn(id);
-                    return StoreResponse.toDto(mock);
-                })
+    private List<Long> 찜한_스토어_아이디_목록(final int startStoreId, final int size) {
+        return LongStream.range(startStoreId, startStoreId + size)
+                .mapToObj(m -> m)
                 .collect(Collectors.toList());
     }
 

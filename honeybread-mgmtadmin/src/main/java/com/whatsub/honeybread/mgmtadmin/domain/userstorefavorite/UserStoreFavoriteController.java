@@ -1,15 +1,11 @@
 package com.whatsub.honeybread.mgmtadmin.domain.userstorefavorite;
 
 import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
-import com.whatsub.honeybread.core.domain.store.dto.StoreResponse;
+import com.whatsub.honeybread.core.domain.store.dto.StoreIdsResponse;
 import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +25,9 @@ public class UserStoreFavoriteController {
             value = "찜한 스토어 목록 조회",
             tags = MgmtAdminSwaggerTags.USER_STORE_FAVORITE
     )
-    @GetMapping
-    public ResponseEntity<Page<StoreResponse>> getStores(
-            @PageableDefault(size = 20, direction = Sort.Direction.DESC, sort = "createdAt") Pageable pageable) {
-        Page<StoreResponse> response = queryService.getStoresByUserId(pageable, channelUserSession.getId());
+    @GetMapping("store-id")
+    public ResponseEntity<StoreIdsResponse> getStoreIds() {
+        StoreIdsResponse response = queryService.getStoresByUserId(channelUserSession.getId());
         return ResponseEntity.ok(response);
     }
 

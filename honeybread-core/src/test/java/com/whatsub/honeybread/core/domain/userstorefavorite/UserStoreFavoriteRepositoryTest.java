@@ -3,17 +3,13 @@ package com.whatsub.honeybread.core.domain.userstorefavorite;
 import com.whatsub.honeybread.core.domain.store.Store;
 import com.whatsub.honeybread.core.domain.store.StoreRepository;
 import lombok.RequiredArgsConstructor;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -33,40 +29,47 @@ class UserStoreFavoriteRepositoryTest {
     @Test
     void 유저별로_저장된_찜정보만_조회_성공() {
         // given
-        final int size = 10;
+        final int 저장할_스토어_전체_개수 = 10;
+        final List<Store> 저장된_스토어_목록 = 사이즈만큼_스토어_저장하기(저장할_스토어_전체_개수);
+        storeRepository.saveAll(저장된_스토어_목록);
 
-        final List<Store> 저장된_스토어 = getStores(size);
-        storeRepository.saveAll(저장된_스토어);
+        Long 첫번째_스토어 = 저장된_스토어_목록.get(0).getId();
+        Long 두번째_스토어 = 저장된_스토어_목록.get(1).getId();
+        Long 세번째_스토어 = 저장된_스토어_목록.get(2).getId();
+        Long 네번째_스토어 = 저장된_스토어_목록.get(3).getId();
+        Long 다섯번째_스토어 = 저장된_스토어_목록.get(4).getId();
 
         long 유저A_아이디 = 1L;
-        int 유저A_추가할_찜_개수 = 2;
         long 유저B_아이디 = 2L;
-        int 유저B_추가할_찜_개수 = 3;
-        final List<UserStoreFavorite> 유저A_저장된_찜정보 = getUserStoreFavorites(유저A_아이디, 유저A_추가할_찜_개수);
-        final List<UserStoreFavorite> 유저B_저장된_찜정보 = getUserStoreFavorites(유저B_아이디, 유저B_추가할_찜_개수);
-        repository.saveAll(유저A_저장된_찜정보);
-        repository.saveAll(유저B_저장된_찜정보);
+
+        UserStoreFavorite 유저A의_첫번째_스토어_찜정보 = new UserStoreFavorite(유저A_아이디, 첫번째_스토어);
+        UserStoreFavorite 유저A의_두번째_스토어_찜정보 = new UserStoreFavorite(유저A_아이디, 두번째_스토어);
+        repository.save(유저A의_첫번째_스토어_찜정보);
+        repository.save(유저A의_두번째_스토어_찜정보);
+        UserStoreFavorite 유저B의_두번째_스토어_찜정보 = new UserStoreFavorite(유저B_아이디, 두번째_스토어);
+        UserStoreFavorite 유저B의_세번째_스토어_찜정보 = new UserStoreFavorite(유저B_아이디, 세번째_스토어);
+        UserStoreFavorite 유저B의_네번째_스토어_찜정보 = new UserStoreFavorite(유저B_아이디, 네번째_스토어);
+        repository.save(유저B의_두번째_스토어_찜정보);
+        repository.save(유저B의_세번째_스토어_찜정보);
+        repository.save(유저B의_네번째_스토어_찜정보);
 
         // when
-        Page<Store> 유저A_조회결과 = repository.getStoresByUserId(PageRequest.of(0, size), 유저A_아이디);
-        Page<Store> 유저B_조회결과 = repository.getStoresByUserId(PageRequest.of(0, size), 유저B_아이디);
+        List<UserStoreFavorite> 유저A_조회된_찜목록 = repository.findByUserId(유저A_아이디);
+        List<UserStoreFavorite> 유저B_조회된_찜목록 = repository.findByUserId(유저B_아이디);
 
         // then
-        AssertionsForClassTypes.assertThat(유저A_조회결과.getTotalElements()).isEqualTo(유저A_추가할_찜_개수);
-        AssertionsForClassTypes.assertThat(유저A_조회결과.getContent().get(0).getId()).isEqualTo(유저A_아이디);
-        AssertionsForClassTypes.assertThat(유저B_조회결과.getTotalElements()).isEqualTo(유저B_추가할_찜_개수);
-        AssertionsForClassTypes.assertThat(유저B_조회결과.getContent().get(0).getId()).isEqualTo(유저B_아이디);
+        assertThat(유저A_조회된_찜목록.size()).isEqualTo(2);
+        assertThat(유저A_조회된_찜목록.get(0)).isEqualTo(유저A의_첫번째_스토어_찜정보);
+        assertThat(유저A_조회된_찜목록.get(1)).isEqualTo(유저A의_두번째_스토어_찜정보);
+
+        assertThat(유저B_조회된_찜목록.get(0)).isEqualTo(유저B의_두번째_스토어_찜정보);
+        assertThat(유저B_조회된_찜목록.get(1)).isEqualTo(유저B의_세번째_스토어_찜정보);
+        assertThat(유저B_조회된_찜목록.get(2)).isEqualTo(유저B의_네번째_스토어_찜정보);
     }
 
-    private List<Store> getStores(final int size) {
+    private List<Store> 사이즈만큼_스토어_저장하기(final int size) {
         return IntStream.range(0, size)
                 .mapToObj(value -> Store.newStore())
-                .collect(Collectors.toList());
-    }
-
-    private List<UserStoreFavorite> getUserStoreFavorites(Long userId, int storeIdSize) {
-        return LongStream.range(0, storeIdSize)
-                .mapToObj(value -> new UserStoreFavorite(userId, value + 1))
                 .collect(Collectors.toList());
     }
 
