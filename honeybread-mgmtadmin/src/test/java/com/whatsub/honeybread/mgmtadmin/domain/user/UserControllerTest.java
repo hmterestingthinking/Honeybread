@@ -173,7 +173,7 @@ class UserControllerTest {
 
         //then
         verify(userService).findById(id);
-        resultActions.andExpect(status().isBadRequest())
+        resultActions.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(ErrorCode.USER_NOT_FOUND.getMessage())));
     }
 
