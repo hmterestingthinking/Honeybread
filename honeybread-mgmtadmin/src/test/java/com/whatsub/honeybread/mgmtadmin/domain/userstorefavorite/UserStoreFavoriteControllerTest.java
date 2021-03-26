@@ -87,9 +87,7 @@ class UserStoreFavoriteControllerTest {
     @Test
     void 존재하지_않는_스토어면_등록_실패() throws Exception {
         // given
-        given(service.create(anyLong(), anyLong())).willAnswer(mock -> {
-            throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
-        });
+        given(service.create(anyLong(), anyLong())).willThrow(new HoneyBreadException(ErrorCode.STORE_NOT_FOUND));
 
         // when
         ResultActions response = 찜등록_요청();
@@ -115,9 +113,7 @@ class UserStoreFavoriteControllerTest {
     @Test
     void 존재하는_스토어지만_이미_찜했기에_등록_실패() throws Exception {
         // given
-        given(service.create(anyLong(), anyLong())).willAnswer(mock -> {
-            throw new HoneyBreadException(ErrorCode.DUPLICATE_USER_STORE_FAVORITE);
-        });
+        given(service.create(anyLong(), anyLong())).willThrow(new HoneyBreadException(ErrorCode.DUPLICATE_USER_STORE_FAVORITE));
 
         // when
         ResultActions response = 찜등록_요청();
@@ -130,9 +126,7 @@ class UserStoreFavoriteControllerTest {
     @Test
     void 존재하지_않는_스토어면_삭제_실패() throws Exception {
         // given
-        given(service.delete(anyLong(), anyLong())).willAnswer(mock -> {
-            throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
-        });
+        given(service.delete(anyLong(), anyLong())).willThrow(new HoneyBreadException(ErrorCode.STORE_NOT_FOUND));
 
         // when
         ResultActions response = 찜삭제_요청();
@@ -145,9 +139,7 @@ class UserStoreFavoriteControllerTest {
     @Test
     void 찜한적_없어서_삭제_실패() throws Exception {
         // given
-        given(service.delete(anyLong(), anyLong())).willAnswer(mock -> {
-            throw new HoneyBreadException(ErrorCode.USER_STORE_FAVORITE_NOT_FOUND);
-        });
+        given(service.delete(anyLong(), anyLong())).willThrow(new HoneyBreadException(ErrorCode.USER_STORE_FAVORITE_NOT_FOUND));
 
         // when
         ResultActions response = 찜삭제_요청();
