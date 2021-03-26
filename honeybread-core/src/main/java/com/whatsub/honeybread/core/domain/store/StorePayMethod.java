@@ -7,7 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "store_pay_methos")
@@ -15,10 +18,6 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = true)
 public class StorePayMethod extends BaseEntity {
-
-    @ManyToOne
-    @JoinColumn(name = "store_id")
-    private Store store;
 
     @Enumerated(EnumType.STRING)
     private PayType payType;
