@@ -6,6 +6,7 @@ import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
+import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuGroupRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuOptionGroupRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuOptionRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuRequest;
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MenuControllerTest {
 
     static final String BASE_URL = "/menus";
+    static final String GROUP_BASE_URL = BASE_URL + "/groups";
 
     final MockMvc mockMvc;
 
@@ -40,6 +42,67 @@ class MenuControllerTest {
 
     @MockBean
     MenuService service;
+
+    @MockBean
+    MenuGroupService groupService;
+
+    @Test
+    void 벨리데이션_성공시_메뉴그룹_등록에_성공한다() throws Exception {
+        // given
+        final MenuGroupRequest request = 식사류_메뉴그룹_요청();
+
+        given(groupService.create(request)).willReturn(1L);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            post(GROUP_BASE_URL)
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(groupService).create(any(MenuGroupRequest.class));
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void 벨리데이션_실패시_메뉴그룹_등록에_실패한다() throws Exception {
+        // given
+        final MenuGroupRequest request = 식사류_메뉴그룹_요청();
+
+        willThrow(ValidationException.class).given(groupService).create(request);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            post(GROUP_BASE_URL)
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(groupService).create(any(MenuGroupRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 잘못된_요청시_메뉴그룹_등록에_실패한다() throws Exception {
+        // given
+        final MenuGroupRequest request = 잘못된_메뉴그룹_요청();
+
+        // when
+        ResultActions result = mockMvc.perform(
+            post(GROUP_BASE_URL)
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(groupService, never()).create(any(MenuGroupRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
 
     @Test
     void 벨리데이션_성공시_등록에_성공한다() throws Exception {
@@ -218,6 +281,18 @@ class MenuControllerTest {
         // then
         verify(service).delete(anyLong());
         result.andExpect(status().isNotFound());
+    }
+
+    private MenuGroupRequest 식사류_메뉴그룹_요청() {
+        return MenuGroupRequest.builder()
+            .name("식사류")
+            .description("식사메뉴 입니다 ~")
+            .storeId(1L)
+            .build();
+    }
+
+    private MenuGroupRequest 잘못된_메뉴그룹_요청() {
+        return MenuGroupRequest.builder().build();
     }
 
     private MenuRequest 간장찜닭_메뉴_요청() {

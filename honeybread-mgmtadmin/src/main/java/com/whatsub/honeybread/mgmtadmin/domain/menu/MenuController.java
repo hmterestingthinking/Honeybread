@@ -1,7 +1,9 @@
 package com.whatsub.honeybread.mgmtadmin.domain.menu;
 
 import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
+import com.whatsub.honeybread.core.domain.menu.repository.MenuGroupRepository;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
+import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuGroupRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuRequest;
 import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
 import io.swagger.annotations.Api;
@@ -20,6 +22,21 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MenuController {
     private final MenuService service;
+    private final MenuGroupService groupService;
+
+    // 메뉴 그룹 등록
+    @ApiOperation(
+        value = "메뉴 그룹 등록",
+        tags = MgmtAdminSwaggerTags.MENU
+    )
+    @PostMapping("groups")
+    public ResponseEntity<Void> createMenuGroups(@Valid @RequestBody MenuGroupRequest request, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
+        }
+        groupService.create(request);
+        return ResponseEntity.ok().build();
+    }
 
     // 목록 조회
 
