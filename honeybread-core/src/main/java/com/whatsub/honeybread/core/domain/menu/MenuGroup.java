@@ -2,6 +2,7 @@ package com.whatsub.honeybread.core.domain.menu;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,11 @@ public class MenuGroup extends BaseEntity {
     // 스토어
     @Column(nullable = false)
     private Long storeId;
+
+    @Builder
+    public MenuGroup(String name, String description, Long storeId) {
+        this.name = name;
+        this.description = description;
+        this.storeId = storeId;
+    }
 }
