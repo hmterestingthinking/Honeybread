@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class StoreOperation {
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "operation_status")
     private OperationStatus status;
 
     @AttributeOverrides({

@@ -10,4 +10,7 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class Address {
+
+    private String detailAddress;
+
 }
