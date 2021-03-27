@@ -38,8 +38,8 @@ public class Store extends BaseEntity {
     private List<StoreCategory> categories;
 
     // 지원하는 결제 방식
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
+    @ElementCollection
+    @CollectionTable(name = "store_pay_methods", joinColumns = @JoinColumn(name = "store_id"))
     private List<StorePayMethod> payMethods;
 
 }
