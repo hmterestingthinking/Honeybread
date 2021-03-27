@@ -33,12 +33,12 @@ public class Store extends BaseEntity {
     private StoreStatus status;
 
     // 카테고리
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private List<StoreCategory> categories;
 
     // 지원하는 결제 방식
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private List<StorePayMethod> payMethods;
 
