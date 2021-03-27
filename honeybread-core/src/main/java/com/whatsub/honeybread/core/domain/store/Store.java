@@ -22,15 +22,21 @@ public class Store extends BaseEntity {
     // 판매자
     private Long sellerId;
 
-    // 기본 정보
-    private StoreBasic basic;
-
-    // 영업 정보
+    // 현재 영업 정보
+    @Embedded
     private StoreOperation operation;
 
     // 상태
     @Enumerated(EnumType.STRING)
     private StoreStatus status;
+
+    // 기본 정보
+    @Embedded
+    private StoreBasic basic;
+
+    // 스토어 계좌 정보
+    @Embedded
+    private BankAccount bankAccount;
 
     // 카테고리
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

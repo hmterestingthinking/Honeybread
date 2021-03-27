@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 
 @Embeddable
 @Getter
@@ -24,30 +25,20 @@ public class StoreBasic {
     // 대표 이미지
     private String imageUrl;
 
-    // 원산지
-    private String originCountry;
-
-    // 소개글
-    private String introduce;
-
-    // 알림글
-    private String announcement;
-
-    // 사업자등록자번호
-    private String businessLicenseNumber;
-
-    // 스토어 계좌
-    private BankAccount bankAccount;
-
     // 주소
+    @Embedded
     private Address address;
 
-    // 운영시간
-    private String operationTime;
+    // 안내 관련 정보
+    @Embedded
+    private StoreAnnouncement storeIntroduce;
 
-    // 휴무일
-    private String holiday;
+    // 영업 관련 정보
+    @Embedded
+    private BusinessHours operationTime;
 
-    // 휴게 시간
-    private String breakTime;
+    // 사업자등록증 관련 정보
+    @Embedded
+    private BusinessLicense businessLicense;
+
 }
