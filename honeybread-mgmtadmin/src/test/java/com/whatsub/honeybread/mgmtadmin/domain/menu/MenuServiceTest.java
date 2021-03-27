@@ -20,6 +20,7 @@ import org.springframework.test.context.TestConstructor;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
@@ -111,6 +112,36 @@ class MenuServiceTest {
         verify(repository).findById(anyLong());
         verify(mockMenu).update(any(Menu.class));
         verify(validator).validate(any(Menu.class));
+    }
+
+    @Test
+    void 삭제요청시_해당메뉴가_있다면_삭제_성공() {
+        // given
+        final long menuId = 1L;
+        final Menu mockMenu = mock(Menu.class);
+
+        given(repository.findById(anyLong())).willReturn(Optional.of(mockMenu));
+
+        // when
+        service.delete(menuId);
+
+        // then
+        verify(repository).findById(anyLong());
+        verify(repository).delete(any(Menu.class));
+    }
+
+    @Test
+    void 삭제요청시_해당메뉴가_없다면_삭제_실패() {
+        // given
+        final long menuId = 1L;
+
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, () -> service.delete(menuId));
+
+        // then
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.MENU_NOT_FOUND);
     }
 
     private MenuRequest 기본판매가가_존재하는_찜닭메뉴_요청() {

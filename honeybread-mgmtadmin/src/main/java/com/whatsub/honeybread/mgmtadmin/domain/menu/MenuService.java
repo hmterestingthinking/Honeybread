@@ -31,6 +31,11 @@ public class MenuService {
         validator.validate(menu);
     }
 
+    @Transactional
+    public void delete(final Long id) {
+        repository.delete(findMenu(id));
+    }
+
     private Menu findMenu(final Long id) {
         return repository.findById(id)
             .orElseThrow(() -> new HoneyBreadException(ErrorCode.MENU_NOT_FOUND));

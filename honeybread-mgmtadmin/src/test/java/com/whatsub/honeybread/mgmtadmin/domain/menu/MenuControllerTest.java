@@ -23,8 +23,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -181,6 +180,44 @@ class MenuControllerTest {
         // then
         verify(service).update(anyLong(), any(MenuRequest.class));
         result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 존재하는_메뉴_삭제_요청시_삭제_성공() throws Exception {
+        // given
+        final Long menuId = 1L;
+
+        willDoNothing().given(service).delete(anyLong());
+
+        // when
+        ResultActions result = mockMvc.perform(
+            delete(BASE_URL + "/" + menuId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(service).delete(anyLong());
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    void 존재하지_않는_메뉴_삭제_요청시_삭제_실패() throws Exception {
+        // given
+        final Long menuId = 1L;
+
+        willThrow(new HoneyBreadException(ErrorCode.MENU_NOT_FOUND)).given(service).delete(anyLong());
+
+        // when
+        ResultActions result = mockMvc.perform(
+            delete(BASE_URL + "/" + menuId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(service).delete(anyLong());
+        result.andExpect(status().isNotFound());
     }
 
     private MenuRequest 간장찜닭_메뉴_요청() {
