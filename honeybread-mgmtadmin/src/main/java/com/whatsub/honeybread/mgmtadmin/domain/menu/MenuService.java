@@ -3,6 +3,8 @@ package com.whatsub.honeybread.mgmtadmin.domain.menu;
 import com.whatsub.honeybread.core.domain.menu.Menu;
 import com.whatsub.honeybread.core.domain.menu.repository.MenuRepository;
 import com.whatsub.honeybread.core.domain.menu.validator.MenuValidator;
+import com.whatsub.honeybread.core.infra.errors.ErrorCode;
+import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,5 +22,17 @@ public class MenuService {
         Menu menu = request.toEntity();
         validator.validate(menu);
         return repository.save(menu).getId();
+    }
+
+    @Transactional
+    public void update(final Long id, final MenuRequest request) {
+        Menu menu = findMenu(id);
+        menu.update(request.toEntity());
+        validator.validate(menu);
+    }
+
+    private Menu findMenu(final Long id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new HoneyBreadException(ErrorCode.MENU_NOT_FOUND));
     }
 }

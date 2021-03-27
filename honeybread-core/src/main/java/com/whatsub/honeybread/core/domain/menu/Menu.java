@@ -1,10 +1,23 @@
 package com.whatsub.honeybread.core.domain.menu;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
+import com.whatsub.honeybread.core.domain.menu.listener.MenuListener;
 import com.whatsub.honeybread.core.domain.model.Money;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Builder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
+import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+
 import java.util.List;
 
 @Getter
@@ -12,6 +25,7 @@ import java.util.List;
 @Table(name = "menus")
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(MenuListener.class)
 public class Menu extends BaseEntity {
 
     // 스토어
@@ -76,5 +90,26 @@ public class Menu extends BaseEntity {
         this.menuGroupId = menuGroupId;
         this.categoryId = categoryId;
         this.optionGroups = optionGroups;
+    }
+
+    public void update(Menu menu) {
+        updateBasic(menu);
+        updateOptions(menu);
+    }
+
+    private void updateBasic(Menu menu) {
+        this.name = menu.getName();
+        this.imageUrl = menu.getImageUrl();
+        this.description = menu.getDescription();
+        this.price = menu.getPrice();
+        this.isMain = menu.isMain();
+        this.isBest = menu.isBest();
+        this.menuGroupId = menu.getMenuGroupId();
+        this.categoryId = menu.getCategoryId();
+    }
+
+    private void updateOptions(Menu menu) {
+        this.optionGroups.clear();
+        this.optionGroups.addAll(menu.getOptionGroups());
     }
 }

@@ -5,6 +5,8 @@ import com.whatsub.honeybread.core.domain.menu.MenuOptionGroup;
 import com.whatsub.honeybread.core.domain.menu.repository.MenuRepository;
 import com.whatsub.honeybread.core.domain.menu.validator.MenuValidator;
 import com.whatsub.honeybread.core.domain.model.Money;
+import com.whatsub.honeybread.core.infra.errors.ErrorCode;
+import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuOptionGroupRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuOptionRequest;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +39,7 @@ class MenuServiceTest {
     @Test
     void 벨리데이션_성공시_메뉴_등록_성공() {
         // given
-        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_생성_요청();
+        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_요청();
 
         Menu mockMenu = mock(Menu.class);
         given(mockMenu.getId()).willReturn(1L);
@@ -55,7 +58,7 @@ class MenuServiceTest {
     @Test
     void 벨리데이션_실패시_메뉴_등록_실패() {
         // given
-        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_생성_요청();
+        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_요청();
 
         Menu mockMenu = mock(Menu.class);
         given(mockMenu.getId()).willReturn(1L);
@@ -71,7 +74,46 @@ class MenuServiceTest {
         verify(repository, never()).save(any(Menu.class));
     }
 
-    private MenuRequest 기본판매가가_존재하는_찜닭메뉴_생성_요청() {
+    @Test
+    void 벨리데이션_성공시_메뉴_수정_성공() {
+        // given
+        final long menuId = 1L;
+        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_요청();
+
+        final Menu mockMenu = mock(Menu.class);
+
+        given(repository.findById(anyLong())).willReturn(Optional.of(mockMenu));
+        willDoNothing().given(validator).validate(any(Menu.class));
+
+        // when
+        service.update(menuId, request);
+
+        // then
+        verify(repository).findById(anyLong());
+        verify(mockMenu).update(any(Menu.class));
+        verify(validator).validate(any(Menu.class));
+    }
+
+    @Test
+    void 벨리데이션_실패시_메뉴_수정_실패() {
+        // given
+        final long menuId = 1L;
+        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_요청();
+
+        final Menu mockMenu = mock(Menu.class);
+        given(repository.findById(anyLong())).willReturn(Optional.of(mockMenu));
+        willThrow(ValidationException.class).given(validator).validate(any(Menu.class));
+
+        // when
+        assertThrows(ValidationException.class, () -> service.update(menuId, request));
+
+        // then
+        verify(repository).findById(anyLong());
+        verify(mockMenu).update(any(Menu.class));
+        verify(validator).validate(any(Menu.class));
+    }
+
+    private MenuRequest 기본판매가가_존재하는_찜닭메뉴_요청() {
         return MenuRequest.builder()
             .menuGroupId(1L)
             .categoryId(1L)

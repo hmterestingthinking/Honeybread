@@ -10,10 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @Api(tags = HoneyBreadSwaggerTags.ALL)
 @RestController
@@ -32,7 +36,7 @@ public class MenuController {
         tags = MgmtAdminSwaggerTags.MENU
     )
     @PostMapping
-    public ResponseEntity<Void> createMenu(@RequestBody MenuRequest request, BindingResult result) {
+    public ResponseEntity<Void> createMenu(@Valid @RequestBody MenuRequest request, BindingResult result) {
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -41,6 +45,22 @@ public class MenuController {
     }
 
     // 수정
+    @ApiOperation(
+        value = "메뉴 수정",
+        tags = MgmtAdminSwaggerTags.MENU
+    )
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateMenu(
+        @Valid @PathVariable Long id,
+        @RequestBody MenuRequest request,
+        BindingResult result
+    ) {
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
+        }
+        service.update(id, request);
+        return ResponseEntity.ok().build();
+    }
 
     // 삭제
 }

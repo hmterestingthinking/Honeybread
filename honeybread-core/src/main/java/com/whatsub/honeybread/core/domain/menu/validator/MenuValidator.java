@@ -2,7 +2,6 @@ package com.whatsub.honeybread.core.domain.menu.validator;
 
 import com.whatsub.honeybread.core.domain.category.CategoryRepository;
 import com.whatsub.honeybread.core.domain.menu.Menu;
-import com.whatsub.honeybread.core.domain.menu.MenuOption;
 import com.whatsub.honeybread.core.domain.menu.MenuOptionGroup;
 import com.whatsub.honeybread.core.domain.menu.repository.MenuGroupRepository;
 import com.whatsub.honeybread.core.domain.model.Money;
@@ -32,12 +31,12 @@ public class MenuValidator {
             throw new ValidationException(bindingResult);
         }
     }
-    
+
     private void validateMenu(Menu menu) {
         if (!categoryRepository.existsById(menu.getCategoryId())) {
             throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
         }
-        
+
         if (!groupRepository.existsById(menu.getMenuGroupId())) {
             throw new HoneyBreadException(ErrorCode.MENU_GROUP_NOT_FOUND);
         }
@@ -45,11 +44,11 @@ public class MenuValidator {
 
     /**
      * 기본 판매가가 0원이라면, 반드시 1개가 존재해야 한다.
-     *
+     * <p>
      * 옵션 그룹의 최소 선택 개수는 1개 이상이어야 한다.
-     *
+     * <p>
      * 옵션 그룹의 최대 선택 개수는 최소 선택개수보다 작을 수 없다.
-     * */
+     */
     private void validateOptionGroup(final Menu menu, final List<MenuOptionGroup> optionGroups, final Errors errors) {
         if (menu.getPrice().equals(Money.ZERO) && !existsBasicOption(optionGroups)) {
             errors.reject(
