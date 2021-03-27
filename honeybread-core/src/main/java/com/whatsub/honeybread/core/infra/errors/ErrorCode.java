@@ -14,6 +14,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "-10005", "Unauthenticated"),
 
     DUPLICATE_USER_STORE_FAVORITE(HttpStatus.CONFLICT, "-21000", "Duplicate User Store Favorite"),
+    USER_STORE_FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND, "-21001", "User Store Favorite Not Found"),
 
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "-22000", "Store Not Found"),
     ;
