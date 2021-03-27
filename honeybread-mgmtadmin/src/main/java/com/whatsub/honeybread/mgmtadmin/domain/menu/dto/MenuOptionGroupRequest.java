@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -25,9 +26,11 @@ public class MenuOptionGroupRequest {
     private MenuOptionGroup.Type type;
 
     @ApiModelProperty("최소 선택 개수")
+    @Min(value = 1, message = "최소 선택 개수는 1개 이상이어야 합니다.")
     private int minimumSelectCount;
 
     @ApiModelProperty("최대 선택 개수")
+    @Min(value = 1, message = "최대 선택 개수는 1개 이상이어야 합니다.")
     private int maximumSelectCount;
 
     @ApiModelProperty("옵션 목록")
