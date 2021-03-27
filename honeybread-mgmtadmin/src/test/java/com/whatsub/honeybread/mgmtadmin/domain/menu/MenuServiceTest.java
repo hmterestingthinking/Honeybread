@@ -115,7 +115,7 @@ class MenuServiceTest {
     }
 
     @Test
-    void 삭제요청시_해당메뉴가_있다면_삭제_성공() {
+    void 해당메뉴가_있다면_삭제_성공() {
         // given
         final long menuId = 1L;
         final Menu mockMenu = mock(Menu.class);
@@ -131,7 +131,7 @@ class MenuServiceTest {
     }
 
     @Test
-    void 삭제요청시_해당메뉴가_없다면_삭제_실패() {
+    void 해당메뉴가_없다면_삭제_실패() {
         // given
         final long menuId = 1L;
 

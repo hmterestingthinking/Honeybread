@@ -42,7 +42,7 @@ class MenuControllerTest {
     MenuService service;
 
     @Test
-    void 벨리데이션_성공시_메뉴_등록_성공() throws Exception {
+    void 벨리데이션_성공시_등록에_성공한다() throws Exception {
         // given
         final MenuRequest request = 간장찜닭_메뉴_요청();
 
@@ -62,7 +62,7 @@ class MenuControllerTest {
     }
 
     @Test
-    void 벨리데이션_실패시_메뉴_등록_실패() throws Exception {
+    void 벨리데이션_실패시_등록에_실패한다() throws Exception {
         // given
         final MenuRequest request = 간장찜닭_메뉴_요청();
 
@@ -82,7 +82,7 @@ class MenuControllerTest {
     }
 
     @Test
-    void 잘못된_요청시_메뉴_등록_실패() throws Exception {
+    void 잘못된_요청시_등록에_실패한다() throws Exception {
         // given
         final MenuRequest request = 잘못된_메뉴_요청();
 
@@ -100,7 +100,7 @@ class MenuControllerTest {
     }
 
     @Test
-    void 벨리데이션_성공시_메뉴_수정_성공() throws Exception {
+    void 벨리데이션_성공시_수정에_성공한다() throws Exception {
         // given
         final Long menuId = 1L;
         final MenuRequest request = 간장찜닭_메뉴_요청();
@@ -121,7 +121,7 @@ class MenuControllerTest {
     }
 
     @Test
-    void 벨리데이션_실패시_메뉴_수정_실패() throws Exception {
+    void 벨리데이션_실패시_수정에_실패한다() throws Exception {
         // given
         final Long menuId = 1L;
         final MenuRequest request = 간장찜닭_메뉴_요청();
@@ -142,7 +142,7 @@ class MenuControllerTest {
     }
 
     @Test
-    void 잘못된_요청시_메뉴_수정_실패() throws Exception {
+    void 잘못된_요청시_수정에_실패한다() throws Exception {
         // given
         final Long menuId = 1L;
         final MenuRequest request = 잘못된_메뉴_요청();
@@ -161,7 +161,7 @@ class MenuControllerTest {
     }
 
     @Test
-    void 존재하지_않는_메뉴_수정_요청시_수정_실패() throws Exception {
+    void 메뉴가_존재하지_않는다면_수정에_실패한다() throws Exception {
         // given
         final Long menuId = 1L;
         final MenuRequest request = 간장찜닭_메뉴_요청();
@@ -183,7 +183,7 @@ class MenuControllerTest {
     }
 
     @Test
-    void 존재하는_메뉴_삭제_요청시_삭제_성공() throws Exception {
+    void 메뉴가_존재한다면_삭제에_성공한다() throws Exception {
         // given
         final Long menuId = 1L;
 
@@ -202,7 +202,7 @@ class MenuControllerTest {
     }
 
     @Test
-    void 존재하지_않는_메뉴_삭제_요청시_삭제_실패() throws Exception {
+    void 메뉴가_존재하지_않는다면_삭제에_실패한다() throws Exception {
         // given
         final Long menuId = 1L;
 
