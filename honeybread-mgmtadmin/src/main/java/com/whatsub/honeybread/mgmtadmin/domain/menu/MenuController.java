@@ -1,7 +1,6 @@
 package com.whatsub.honeybread.mgmtadmin.domain.menu;
 
 import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
-import com.whatsub.honeybread.core.domain.menu.repository.MenuGroupRepository;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuGroupRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuRequest;
@@ -37,6 +36,26 @@ public class MenuController {
         groupService.create(request);
         return ResponseEntity.ok().build();
     }
+
+    // 메뉴 그룹 수정
+    @ApiOperation(
+        value = "메뉴 그룹 수정",
+        tags = MgmtAdminSwaggerTags.MENU
+    )
+    @PutMapping("groups/{id}")
+    public ResponseEntity<Void> updateMenuGroups(
+        @PathVariable Long id,
+        @Valid @RequestBody MenuGroupRequest request,
+        BindingResult result
+    ) {
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
+        }
+        groupService.update(id, request);
+        return ResponseEntity.ok().build();
+    }
+
+    // 메뉴 그룹 삭제
 
     // 목록 조회
 

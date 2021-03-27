@@ -47,7 +47,7 @@ class MenuControllerTest {
     MenuGroupService groupService;
 
     @Test
-    void 벨리데이션_성공시_메뉴그룹_등록에_성공한다() throws Exception {
+    void 메뉴그룹_등록에_성공한다() throws Exception {
         // given
         final MenuGroupRequest request = 식사류_메뉴그룹_요청();
 
@@ -67,26 +67,6 @@ class MenuControllerTest {
     }
 
     @Test
-    void 벨리데이션_실패시_메뉴그룹_등록에_실패한다() throws Exception {
-        // given
-        final MenuGroupRequest request = 식사류_메뉴그룹_요청();
-
-        willThrow(ValidationException.class).given(groupService).create(request);
-
-        // when
-        ResultActions result = mockMvc.perform(
-            post(GROUP_BASE_URL)
-                .content(mapper.writeValueAsString(request))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(groupService).create(any(MenuGroupRequest.class));
-        result.andExpect(status().is4xxClientError());
-    }
-
-    @Test
     void 잘못된_요청시_메뉴그룹_등록에_실패한다() throws Exception {
         // given
         final MenuGroupRequest request = 잘못된_메뉴그룹_요청();
@@ -101,6 +81,68 @@ class MenuControllerTest {
 
         // then
         verify(groupService, never()).create(any(MenuGroupRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 메뉴그룹_수정에_성공한다() throws Exception {
+        // given
+        final long menuGroupId = 1L;
+        final MenuGroupRequest request = 식사류_메뉴그룹_요청();
+
+        willDoNothing().given(groupService).update(anyLong(), any(MenuGroupRequest.class));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(GROUP_BASE_URL + "/" + menuGroupId)
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(groupService).update(anyLong(), any(MenuGroupRequest.class));
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void 잘못된_요청시_메뉴그룹_수정에_실패한다() throws Exception {
+        // given
+        final long menuGroupId = 1L;
+        final MenuGroupRequest request = 잘못된_메뉴그룹_요청();
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(GROUP_BASE_URL + "/" + menuGroupId)
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(groupService, never()).update(anyLong(), any(MenuGroupRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 메뉴그룹이_존재하지_않는다면_수정에_실패한다() throws Exception {
+        // given
+        final long menuGroupId = 1L;
+        final MenuGroupRequest request = 식사류_메뉴그룹_요청();
+
+        willThrow(new HoneyBreadException(ErrorCode.MENU_GROUP_NOT_FOUND))
+            .given(groupService).update(anyLong(), any(MenuGroupRequest.class));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(GROUP_BASE_URL + "/" + menuGroupId)
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(groupService).update(anyLong(), any(MenuGroupRequest.class));
         result.andExpect(status().is4xxClientError());
     }
 

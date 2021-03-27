@@ -33,4 +33,10 @@ public class MenuGroup extends BaseEntity {
         this.description = description;
         this.storeId = storeId;
     }
+
+    public void update(MenuGroup menuGroup) {
+        this.name = menuGroup.getName();
+        this.description = menuGroup.getDescription();
+        this.storeId = menuGroup.getStoreId();
+    }
 }
