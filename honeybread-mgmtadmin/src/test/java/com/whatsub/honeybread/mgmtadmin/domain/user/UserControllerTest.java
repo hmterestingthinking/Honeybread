@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -74,6 +75,28 @@ class UserControllerTest {
         //then
         resultActions.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors", hasSize(3)));
+    }    
+    
+    @Test
+    void 유저_등록시_중복된_이메일이면_등록_실패() throws Exception {
+        //given
+        final UserRequest userRequest =
+                new UserRequest("test@honeybread.com", "qwer1234!", "010-9999-9999", false, false);
+
+        given(userService.register(userRequest))
+                .willThrow(new HoneyBreadException(ErrorCode.DUPLICATE_USER_EMAIL));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userRequest)))
+                .andDo(print());
+
+        //then
+        resultActions.andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message", is(ErrorCode.DUPLICATE_USER_EMAIL.getMessage())));
     }
 
     @Test
@@ -134,6 +157,27 @@ class UserControllerTest {
     }
 
     @Test
+    void 유저_삭제시_없을경우_에러() throws Exception {
+        //given
+        final long id = 1L;
+
+        willThrow(new HoneyBreadException(ErrorCode.USER_NOT_FOUND))
+                .given(userService).delete(id);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                delete(BASE_URL + "/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print());
+
+        //then
+        verify(userService).delete(id);
+        resultActions.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", is(ErrorCode.USER_NOT_FOUND.getMessage())));
+    }
+
+    @Test
     void 유저_조회() throws Exception {
         //given
         final long id = 1L;
@@ -173,7 +217,7 @@ class UserControllerTest {
 
         //then
         verify(userService).findById(id);
-        resultActions.andExpect(status().isBadRequest())
+        resultActions.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(ErrorCode.USER_NOT_FOUND.getMessage())));
     }
 
