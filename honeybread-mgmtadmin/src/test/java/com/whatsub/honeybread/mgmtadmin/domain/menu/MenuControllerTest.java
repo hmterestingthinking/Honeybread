@@ -147,6 +147,45 @@ class MenuControllerTest {
     }
 
     @Test
+    void 메뉴그룹이_존재한다면_삭제에_성공한다() throws Exception {
+        // given
+        final long menuGroupId = 1L;
+
+        willDoNothing().given(service).delete(anyLong());
+
+        // when
+        ResultActions result = mockMvc.perform(
+            delete(GROUP_BASE_URL + "/" + menuGroupId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(service).delete(anyLong());
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    void 메뉴그룹이_존재하지_않는다면_삭제에_실패한다() throws Exception {
+        // given
+        final long menuGroupId = 1L;
+
+        willThrow(new HoneyBreadException(ErrorCode.MENU_GROUP_NOT_FOUND))
+            .given(groupService).delete(anyLong());
+
+        // when
+        ResultActions result = mockMvc.perform(
+            delete(GROUP_BASE_URL + "/" + menuGroupId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(groupService).delete(anyLong());
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
     void 벨리데이션_성공시_등록에_성공한다() throws Exception {
         // given
         final MenuRequest request = 간장찜닭_메뉴_요청();

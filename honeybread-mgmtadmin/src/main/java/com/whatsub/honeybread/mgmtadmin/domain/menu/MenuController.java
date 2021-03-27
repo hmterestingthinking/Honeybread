@@ -56,6 +56,15 @@ public class MenuController {
     }
 
     // 메뉴 그룹 삭제
+    @ApiOperation(
+        value = "메뉴 그룹 삭제",
+        tags = MgmtAdminSwaggerTags.MENU
+    )
+    @DeleteMapping("groups/{id}")
+    public ResponseEntity<Void> deleteMenuGroups(@PathVariable Long id) {
+        groupService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
     // 목록 조회
 

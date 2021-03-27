@@ -27,6 +27,12 @@ public class MenuGroupService {
         menuGroup.update(request.toEntity());
     }
 
+    @Transactional
+    public void delete(final Long id) {
+        MenuGroup menuGroup = findMenuGroup(id);
+        repository.delete(menuGroup);
+    }
+
     private MenuGroup findMenuGroup(final Long id) {
         return repository.findById(id)
             .orElseThrow(() -> new HoneyBreadException(ErrorCode.MENU_GROUP_NOT_FOUND));

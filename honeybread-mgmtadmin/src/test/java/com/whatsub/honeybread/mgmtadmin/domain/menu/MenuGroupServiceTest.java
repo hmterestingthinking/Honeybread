@@ -78,6 +78,35 @@ class MenuGroupServiceTest {
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.MENU_GROUP_NOT_FOUND);
     }
 
+    @Test
+    void 메뉴그룹_삭제_성공() throws Exception {
+        // given
+        final long menuGroupId = 1L;
+
+        given(repository.findById(anyLong())).willReturn(Optional.of(mock(MenuGroup.class)));
+
+        // when
+        service.delete(menuGroupId);
+
+        // then
+        verify(repository).findById(anyLong());
+        verify(repository).delete(any(MenuGroup.class));
+    }
+
+    @Test
+    void 메뉴그룹이_없다면_삭제_실패() throws Exception {
+        // given
+        final long menuGroupId = 1L;
+
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, () -> service.delete(menuGroupId));
+
+        // then
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.MENU_GROUP_NOT_FOUND);
+    }
+
     private MenuGroupRequest 식사류_메뉴_그룹_요청() {
         return MenuGroupRequest.builder()
             .name("식사류")
