@@ -1,9 +1,18 @@
 package com.whatsub.honeybread.core.domain.store;
 
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 @Embeddable
 @Getter
