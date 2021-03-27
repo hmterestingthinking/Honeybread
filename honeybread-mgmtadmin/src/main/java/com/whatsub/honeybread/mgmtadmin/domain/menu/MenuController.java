@@ -51,8 +51,8 @@ public class MenuController {
     )
     @PutMapping("{id}")
     public ResponseEntity<Void> updateMenu(
-        @Valid @PathVariable Long id,
-        @RequestBody MenuRequest request,
+        @PathVariable Long id,
+        @Valid @RequestBody MenuRequest request,
         BindingResult result
     ) {
         if (result.hasErrors()) {

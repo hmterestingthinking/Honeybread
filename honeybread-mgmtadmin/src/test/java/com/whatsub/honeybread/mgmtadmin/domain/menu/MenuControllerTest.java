@@ -3,6 +3,8 @@ package com.whatsub.honeybread.mgmtadmin.domain.menu;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsub.honeybread.core.domain.menu.MenuOptionGroup;
 import com.whatsub.honeybread.core.domain.model.Money;
+import com.whatsub.honeybread.core.infra.errors.ErrorCode;
+import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuOptionGroupRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuOptionRequest;
@@ -56,6 +58,7 @@ class MenuControllerTest {
         ).andDo(print());
 
         // then
+        verify(service).create(any(MenuRequest.class));
         result.andExpect(status().isCreated());
     }
 
@@ -75,13 +78,14 @@ class MenuControllerTest {
         ).andDo(print());
 
         // then
+        verify(service).create(any(MenuRequest.class));
         result.andExpect(status().is4xxClientError());
     }
 
     @Test
     void 잘못된_요청시_메뉴_등록_실패() throws Exception {
         // given
-        final MenuRequest request = MenuRequest.builder().build();
+        final MenuRequest request = 잘못된_메뉴_요청();
 
         // when
         ResultActions result = mockMvc.perform(
@@ -92,6 +96,7 @@ class MenuControllerTest {
         ).andDo(print());
 
         // then
+        verify(service, never()).create(any(MenuRequest.class));
         result.andExpect(status().is4xxClientError());
     }
 
@@ -112,11 +117,75 @@ class MenuControllerTest {
         ).andDo(print());
 
         // then
+        verify(service).update(anyLong(), any(MenuRequest.class));
         result.andExpect(status().isOk());
+    }
+
+    @Test
+    void 벨리데이션_실패시_메뉴_수정_실패() throws Exception {
+        // given
+        final Long menuId = 1L;
+        final MenuRequest request = 간장찜닭_메뉴_요청();
+
+        willThrow(ValidationException.class).given(service).update(anyLong(), any(MenuRequest.class));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(BASE_URL + "/" + menuId)
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(service).update(anyLong(), any(MenuRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 잘못된_요청시_메뉴_수정_실패() throws Exception {
+        // given
+        final Long menuId = 1L;
+        final MenuRequest request = 잘못된_메뉴_요청();
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(BASE_URL + "/" + menuId)
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(service, never()).update(anyLong(), any(MenuRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 존재하지_않는_메뉴_수정_요청시_수정_실패() throws Exception {
+        // given
+        final Long menuId = 1L;
+        final MenuRequest request = 간장찜닭_메뉴_요청();
+
+        willThrow(new HoneyBreadException(ErrorCode.MENU_NOT_FOUND))
+            .given(service).update(anyLong(), any(MenuRequest.class));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(BASE_URL + "/" + menuId)
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        verify(service).update(anyLong(), any(MenuRequest.class));
+        result.andExpect(status().is4xxClientError());
     }
 
     private MenuRequest 간장찜닭_메뉴_요청() {
         return MenuRequest.builder()
+            .storeId(1L)
             .menuGroupId(1L)
             .categoryId(1L)
             .name("간장 찜닭")
@@ -140,5 +209,10 @@ class MenuControllerTest {
                         ).build()
                 )
             ).build();
+    }
+
+
+    private MenuRequest 잘못된_메뉴_요청() {
+        return MenuRequest.builder().build();
     }
 }
