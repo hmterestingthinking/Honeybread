@@ -17,9 +17,11 @@ import java.util.List;
 public class Store extends BaseEntity {
 
     // 스토어 텍스트형식 id
+    @Column(nullable = false)
     private String uuid;
 
     // 판매자
+    @Column(nullable = false)
     private Long sellerId;
 
     // 현재 영업 정보
@@ -28,6 +30,7 @@ public class Store extends BaseEntity {
 
     // 상태
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StoreStatus status;
 
     // 기본 정보
@@ -41,12 +44,12 @@ public class Store extends BaseEntity {
     // 카테고리
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
-    private List<StoreCategory> categories;
+    private List<StoreCategory> categories = List.of();
 
     // 지원하는 결제 방식
     @ElementCollection
     @CollectionTable(name = "store_pay_methods", joinColumns = @JoinColumn(name = "store_id"))
-    private List<StorePayMethod> payMethods;
+    private List<StorePayMethod> payMethods = List.of();
 
     public static Store newStore() {
         return new Store();
