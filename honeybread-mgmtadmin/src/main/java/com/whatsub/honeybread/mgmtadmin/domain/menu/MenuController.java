@@ -34,7 +34,7 @@ public class MenuController {
             throw new ValidationException(result);
         }
         groupService.create(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 메뉴 그룹 수정
