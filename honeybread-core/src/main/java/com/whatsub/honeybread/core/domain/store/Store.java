@@ -48,4 +48,8 @@ public class Store extends BaseEntity {
     @CollectionTable(name = "store_pay_methods", joinColumns = @JoinColumn(name = "store_id"))
     private List<StorePayMethod> payMethods;
 
+    public static Store newStore() {
+        return new Store();
+    }
+
 }
