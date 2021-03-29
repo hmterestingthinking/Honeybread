@@ -1,6 +1,5 @@
 package com.whatsub.honeybread.core.domain.recentaddress;
 
-import com.whatsub.honeybread.core.domain.user.User;
 import com.whatsub.honeybread.core.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -24,13 +23,11 @@ class RecentDeliveryAddressRepositoryTest {
     @Test
     void 배달주소로_최근배달주소검색() {
         //given
-        User user = createUser();
-        userRepository.save(user);
+        final long userId = 1L;
+        final String deliveryAddress = "서울시 강남구 수서동 500 301동 404호";
 
-        String deliveryAddress = "서울시 강남구 수서동 500 301동 404호";
-
-        RecentDeliveryAddress recentDeliveryAddress = RecentDeliveryAddress.builder()
-            .user(user)
+        final RecentDeliveryAddress recentDeliveryAddress = RecentDeliveryAddress.builder()
+            .userId(userId)
             .deliveryAddress(deliveryAddress)
             .searchableDeliveryAddress("서울시 강남구 수서동")
             .stateNameAddress("서울시 강남구 광평로101길 200 301호 404호")
@@ -42,7 +39,7 @@ class RecentDeliveryAddressRepositoryTest {
 
         //when
         Optional<RecentDeliveryAddress> findRecentDeliveryAddress =
-            repository.findByUserAndDeliveryAddressOrStateNameAddress(user, deliveryAddress, "");
+            repository.findByUserIdAndDeliveryAddressOrStateNameAddress(userId, deliveryAddress, "");
 
         //then
         assertTrue(findRecentDeliveryAddress.isPresent());
@@ -52,13 +49,11 @@ class RecentDeliveryAddressRepositoryTest {
     @Test
     void 도로명주소로로_최근배달주소검색() {
         //given
-        User user = createUser();
-        userRepository.save(user);
+        final long userId = 1L;
+        final String stateNameAddress = "서울시 강남구 광평로101길 200 301호 404호";
 
-        String stateNameAddress = "서울시 강남구 광평로101길 200 301호 404호";
-
-        RecentDeliveryAddress recentDeliveryAddress = RecentDeliveryAddress.builder()
-            .user(user)
+        final RecentDeliveryAddress recentDeliveryAddress = RecentDeliveryAddress.builder()
+            .userId(userId)
             .deliveryAddress("서울시 강남구 수서동 500 301동 404호")
             .searchableDeliveryAddress("서울시 강남구 수서동")
             .stateNameAddress(stateNameAddress)
@@ -70,18 +65,11 @@ class RecentDeliveryAddressRepositoryTest {
 
         //when
         Optional<RecentDeliveryAddress> findRecentDeliveryAddress
-            = repository.findByUserAndDeliveryAddressOrStateNameAddress(user, "", stateNameAddress);
+            = repository.findByUserIdAndDeliveryAddressOrStateNameAddress(userId, "", stateNameAddress);
 
         //then
         assertTrue(findRecentDeliveryAddress.isPresent());
         assertEquals(recentDeliveryAddress, findRecentDeliveryAddress.get());
     }
 
-    private User createUser() {
-        return User.createUser("test@honeybread.com",
-            "testpasswd",
-            "010-0000-0000",
-            true,
-            true);
-    }
 }
