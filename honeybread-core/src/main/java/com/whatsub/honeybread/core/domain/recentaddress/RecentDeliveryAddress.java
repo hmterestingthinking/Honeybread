@@ -14,9 +14,8 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class RecentDeliveryAddress extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(nullable = false)
+    private Long userId;
 
     @Column(nullable = false)
     private String deliveryAddress;
@@ -34,13 +33,13 @@ public class RecentDeliveryAddress extends BaseEntity {
     private LocalDateTime usedAt;
 
     @Builder
-    public RecentDeliveryAddress (User user,
+    public RecentDeliveryAddress (Long userId,
                                   String deliveryAddress,
                                   String searchableDeliveryAddress,
                                   String stateNameAddress,
                                   String zipCode,
                                   LocalDateTime usedAt) {
-        this.user = user;
+        this.userId = userId;
         this.deliveryAddress = deliveryAddress;
         this.searchableDeliveryAddress = searchableDeliveryAddress;
         this.stateNameAddress = stateNameAddress;
