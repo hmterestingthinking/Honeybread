@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -63,6 +64,7 @@ public class Menu extends BaseEntity {
     @Column(nullable = false)
     private Long categoryId;
 
+    @BatchSize(size = 50)
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "menu_id")
     private List<MenuOptionGroup> optionGroups = List.of();

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -47,6 +48,7 @@ public class MenuOptionGroup extends BaseEntity {
     @Column(nullable = false)
     private int maximumSelectCount = MINIMUM_SELECT_DEFAULT;
 
+    @BatchSize(size = 50)
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "menu_option_group_id")
     private List<MenuOption> options = List.of();
