@@ -13,14 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,14 +27,12 @@ public class MenuController {
     private final MenuGroupService groupService;
     private final MenuQueryRepository queryRepository;
 
-    // 스토어 아이디 기반 메뉴 목록 조회
-    @GetMapping("by-store/{storeId}")
+    @GetMapping("stores/{storeId}")
     public ResponseEntity<List<MenuGroupDto>> getMenusByStoreId(@PathVariable Long storeId) {
         List<MenuGroupDto> response = queryRepository.findAllByStoreId(storeId);
         return ResponseEntity.ok(response);
     }
 
-    // 메뉴 그룹 등록
     @ApiOperation(
         value = "메뉴 그룹 등록",
         tags = MgmtAdminSwaggerTags.MENU
@@ -55,7 +46,6 @@ public class MenuController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 메뉴 그룹 수정
     @ApiOperation(
         value = "메뉴 그룹 수정",
         tags = MgmtAdminSwaggerTags.MENU
@@ -73,7 +63,6 @@ public class MenuController {
         return ResponseEntity.ok().build();
     }
 
-    // 메뉴 그룹 삭제
     @ApiOperation(
         value = "메뉴 그룹 삭제",
         tags = MgmtAdminSwaggerTags.MENU
@@ -84,7 +73,6 @@ public class MenuController {
         return ResponseEntity.noContent().build();
     }
 
-    // 등록
     @ApiOperation(
         value = "메뉴 등록",
         tags = MgmtAdminSwaggerTags.MENU
@@ -98,7 +86,6 @@ public class MenuController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 수정
     @ApiOperation(
         value = "메뉴 수정",
         tags = MgmtAdminSwaggerTags.MENU
@@ -116,7 +103,6 @@ public class MenuController {
         return ResponseEntity.ok().build();
     }
 
-    // 삭제
     @ApiOperation(
         value = "메뉴 삭제",
         tags = MgmtAdminSwaggerTags.MENU

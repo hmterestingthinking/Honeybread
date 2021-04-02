@@ -2,6 +2,9 @@ package com.whatsub.honeybread.mgmtadmin.domain.menu;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsub.honeybread.core.domain.menu.MenuOptionGroup;
+import com.whatsub.honeybread.core.domain.menu.repository.query.MenuDto;
+import com.whatsub.honeybread.core.domain.menu.repository.query.MenuGroupDto;
+import com.whatsub.honeybread.core.domain.menu.repository.query.MenuQueryRepository;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
@@ -26,6 +29,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -45,6 +49,60 @@ class MenuControllerTest {
 
     @MockBean
     MenuGroupService groupService;
+
+    @MockBean
+    MenuQueryRepository queryRepository;
+
+    @Test
+    void 스토어의_메뉴목록_조회에_성공한다() throws Exception {
+        // given
+        List<MenuGroupDto> menus = List.of(
+            MenuGroupDto.builder()
+                .id(1L)
+                .name("식사류")
+                .description("식사류 입니다")
+                .menus(
+                    List.of(
+                        MenuDto.builder()
+                            .id(1L)
+                            .name("볶음밥")
+                            .menuGroupId(1L)
+                            .categoryId(1L)
+                            .imageUrl("https://www.naver.com")
+                            .isMain(true)
+                            .isBest(true)
+                            .price(Money.wons(10000))
+                            .build()
+                    )
+                )
+                .build()
+        );
+        
+        given(queryRepository.findAllByStoreId(anyLong())).willReturn(menus);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            get(BASE_URL + "/stores/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$.[0].id").exists())
+            .andExpect(jsonPath("$.[0].name").exists())
+            .andExpect(jsonPath("$.[0].description").exists())
+            .andExpect(jsonPath("$.[0].menus").isNotEmpty())
+            .andExpect(jsonPath("$.[0].menus[0].id").exists())
+            .andExpect(jsonPath("$.[0].menus[0].name").exists())
+            .andExpect(jsonPath("$.[0].menus[0].menuGroupId").exists())
+            .andExpect(jsonPath("$.[0].menus[0].categoryId").exists())
+            .andExpect(jsonPath("$.[0].menus[0].imageUrl").exists())
+            .andExpect(jsonPath("$.[0].menus[0].main").exists())
+            .andExpect(jsonPath("$.[0].menus[0].best").exists())
+            .andExpect(jsonPath("$.[0].menus[0].price").exists())
+        ;
+    }
 
     @Test
     void 메뉴그룹_등록에_성공한다() throws Exception {

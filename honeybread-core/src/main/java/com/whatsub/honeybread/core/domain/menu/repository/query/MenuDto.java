@@ -2,11 +2,13 @@ package com.whatsub.honeybread.core.domain.menu.repository.query;
 
 import com.whatsub.honeybread.core.domain.menu.Menu;
 import com.whatsub.honeybread.core.domain.model.Money;
+import lombok.Builder;
 import lombok.Value;
 
 import java.util.List;
 
 @Value
+@Builder
 public class MenuDto {
     long id;
     String name;
