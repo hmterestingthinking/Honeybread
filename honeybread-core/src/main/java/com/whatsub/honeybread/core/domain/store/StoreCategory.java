@@ -3,6 +3,7 @@ package com.whatsub.honeybread.core.domain.store;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 @Table(name = "store_categories")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class StoreCategory extends BaseEntity {
 

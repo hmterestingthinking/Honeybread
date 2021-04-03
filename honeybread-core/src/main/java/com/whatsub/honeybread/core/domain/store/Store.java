@@ -6,7 +6,18 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity
@@ -17,7 +28,7 @@ import java.util.List;
 public class Store extends BaseEntity {
 
     // 스토어 텍스트형식 id
-    @Column(nullable = false)
+    @Column
     private String uuid;
 
     // 판매자
@@ -51,8 +62,24 @@ public class Store extends BaseEntity {
     @CollectionTable(name = "store_pay_methods", joinColumns = @JoinColumn(name = "store_id"))
     private List<StorePayMethod> payMethods = List.of();
 
-    public static Store newStore() {
-        return new Store();
+    public static Store createStore(Long sellerId,
+                                    StoreBasic storeBasic,
+                                    BankAccount bankAccount,
+                                    List<StoreCategory> categories,
+                                    List<StorePayMethod> payMethods) {
+        Store store = new Store();
+        store.sellerId = sellerId;
+        store.operation = StoreOperation.createClosedOperation();
+        store.status = StoreStatus.WAITING;
+        store.basic = storeBasic;
+        store.bankAccount = bankAccount;
+        store.categories = categories;
+        store.payMethods = payMethods;
+        return store;
+    }
+
+    public void updateUuid(String uuid) {
+        this.uuid = uuid;
     }
 
 }

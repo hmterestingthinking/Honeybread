@@ -1,6 +1,12 @@
 package com.whatsub.honeybread.core.domain.userstorefavorite;
 
+import com.whatsub.honeybread.core.domain.store.Address;
+import com.whatsub.honeybread.core.domain.store.BankAccount;
+import com.whatsub.honeybread.core.domain.store.BusinessHours;
+import com.whatsub.honeybread.core.domain.store.BusinessLicense;
 import com.whatsub.honeybread.core.domain.store.Store;
+import com.whatsub.honeybread.core.domain.store.StoreAnnouncement;
+import com.whatsub.honeybread.core.domain.store.StoreBasic;
 import com.whatsub.honeybread.core.domain.store.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -12,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.ArgumentMatchers.*;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @DataJpaTest
@@ -70,7 +77,7 @@ class UserStoreFavoriteRepositoryTest {
 
     private List<Store> 사이즈만큼_스토어_저장하기(final int size) {
         return IntStream.range(0, size)
-                .mapToObj(value -> Store.newStore())
+                .mapToObj(this::스토어_가져오기)
                 .collect(Collectors.toList());
     }
 
@@ -131,6 +138,23 @@ class UserStoreFavoriteRepositoryTest {
 
         // then
         assertThat(찜_존재_여부).isFalse();
+    }
+
+    Store 스토어_가져오기(int value) {
+        return Store.createStore(
+                anyLong(),
+                new StoreBasic(anyString(),
+                        anyString(),
+                        anyString(),
+                        new Address(anyString()),
+                        new StoreAnnouncement(anyString(), anyString(), anyString()),
+                        new BusinessHours(anyString(), anyString(), anyString()),
+                        new BusinessLicense(anyString())
+                ),
+                new BankAccount(any(), anyString()),
+                anyList(),
+                anyList()
+        );
     }
 
 }
