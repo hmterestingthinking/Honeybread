@@ -7,6 +7,7 @@ import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuGroupRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
@@ -18,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.then;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @SpringBootTest(classes = MenuGroupService.class)
@@ -30,84 +30,115 @@ class MenuGroupServiceTest {
     @MockBean
     MenuGroupRepository repository;
 
+    @Mock
+    MenuGroup menuGroup;
+
     @Test
-    void 메뉴그룹_생성_성공() throws Exception {
+    void 메뉴그룹_생성_성공() {
         // given
-        final MenuGroupRequest request = 식사류_메뉴_그룹_요청();
-        final MenuGroup mockGroup = mock(MenuGroup.class);
-        given(mockGroup.getId()).willReturn(1L);
-
-
-        given(repository.save(any(MenuGroup.class))).willReturn(mockGroup);
+        메뉴_그룹_등록시_성공한다();
 
         // when
-        service.create(request);
+        메뉴_그룹_생성();
 
         // then
-        verify(repository).save(any(MenuGroup.class));
+        then(repository).should().save(any(MenuGroup.class));
     }
 
     @Test
-    void 메뉴그룹_수정_성공() throws Exception {
+    void 메뉴그룹_수정_성공() {
         // given
-        final long menuGroupId = 1L;
-        final MenuGroupRequest request = 식사류_메뉴_그룹_요청();
-        final MenuGroup mockGroup = mock(MenuGroup.class);
-
-        given(repository.findById(anyLong())).willReturn(Optional.of(mockGroup));
+        메뉴_그룹_조회시_성공한다();
 
         // when
-        service.update(menuGroupId, request);
+        메뉴_수정();
 
         // then
-        verify(repository).findById(anyLong());
-        verify(mockGroup).update(any(MenuGroup.class));
+        메뉴_그룹_조회가_수행되어야_한다();
+        then(menuGroup).should().update(any(MenuGroup.class));
     }
 
     @Test
-    void 메뉴그룹이_없다면_수정_실패() throws Exception {
+    void 메뉴그룹이_없다면_수정_실패() {
         // given
-        final long menuGroupId = 1L;
-        final MenuGroupRequest request = 식사류_메뉴_그룹_요청();
-        given(repository.findById(anyLong())).willReturn(Optional.empty());
+        메뉴_그룹_조회시_실패한다();
 
         // when
-        HoneyBreadException ex = assertThrows(HoneyBreadException.class, () -> service.update(menuGroupId, request));
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::메뉴_수정);
 
         // then
+        메뉴_그룹_조회가_수행되어야_한다();
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.MENU_GROUP_NOT_FOUND);
     }
 
     @Test
-    void 메뉴그룹_삭제_성공() throws Exception {
+    void 메뉴그룹_삭제_성공() {
         // given
-        final long menuGroupId = 1L;
-
-        given(repository.findById(anyLong())).willReturn(Optional.of(mock(MenuGroup.class)));
+        메뉴_그룹_조회시_성공한다();
 
         // when
-        service.delete(menuGroupId);
+        메뉴_삭제();
 
         // then
-        verify(repository).findById(anyLong());
-        verify(repository).delete(any(MenuGroup.class));
+        메뉴_그룹_조회가_수행되어야_한다();
+        then(repository).should().delete(any(MenuGroup.class));
     }
 
     @Test
-    void 메뉴그룹이_없다면_삭제_실패() throws Exception {
+    void 메뉴그룹이_없다면_삭제_실패() {
         // given
-        final long menuGroupId = 1L;
-
-        given(repository.findById(anyLong())).willReturn(Optional.empty());
+        메뉴_그룹_조회시_실패한다();
 
         // when
-        HoneyBreadException ex = assertThrows(HoneyBreadException.class, () -> service.delete(menuGroupId));
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::메뉴_삭제);
 
         // then
+        메뉴_그룹_조회가_수행되어야_한다();
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.MENU_GROUP_NOT_FOUND);
     }
 
-    private MenuGroupRequest 식사류_메뉴_그룹_요청() {
+    /**
+     * Given
+     */
+    private void 메뉴_그룹_등록시_성공한다() {
+        given(menuGroup.getId()).willReturn(1L);
+        given(repository.save(any(MenuGroup.class))).willReturn(menuGroup);
+    }
+
+    private void 메뉴_그룹_조회시_성공한다() {
+        given(repository.findById(anyLong())).willReturn(Optional.of(menuGroup));
+    }
+
+    private void 메뉴_그룹_조회시_실패한다() {
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+    }
+
+    /**
+     * When
+     */
+    private void 메뉴_그룹_생성() {
+        service.create(메뉴_그룹_요청());
+    }
+
+    private void 메뉴_수정() {
+        service.update(anyLong(), 메뉴_그룹_요청());
+    }
+
+    private void 메뉴_삭제() {
+        service.delete(anyLong());
+    }
+
+    /**
+     * Then
+     */
+    private void 메뉴_그룹_조회가_수행되어야_한다() {
+        then(repository).should().findById(anyLong());
+    }
+
+    /**
+     * Helper
+     */
+    private MenuGroupRequest 메뉴_그룹_요청() {
         return MenuGroupRequest.builder()
             .name("식사류")
             .description("식사 메뉴 입니다 ~")
