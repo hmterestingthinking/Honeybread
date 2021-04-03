@@ -4,6 +4,7 @@ import com.whatsub.honeybread.core.domain.base.BaseEntity;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,4 +39,19 @@ public class AdvertisementBidNotice extends BaseEntity {
         }
     )
     private TimePeriod period = TimePeriod.EMPTY;
+
+    @Builder
+    private AdvertisementBidNotice(
+        AdvertisementType type,
+        int maximumStoreCounts,
+        Money minimumBidPrice,
+        Money bidPriceUnit,
+        TimePeriod period
+    ) {
+        this.type = type;
+        this.maximumStoreCounts = maximumStoreCounts;
+        this.minimumBidPrice = minimumBidPrice;
+        this.bidPriceUnit = bidPriceUnit;
+        this.period = period;
+    }
 }
