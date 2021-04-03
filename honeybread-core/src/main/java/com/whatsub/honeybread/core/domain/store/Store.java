@@ -82,4 +82,29 @@ public class Store extends BaseEntity {
         this.uuid = uuid;
     }
 
+    public static Store updateStore(StoreOperation operation,
+                                    StoreStatus status,
+                                    StoreBasic storeBasic,
+                                    BankAccount bankAccount,
+                                    List<StoreCategory> categories,
+                                    List<StorePayMethod> payMethods) {
+        Store store = new Store();
+        store.operation = operation;
+        store.status = status;
+        store.basic = storeBasic;
+        store.bankAccount = bankAccount;
+        store.categories = categories;
+        store.payMethods = payMethods;
+        return store;
+    }
+
+    public void update(Store store) {
+        this.operation = store.operation;
+        this.status = store.status;
+        this.basic = store.basic;
+        this.bankAccount = store.bankAccount;
+        this.categories = store.getCategories();
+        this.payMethods = store.getPayMethods();
+    }
+
 }

@@ -6,4 +6,6 @@ public interface StoreRepository extends JpaRepository<Store, Long>, StoreReposi
 
     boolean existsByBasicName(final String name);
 
+    boolean existsByIdNotAndBasicName(final long storeId, final String name);
+
 }
