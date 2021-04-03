@@ -8,11 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -39,6 +35,17 @@ public class AdvertisementBidNotice extends BaseEntity {
         }
     )
     private TimePeriod period = TimePeriod.EMPTY;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.OPEN;
+
+    public enum Status {
+        OPEN, // 생성
+        PROGRESS, // 진행중
+        CLOSED, // 종료
+        ;
+    }
 
     @Builder
     private AdvertisementBidNotice(
