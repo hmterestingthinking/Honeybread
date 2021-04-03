@@ -3,6 +3,7 @@ package com.whatsub.honeybread.core.domain.model;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
@@ -16,4 +17,13 @@ public class TimePeriod implements Serializable {
 
     private LocalDateTime from;
     private LocalDateTime to;
+
+    private TimePeriod(LocalDateTime from, LocalDateTime to) {
+        this.from = from;
+        this.to = to;
+    }
+
+    public static TimePeriod of(LocalDateTime from, LocalDateTime to) {
+        return new TimePeriod(from, to);
+    }
 }

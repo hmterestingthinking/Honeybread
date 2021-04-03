@@ -1,6 +1,6 @@
 package com.whatsub.honeybread.core.domain.advertisement;
 
-enum AdvertisementType {
+public enum AdvertisementType {
     OPEN_LIST,
     ULTRA_CALL,
     ;
