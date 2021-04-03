@@ -13,6 +13,7 @@ import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuOptionRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.menu.dto.MenuRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
@@ -37,113 +38,165 @@ class MenuServiceTest {
     @MockBean
     MenuValidator validator;
 
+    @Mock
+    Menu menu;
+
     @Test
-    void 벨리데이션_성공시_메뉴_등록_성공() {
+    void 벨리데이션_성공시_등록_성공() {
         // given
-        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_요청();
-
-        Menu mockMenu = mock(Menu.class);
-        given(mockMenu.getId()).willReturn(1L);
-
-        willDoNothing().given(validator).validate(any(Menu.class));
-        given(repository.save(any(Menu.class))).willReturn(mockMenu);
+        메뉴_등록시_성공한다();
+        벨리데이션_시도시_성공한다();
 
         // when
-        service.create(request);
+        메뉴_등록();
 
         // then
-        verify(validator).validate(any(Menu.class));
-        verify(repository).save(any(Menu.class));
+        벨리데이션이_수행되어야_한다();
+        then(repository).should().save(any(Menu.class));
     }
 
     @Test
-    void 벨리데이션_실패시_메뉴_등록_실패() {
+    void 벨리데이션_실패시_등록_실패() {
         // given
-        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_요청();
-
-        Menu mockMenu = mock(Menu.class);
-        given(mockMenu.getId()).willReturn(1L);
-
-        willThrow(ValidationException.class).given(validator).validate(any(Menu.class));
-        given(repository.save(any(Menu.class))).willReturn(mockMenu);
+        메뉴_등록시_성공한다();
+        벨리데이션_시도시_예외가_발생한다();
 
         // when
-        assertThrows(ValidationException.class, () -> service.create(request));
+        assertThrows(ValidationException.class, this::메뉴_등록);
 
         // then
-        verify(validator).validate(any(Menu.class));
-        verify(repository, never()).save(any(Menu.class));
+        벨리데이션이_수행되어야_한다();
+        then(repository).should(never()).save(any(Menu.class));
     }
 
     @Test
-    void 벨리데이션_성공시_메뉴_수정_성공() {
+    void 벨리데이션_성공시_수정_성공() {
         // given
-        final long menuId = 1L;
-        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_요청();
-
-        final Menu mockMenu = mock(Menu.class);
-
-        given(repository.findById(anyLong())).willReturn(Optional.of(mockMenu));
-        willDoNothing().given(validator).validate(any(Menu.class));
+        메뉴_조회시_성공한다();
+        벨리데이션_시도시_성공한다();
 
         // when
-        service.update(menuId, request);
+        메뉴_수정();
 
         // then
-        verify(repository).findById(anyLong());
-        verify(mockMenu).update(any(Menu.class));
-        verify(validator).validate(any(Menu.class));
+        메뉴_조회가_수행되어야_한다();
+        메뉴_수정이_수행되어야_한다();
+        벨리데이션이_수행되어야_한다();
     }
 
     @Test
-    void 벨리데이션_실패시_메뉴_수정_실패() {
+    void 벨리데이션_실패시_수정_실패() {
         // given
-        final long menuId = 1L;
-        final MenuRequest request = 기본판매가가_존재하는_찜닭메뉴_요청();
-
-        final Menu mockMenu = mock(Menu.class);
-        given(repository.findById(anyLong())).willReturn(Optional.of(mockMenu));
-        willThrow(ValidationException.class).given(validator).validate(any(Menu.class));
+        메뉴_조회시_성공한다();
+        벨리데이션_시도시_예외가_발생한다();
 
         // when
-        assertThrows(ValidationException.class, () -> service.update(menuId, request));
+        assertThrows(ValidationException.class, this::메뉴_수정);
 
         // then
-        verify(repository).findById(anyLong());
-        verify(mockMenu).update(any(Menu.class));
-        verify(validator).validate(any(Menu.class));
+        메뉴_조회가_수행되어야_한다();
+        메뉴_수정이_수행되어야_한다();
+        벨리데이션이_수행되어야_한다();
+    }
+
+    @Test
+    void 해당_메뉴가_없다면_수정_실패() {
+        // given
+        메뉴_조회시_실패한다();
+
+        // when
+        assertThrows(HoneyBreadException.class, this::메뉴_수정);
+
+        // then
+        메뉴_조회가_수행되어야_한다();
     }
 
     @Test
     void 해당메뉴가_있다면_삭제_성공() {
         // given
-        final long menuId = 1L;
-        final Menu mockMenu = mock(Menu.class);
-
-        given(repository.findById(anyLong())).willReturn(Optional.of(mockMenu));
+        메뉴_조회시_성공한다();
 
         // when
-        service.delete(menuId);
+        메뉴_삭제();
 
         // then
-        verify(repository).findById(anyLong());
-        verify(repository).delete(any(Menu.class));
+        메뉴_조회가_수행되어야_한다();
+        메뉴_삭제가_수행되어야_한다();
     }
 
     @Test
     void 해당메뉴가_없다면_삭제_실패() {
         // given
-        final long menuId = 1L;
-
-        given(repository.findById(anyLong())).willReturn(Optional.empty());
+        메뉴_조회시_실패한다();
 
         // when
-        HoneyBreadException ex = assertThrows(HoneyBreadException.class, () -> service.delete(menuId));
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::메뉴_삭제);
 
         // then
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.MENU_NOT_FOUND);
     }
 
+    /**
+     * Given
+     */
+    private void 메뉴_등록시_성공한다() {
+        given(menu.getId()).willReturn(1L);
+        given(repository.save(any(Menu.class))).willReturn(menu);
+    }
+
+    private void 메뉴_조회시_성공한다() {
+        given(repository.findById(anyLong())).willReturn(Optional.of(menu));
+    }
+
+    private void 메뉴_조회시_실패한다() {
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+    }
+
+    private void 벨리데이션_시도시_성공한다() {
+        willDoNothing().given(validator).validate(any(Menu.class));
+    }
+
+    private void 벨리데이션_시도시_예외가_발생한다() {
+        willThrow(ValidationException.class).given(validator).validate(any(Menu.class));
+    }
+
+    /**
+     * When
+     */
+    private void 메뉴_등록() {
+        service.create(기본판매가가_존재하는_찜닭메뉴_요청());
+    }
+
+    private void 메뉴_수정() {
+        service.update(anyLong(), 기본판매가가_존재하는_찜닭메뉴_요청());
+    }
+
+    private void 메뉴_삭제() {
+        service.delete(anyLong());
+    }
+
+    /**
+     * Then
+     */
+    private void 벨리데이션이_수행되어야_한다() {
+        then(validator).should().validate(any(Menu.class));
+    }
+
+    private void 메뉴_조회가_수행되어야_한다() {
+        then(repository).should().findById(anyLong());
+    }
+
+    private void 메뉴_수정이_수행되어야_한다() {
+        then(menu).should().update(any(Menu.class));
+    }
+
+    private void 메뉴_삭제가_수행되어야_한다() {
+        then(repository).should().delete(any(Menu.class));
+    }
+
+    /**
+     * Helper
+     */
     private MenuRequest 기본판매가가_존재하는_찜닭메뉴_요청() {
         return MenuRequest.builder()
             .menuGroupId(1L)
