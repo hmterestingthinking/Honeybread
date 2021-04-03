@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsub.honeybread.core.domain.advertisement.AdvertisementType;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
+import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementBidNoticeRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,7 +51,41 @@ class AdvertisementBidControllerTest {
         ).andDo(print());
 
         // then
+        then(service).should().create(any(AdvertisementBidNoticeRequest.class));
         result.andExpect(status().isCreated());
+    }
+
+    @Test
+    void 벨리데이션_실패시_입찰공고_등록에_실패한다() throws Exception {
+        // given
+        willThrow(ValidationException.class).given(service).create(any(AdvertisementBidNoticeRequest.class));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            post(NOTICE_BASE_URL)
+                .content(mapper.writeValueAsString(공고_요청()))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        then(service).should().create(any(AdvertisementBidNoticeRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 잘못된_요청시_입찰공고_등록에_실패한다() throws Exception {
+        // when
+        ResultActions result = mockMvc.perform(
+            post(NOTICE_BASE_URL)
+                .content(mapper.writeValueAsString(잘못된_공고_요청()))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        then(service).should(never()).create(any(AdvertisementBidNoticeRequest.class));
+        result.andExpect(status().is4xxClientError());
     }
 
     private AdvertisementBidNoticeRequest 공고_요청() {
@@ -61,7 +96,25 @@ class AdvertisementBidControllerTest {
         );
         final Money 최소_입찰_금액 = Money.wons(100_000);
         final Money 입찰_단위 = Money.wons(10_000);
-        final int 최대_낙찰_가능_스토어_수 = 10;
+        final int 최대_낙찰_가능_스토어_수 = 50;
+        return AdvertisementBidNoticeRequest.builder()
+            .type(광고_타입)
+            .period(광고_기간)
+            .minimumBidPrice(최소_입찰_금액)
+            .bidPriceUnit(입찰_단위)
+            .maximumStoreCounts(최대_낙찰_가능_스토어_수)
+            .build();
+    }
+
+    private AdvertisementBidNoticeRequest 잘못된_공고_요청() {
+        final AdvertisementType 광고_타입 = AdvertisementType.OPEN_LIST;
+        final TimePeriod 광고_기간 = TimePeriod.of(
+            LocalDateTime.of(2021, 4, 3, 12, 0, 0),
+            LocalDateTime.of(2021, 4, 3, 12, 0, 0)
+        );
+        final Money 최소_입찰_금액 = Money.wons(1000);
+        final Money 입찰_단위 = Money.wons(500);
+        final int 최대_낙찰_가능_스토어_수 = 3;
         return AdvertisementBidNoticeRequest.builder()
             .type(광고_타입)
             .period(광고_기간)
