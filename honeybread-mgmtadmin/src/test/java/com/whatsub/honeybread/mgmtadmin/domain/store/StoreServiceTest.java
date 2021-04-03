@@ -276,11 +276,11 @@ public class StoreServiceTest {
     }
 
     private void 스토어명이_중복되는지_검사를_수행했다() {
-        verify(storeRepository).existsByBasicName(스토어_등록요청.getBasic().getName());
+        verify(storeRepository).existsByBasicName(anyString());
     }
 
     private void 해당스토어명을_제외하고_스토어명이_중복되는지_검사를_수행했다() {
-        verify(storeRepository).existsByIdNotAndBasicName(스토어아이디, 스토어_등록요청.getBasic().getName());
+        verify(storeRepository).existsByIdNotAndBasicName(anyLong(), anyString());
     }
 
     private void n번만큼_카테고리가_존재하는지_검사를_수행했다(int n) {
