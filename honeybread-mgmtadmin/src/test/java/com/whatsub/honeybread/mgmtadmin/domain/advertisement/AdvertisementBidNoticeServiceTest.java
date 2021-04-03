@@ -6,6 +6,8 @@ import com.whatsub.honeybread.core.domain.advertisement.repository.Advertisement
 import com.whatsub.honeybread.core.domain.advertisement.validator.AdvertiseBidNoticeValidator;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
+import com.whatsub.honeybread.core.infra.errors.ErrorCode;
+import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementBidNoticeRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
@@ -70,6 +74,69 @@ class AdvertisementBidNoticeServiceTest {
     }
 
     // 수정
+    @Test
+    void 벨리데이션_성공시_수정_성공() {
+        // given
+        given(repository.findById(anyLong())).willReturn(Optional.of(entity));
+        willDoNothing().given(validator).validate(any(AdvertisementBidNotice.class));
+
+        // when
+        입찰공고_수정();
+
+        // then
+        then(repository).should().findById(anyLong());
+        then(entity).should().isProcess();
+        then(validator).should().validate(any(AdvertisementBidNotice.class));
+    }
+
+    @Test
+    void 벨리데이션_실패시_수정_실패() {
+        // given
+        given(repository.findById(anyLong())).willReturn(Optional.of(entity));
+        willThrow(ValidationException.class).given(validator).validate(any(AdvertisementBidNotice.class));
+
+        // when
+        assertThrows(ValidationException.class, this::입찰공고_수정);
+
+        // then
+        then(repository).should().findById(anyLong());
+        then(entity).should().isProcess();
+        then(validator).should().validate(any(AdvertisementBidNotice.class));
+    }
+
+    @Test
+    void 입찰공고가_존재하지_않는다면_수정_실패() {
+        // given
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::입찰공고_수정);
+
+        // then
+        then(repository).should().findById(anyLong());
+        then(entity).should(never()).isProcess();
+        then(validator).should(never()).validate(any(AdvertisementBidNotice.class));
+
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.ADVERTISEMENT_BID_NOTICE_NOT_FOUND);
+    }
+
+    @Test
+    void 입찰진행중_이라면_수정_실패() {
+        // given
+        given(entity.isProcess()).willReturn(true);
+        given(repository.findById(anyLong())).willReturn(Optional.of(entity));
+        willDoNothing().given(validator).validate(any(AdvertisementBidNotice.class));
+
+        // when
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::입찰공고_수정);
+
+        // then
+        then(repository).should().findById(anyLong());
+        then(entity).should().isProcess();
+        then(validator).should(never()).validate(any(AdvertisementBidNotice.class));
+
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY);
+    }
 
     // 삭제
 
@@ -95,5 +162,9 @@ class AdvertisementBidNoticeServiceTest {
 
     private void 입찰공고_등록() {
         service.create(공고_요청());
+    }
+
+    private void 입찰공고_수정() {
+        service.update(1L, 공고_요청());
     }
 }

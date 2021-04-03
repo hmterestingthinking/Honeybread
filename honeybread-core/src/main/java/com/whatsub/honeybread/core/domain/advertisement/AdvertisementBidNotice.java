@@ -16,6 +16,13 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AdvertisementBidNotice extends BaseEntity {
 
+    public enum Status {
+        OPEN, // 생성
+        PROGRESS, // 진행중
+        CLOSED, // 종료
+        ;
+    }
+
     @Column(nullable = false)
     private AdvertisementType type;
 
@@ -40,13 +47,6 @@ public class AdvertisementBidNotice extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status = Status.OPEN;
 
-    public enum Status {
-        OPEN, // 생성
-        PROGRESS, // 진행중
-        CLOSED, // 종료
-        ;
-    }
-
     @Builder
     private AdvertisementBidNotice(
         AdvertisementType type,
@@ -60,5 +60,18 @@ public class AdvertisementBidNotice extends BaseEntity {
         this.minimumBidPrice = minimumBidPrice;
         this.bidPriceUnit = bidPriceUnit;
         this.period = period;
+    }
+
+    public void update(AdvertisementBidNotice entity) {
+        this.type = entity.getType();
+        this.maximumStoreCounts = entity.getMaximumStoreCounts();
+        this.minimumBidPrice = entity.getMinimumBidPrice();
+        this.minimumBidPrice = entity.getMinimumBidPrice();
+        this.bidPriceUnit = entity.getBidPriceUnit();
+        this.period = entity.getPeriod();
+    }
+
+    public boolean isProcess() {
+        return this.status == Status.PROGRESS;
     }
 }

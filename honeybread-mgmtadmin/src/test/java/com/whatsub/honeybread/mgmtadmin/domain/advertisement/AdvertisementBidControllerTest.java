@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsub.honeybread.core.domain.advertisement.AdvertisementType;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
+import com.whatsub.honeybread.core.infra.errors.ErrorCode;
+import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementBidNoticeRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,6 +88,95 @@ class AdvertisementBidControllerTest {
 
         // then
         then(service).should(never()).create(any(AdvertisementBidNoticeRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 벨리데이션_성공시_입찰공고_수정에_성공한다() throws Exception {
+        // given
+        willDoNothing().given(service).update(anyLong(), any(AdvertisementBidNoticeRequest.class));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(NOTICE_BASE_URL + "/1")
+                .content(mapper.writeValueAsString(공고_요청()))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        then(service).should().update(anyLong(), any(AdvertisementBidNoticeRequest.class));
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void 벨리데이션_실패시_입찰공고_수정에_실패한다() throws Exception {
+        // given
+        willThrow(ValidationException.class).given(service).update(anyLong(), any(AdvertisementBidNoticeRequest.class));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(NOTICE_BASE_URL + "/1")
+                .content(mapper.writeValueAsString(공고_요청()))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        then(service).should().update(anyLong(), any(AdvertisementBidNoticeRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 잘못된_요청시_입찰공고_수정에_실패한다() throws Exception {
+        // when
+        ResultActions result = mockMvc.perform(
+            put(NOTICE_BASE_URL + "/1")
+                .content(mapper.writeValueAsString(잘못된_공고_요청()))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        then(service).should(never()).update(anyLong(), any(AdvertisementBidNoticeRequest.class));
+        result.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void 입찰공고가_존재하지_않는다면_수정에_실패한다() throws Exception {
+        // given
+        willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_NOT_FOUND))
+            .given(service).update(anyLong(), any(AdvertisementBidNoticeRequest.class));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(NOTICE_BASE_URL + "/1")
+                .content(mapper.writeValueAsString(공고_요청()))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        then(service).should().update(anyLong(), any(AdvertisementBidNoticeRequest.class));
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void 입찰공고가_진행중이라면_수정에_실패한다() throws Exception {
+        // given
+        willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY))
+            .given(service).update(anyLong(), any(AdvertisementBidNoticeRequest.class));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            put(NOTICE_BASE_URL + "/1")
+                .content(mapper.writeValueAsString(공고_요청()))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        then(service).should().update(anyLong(), any(AdvertisementBidNoticeRequest.class));
         result.andExpect(status().is4xxClientError());
     }
 
