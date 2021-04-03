@@ -56,6 +56,238 @@ class MenuControllerTest {
     @Test
     void 스토어의_메뉴목록_조회에_성공한다() throws Exception {
         // given
+        스토어_메뉴목록_조회시_성공한다();
+
+        // when
+        ResultActions result = mockMvc.perform(
+            get(BASE_URL + "/stores/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        then(queryRepository).should().findAllByStoreId(anyLong());
+
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$.[0].id").exists())
+            .andExpect(jsonPath("$.[0].name").exists())
+            .andExpect(jsonPath("$.[0].description").exists())
+            .andExpect(jsonPath("$.[0].menus").isNotEmpty())
+            .andExpect(jsonPath("$.[0].menus[0].id").exists())
+            .andExpect(jsonPath("$.[0].menus[0].name").exists())
+            .andExpect(jsonPath("$.[0].menus[0].menuGroupId").exists())
+            .andExpect(jsonPath("$.[0].menus[0].categoryId").exists())
+            .andExpect(jsonPath("$.[0].menus[0].imageUrl").exists())
+            .andExpect(jsonPath("$.[0].menus[0].main").exists())
+            .andExpect(jsonPath("$.[0].menus[0].best").exists())
+            .andExpect(jsonPath("$.[0].menus[0].price").exists())
+        ;
+    }
+
+    @Test
+    void 메뉴그룹_등록에_성공한다() throws Exception {
+        // given
+        final MenuGroupRequest request = 식사류_메뉴그룹_요청();
+        given(groupService.create(request)).willReturn(1L);
+
+        // when
+        ResultActions result = 메뉴그룹_등록(request);
+
+        // then
+        then(groupService).should().create(any(MenuGroupRequest.class));
+        Created_응답_확인(result);
+    }
+
+    @Test
+    void 잘못된_요청시_메뉴그룹_등록에_실패한다() throws Exception {
+        // when
+        ResultActions result = 메뉴그룹_등록(잘못된_메뉴그룹_요청());
+
+        // then
+        then(groupService).should(never()).create(any(MenuGroupRequest.class));
+        BadRequest_응답_확인(result);
+    }
+
+    @Test
+    void 메뉴그룹_수정에_성공한다() throws Exception {
+        // given
+        willDoNothing().given(groupService).update(anyLong(), any(MenuGroupRequest.class));
+
+        // when
+        ResultActions result = 메뉴그룹_수정(식사류_메뉴그룹_요청());
+
+        // then
+        메뉴그룹_수정이_수행되어야_한다();
+        Ok_응답_확인(result);
+    }
+
+    @Test
+    void 메뉴그룹이_존재하지_않는다면_수정에_실패한다() throws Exception {
+        // given
+        willThrow(new HoneyBreadException(ErrorCode.MENU_GROUP_NOT_FOUND))
+            .given(groupService).update(anyLong(), any(MenuGroupRequest.class));
+
+        // when
+        ResultActions result = 메뉴그룹_수정(식사류_메뉴그룹_요청());
+
+        // then
+        메뉴그룹_수정이_수행되어야_한다();
+        BadRequest_응답_확인(result);
+    }
+
+    @Test
+    void 잘못된_요청시_메뉴그룹_수정에_실패한다() throws Exception {
+        // when
+        ResultActions result = 메뉴그룹_수정(잘못된_메뉴그룹_요청());
+
+        // then
+        then(groupService).should(never()).update(anyLong(), any(MenuGroupRequest.class));
+        BadRequest_응답_확인(result);
+    }
+
+    @Test
+    void 메뉴그룹이_존재한다면_삭제에_성공한다() throws Exception {
+        // given
+        willDoNothing().given(service).delete(anyLong());
+
+        // when
+        ResultActions result = 메뉴그룹_삭제();
+
+        // then
+        메뉴그룹_삭제가_수행되어야_한다();
+        NoContent_응답_확인(result);
+    }
+
+    @Test
+    void 메뉴그룹이_존재하지_않는다면_삭제에_실패한다() throws Exception {
+        // given
+        willThrow(new HoneyBreadException(ErrorCode.MENU_GROUP_NOT_FOUND))
+            .given(groupService).delete(anyLong());
+
+        // when
+        ResultActions result = 메뉴그룹_삭제();
+
+        // then
+        메뉴그룹_삭제가_수행되어야_한다();
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void 벨리데이션_성공시_등록에_성공한다() throws Exception {
+        // given
+        given(service.create(any(MenuRequest.class))).willReturn(1L);
+
+        // when
+        ResultActions result = 메뉴_등록(간장찜닭_메뉴_요청());
+
+        // then
+        메뉴_등록이_수행되어야_한다();
+        Created_응답_확인(result);
+    }
+
+    @Test
+    void 벨리데이션_실패시_등록에_실패한다() throws Exception {
+        // given
+        willThrow(ValidationException.class).given(service).create(any(MenuRequest.class));
+
+        // when
+        ResultActions result = 메뉴_등록(간장찜닭_메뉴_요청());
+
+        // then
+        메뉴_등록이_수행되어야_한다();
+        BadRequest_응답_확인(result);
+    }
+
+    @Test
+    void 잘못된_요청시_등록에_실패한다() throws Exception {
+        // when
+        ResultActions result = 메뉴_등록(잘못된_메뉴_요청());
+
+        // then
+        then(service).should(never()).create(any(MenuRequest.class));
+        BadRequest_응답_확인(result);
+    }
+
+    @Test
+    void 벨리데이션_성공시_수정에_성공한다() throws Exception {
+        // given
+        willDoNothing().given(service).update(anyLong(), any(MenuRequest.class));
+
+        // when
+        ResultActions result = 메뉴_수정(간장찜닭_메뉴_요청());
+
+        // then
+        메뉴_수정이_수행되어야_한다();
+        Ok_응답_확인(result);
+    }
+
+    @Test
+    void 벨리데이션_실패시_수정에_실패한다() throws Exception {
+        // given
+        willThrow(ValidationException.class).given(service).update(anyLong(), any(MenuRequest.class));
+
+        // when
+        ResultActions result = 메뉴_수정(간장찜닭_메뉴_요청());
+
+        // then
+        메뉴_수정이_수행되어야_한다();
+        BadRequest_응답_확인(result);
+    }
+
+    @Test
+    void 잘못된_요청시_수정에_실패한다() throws Exception {
+        // when
+        ResultActions result = 메뉴_수정(잘못된_메뉴_요청());
+
+        // then
+        then(service).should(never()).update(anyLong(), any(MenuRequest.class));
+        BadRequest_응답_확인(result);
+    }
+
+    @Test
+    void 메뉴가_존재하지_않는다면_수정에_실패한다() throws Exception {
+        // given
+        willThrow(new HoneyBreadException(ErrorCode.MENU_NOT_FOUND))
+            .given(service).update(anyLong(), any(MenuRequest.class));
+
+        // when
+        ResultActions result = 메뉴_수정(간장찜닭_메뉴_요청());
+
+        // then
+        메뉴_수정이_수행되어야_한다();
+        BadRequest_응답_확인(result);
+    }
+
+    @Test
+    void 메뉴가_존재한다면_삭제에_성공한다() throws Exception {
+        // given
+        willDoNothing().given(service).delete(anyLong());
+
+        // when
+        ResultActions result = 메뉴_삭제();
+
+        // then
+        메뉴_삭제가_수행되어야_한다();
+        NoContent_응답_확인(result);
+    }
+
+    @Test
+    void 메뉴가_존재하지_않는다면_삭제에_실패한다() throws Exception {
+        // given
+        willThrow(new HoneyBreadException(ErrorCode.MENU_NOT_FOUND)).given(service).delete(anyLong());
+
+        // when
+        ResultActions result = 메뉴_삭제();
+
+        // then
+        메뉴_삭제가_수행되어야_한다();
+        result.andExpect(status().isNotFound());
+    }
+
+    /**
+     * Given
+     */
+    private void 스토어_메뉴목록_조회시_성공한다() {
         List<MenuGroupDto> menus = List.of(
             MenuGroupDto.builder()
                 .id(1L)
@@ -77,351 +309,107 @@ class MenuControllerTest {
                 )
                 .build()
         );
-        
         given(queryRepository.findAllByStoreId(anyLong())).willReturn(menus);
-
-        // when
-        ResultActions result = mockMvc.perform(
-            get(BASE_URL + "/stores/1")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        result.andExpect(status().isOk())
-            .andExpect(jsonPath("$.[0].id").exists())
-            .andExpect(jsonPath("$.[0].name").exists())
-            .andExpect(jsonPath("$.[0].description").exists())
-            .andExpect(jsonPath("$.[0].menus").isNotEmpty())
-            .andExpect(jsonPath("$.[0].menus[0].id").exists())
-            .andExpect(jsonPath("$.[0].menus[0].name").exists())
-            .andExpect(jsonPath("$.[0].menus[0].menuGroupId").exists())
-            .andExpect(jsonPath("$.[0].menus[0].categoryId").exists())
-            .andExpect(jsonPath("$.[0].menus[0].imageUrl").exists())
-            .andExpect(jsonPath("$.[0].menus[0].main").exists())
-            .andExpect(jsonPath("$.[0].menus[0].best").exists())
-            .andExpect(jsonPath("$.[0].menus[0].price").exists())
-        ;
     }
 
-    @Test
-    void 메뉴그룹_등록에_성공한다() throws Exception {
-        // given
-        final MenuGroupRequest request = 식사류_메뉴그룹_요청();
-
-        given(groupService.create(request)).willReturn(1L);
-
-        // when
-        ResultActions result = mockMvc.perform(
+    /**
+     * When
+     */
+    private ResultActions 메뉴그룹_등록(MenuGroupRequest request) throws Exception {
+        return mockMvc.perform(
             post(GROUP_BASE_URL)
                 .content(mapper.writeValueAsString(request))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
-
-        // then
-        verify(groupService).create(any(MenuGroupRequest.class));
-        result.andExpect(status().isOk());
     }
 
-    @Test
-    void 잘못된_요청시_메뉴그룹_등록에_실패한다() throws Exception {
-        // given
-        final MenuGroupRequest request = 잘못된_메뉴그룹_요청();
-
-        // when
-        ResultActions result = mockMvc.perform(
-            post(GROUP_BASE_URL)
+    private ResultActions 메뉴그룹_수정(MenuGroupRequest request) throws Exception {
+        return mockMvc.perform(
+            put(GROUP_BASE_URL + "/1")
                 .content(mapper.writeValueAsString(request))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
-
-        // then
-        verify(groupService, never()).create(any(MenuGroupRequest.class));
-        result.andExpect(status().is4xxClientError());
     }
 
-    @Test
-    void 메뉴그룹_수정에_성공한다() throws Exception {
-        // given
-        final long menuGroupId = 1L;
-        final MenuGroupRequest request = 식사류_메뉴그룹_요청();
-
-        willDoNothing().given(groupService).update(anyLong(), any(MenuGroupRequest.class));
-
-        // when
-        ResultActions result = mockMvc.perform(
-            put(GROUP_BASE_URL + "/" + menuGroupId)
-                .content(mapper.writeValueAsString(request))
+    private ResultActions 메뉴그룹_삭제() throws Exception {
+        return mockMvc.perform(
+            delete(GROUP_BASE_URL + "/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
-
-        // then
-        verify(groupService).update(anyLong(), any(MenuGroupRequest.class));
-        result.andExpect(status().isOk());
     }
 
-    @Test
-    void 잘못된_요청시_메뉴그룹_수정에_실패한다() throws Exception {
-        // given
-        final long menuGroupId = 1L;
-        final MenuGroupRequest request = 잘못된_메뉴그룹_요청();
-
-        // when
-        ResultActions result = mockMvc.perform(
-            put(GROUP_BASE_URL + "/" + menuGroupId)
-                .content(mapper.writeValueAsString(request))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(groupService, never()).update(anyLong(), any(MenuGroupRequest.class));
-        result.andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    void 메뉴그룹이_존재하지_않는다면_수정에_실패한다() throws Exception {
-        // given
-        final long menuGroupId = 1L;
-        final MenuGroupRequest request = 식사류_메뉴그룹_요청();
-
-        willThrow(new HoneyBreadException(ErrorCode.MENU_GROUP_NOT_FOUND))
-            .given(groupService).update(anyLong(), any(MenuGroupRequest.class));
-
-        // when
-        ResultActions result = mockMvc.perform(
-            put(GROUP_BASE_URL + "/" + menuGroupId)
-                .content(mapper.writeValueAsString(request))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(groupService).update(anyLong(), any(MenuGroupRequest.class));
-        result.andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    void 메뉴그룹이_존재한다면_삭제에_성공한다() throws Exception {
-        // given
-        final long menuGroupId = 1L;
-
-        willDoNothing().given(service).delete(anyLong());
-
-        // when
-        ResultActions result = mockMvc.perform(
-            delete(GROUP_BASE_URL + "/" + menuGroupId)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(service).delete(anyLong());
-        result.andExpect(status().isNoContent());
-    }
-
-    @Test
-    void 메뉴그룹이_존재하지_않는다면_삭제에_실패한다() throws Exception {
-        // given
-        final long menuGroupId = 1L;
-
-        willThrow(new HoneyBreadException(ErrorCode.MENU_GROUP_NOT_FOUND))
-            .given(groupService).delete(anyLong());
-
-        // when
-        ResultActions result = mockMvc.perform(
-            delete(GROUP_BASE_URL + "/" + menuGroupId)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(groupService).delete(anyLong());
-        result.andExpect(status().isNotFound());
-    }
-
-    @Test
-    void 벨리데이션_성공시_등록에_성공한다() throws Exception {
-        // given
-        final MenuRequest request = 간장찜닭_메뉴_요청();
-
-        given(service.create(any(MenuRequest.class))).willReturn(1L);
-
-        // when
-        ResultActions result = mockMvc.perform(
+    private ResultActions 메뉴_등록(MenuRequest request) throws Exception {
+        return mockMvc.perform(
             post(BASE_URL)
                 .content(mapper.writeValueAsString(request))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
+    }
 
-        // then
-        verify(service).create(any(MenuRequest.class));
+    private ResultActions 메뉴_수정(MenuRequest request) throws Exception {
+        return mockMvc.perform(
+            put(BASE_URL + "/1")
+                .content(mapper.writeValueAsString(request))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+    }
+
+    private ResultActions 메뉴_삭제() throws Exception {
+        return mockMvc.perform(
+            delete(BASE_URL + "/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+    }
+
+    /**
+     * Then
+     */
+    private void 메뉴그룹_수정이_수행되어야_한다() {
+        then(groupService).should().update(anyLong(), any(MenuGroupRequest.class));
+    }
+
+    private void 메뉴그룹_삭제가_수행되어야_한다() {
+        then(groupService).should().delete(anyLong());
+    }
+
+    private void 메뉴_등록이_수행되어야_한다() {
+        then(service).should().create(any(MenuRequest.class));
+    }
+
+    private void 메뉴_수정이_수행되어야_한다() {
+        then(service).should().update(anyLong(), any(MenuRequest.class));
+    }
+
+    private void 메뉴_삭제가_수행되어야_한다() {
+        then(service).should().delete(anyLong());
+    }
+
+    private void Ok_응답_확인(ResultActions result) throws Exception {
+        result.andExpect(status().isOk());
+    }
+
+    private void Created_응답_확인(ResultActions result) throws Exception {
         result.andExpect(status().isCreated());
     }
 
-    @Test
-    void 벨리데이션_실패시_등록에_실패한다() throws Exception {
-        // given
-        final MenuRequest request = 간장찜닭_메뉴_요청();
-
-        willThrow(ValidationException.class).given(service).create(any(MenuRequest.class));
-
-        // when
-        ResultActions result = mockMvc.perform(
-            post(BASE_URL)
-                .content(mapper.writeValueAsString(request))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(service).create(any(MenuRequest.class));
-        result.andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    void 잘못된_요청시_등록에_실패한다() throws Exception {
-        // given
-        final MenuRequest request = 잘못된_메뉴_요청();
-
-        // when
-        ResultActions result = mockMvc.perform(
-            post(BASE_URL)
-                .content(mapper.writeValueAsString(request))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(service, never()).create(any(MenuRequest.class));
-        result.andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    void 벨리데이션_성공시_수정에_성공한다() throws Exception {
-        // given
-        final Long menuId = 1L;
-        final MenuRequest request = 간장찜닭_메뉴_요청();
-
-        willDoNothing().given(service).update(anyLong(), any(MenuRequest.class));
-
-        // when
-        ResultActions result = mockMvc.perform(
-            put(BASE_URL + "/" + menuId)
-                .content(mapper.writeValueAsString(request))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(service).update(anyLong(), any(MenuRequest.class));
-        result.andExpect(status().isOk());
-    }
-
-    @Test
-    void 벨리데이션_실패시_수정에_실패한다() throws Exception {
-        // given
-        final Long menuId = 1L;
-        final MenuRequest request = 간장찜닭_메뉴_요청();
-
-        willThrow(ValidationException.class).given(service).update(anyLong(), any(MenuRequest.class));
-
-        // when
-        ResultActions result = mockMvc.perform(
-            put(BASE_URL + "/" + menuId)
-                .content(mapper.writeValueAsString(request))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(service).update(anyLong(), any(MenuRequest.class));
-        result.andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    void 잘못된_요청시_수정에_실패한다() throws Exception {
-        // given
-        final Long menuId = 1L;
-        final MenuRequest request = 잘못된_메뉴_요청();
-
-        // when
-        ResultActions result = mockMvc.perform(
-            put(BASE_URL + "/" + menuId)
-                .content(mapper.writeValueAsString(request))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(service, never()).update(anyLong(), any(MenuRequest.class));
-        result.andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    void 메뉴가_존재하지_않는다면_수정에_실패한다() throws Exception {
-        // given
-        final Long menuId = 1L;
-        final MenuRequest request = 간장찜닭_메뉴_요청();
-
-        willThrow(new HoneyBreadException(ErrorCode.MENU_NOT_FOUND))
-            .given(service).update(anyLong(), any(MenuRequest.class));
-
-        // when
-        ResultActions result = mockMvc.perform(
-            put(BASE_URL + "/" + menuId)
-                .content(mapper.writeValueAsString(request))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(service).update(anyLong(), any(MenuRequest.class));
-        result.andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    void 메뉴가_존재한다면_삭제에_성공한다() throws Exception {
-        // given
-        final Long menuId = 1L;
-
-        willDoNothing().given(service).delete(anyLong());
-
-        // when
-        ResultActions result = mockMvc.perform(
-            delete(BASE_URL + "/" + menuId)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(service).delete(anyLong());
+    private void NoContent_응답_확인(ResultActions result) throws Exception {
         result.andExpect(status().isNoContent());
     }
 
-    @Test
-    void 메뉴가_존재하지_않는다면_삭제에_실패한다() throws Exception {
-        // given
-        final Long menuId = 1L;
-
-        willThrow(new HoneyBreadException(ErrorCode.MENU_NOT_FOUND)).given(service).delete(anyLong());
-
-        // when
-        ResultActions result = mockMvc.perform(
-            delete(BASE_URL + "/" + menuId)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-
-        // then
-        verify(service).delete(anyLong());
-        result.andExpect(status().isNotFound());
+    private void BadRequest_응답_확인(ResultActions result) throws Exception {
+        result.andExpect(status().is4xxClientError());
     }
 
+
+    /**
+     * Helper
+     */
     private MenuGroupRequest 식사류_메뉴그룹_요청() {
         return MenuGroupRequest.builder()
             .name("식사류")
