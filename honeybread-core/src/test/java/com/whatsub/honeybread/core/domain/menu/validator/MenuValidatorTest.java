@@ -10,7 +10,9 @@ import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
@@ -21,7 +23,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.then;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @SpringBootTest(classes = MenuValidator.class)
@@ -36,6 +38,8 @@ class MenuValidatorTest {
     @MockBean
     CategoryRepository categoryRepository;
 
+    @Mock
+    Menu menu;
 
     /**
      * 해당하는 카테고리가 있는지 검증
@@ -53,153 +57,151 @@ class MenuValidatorTest {
      * 판매가가 0원으로 지정될 수 있다.
      * 기본 판매가에 + 추가 계산되는 가격이다.
      */
+    @BeforeEach
+    void setUp() {
+        given(menu.getMenuGroupId()).willReturn(1L);
+        given(menu.getCategoryId()).willReturn(1L);
+        given(menu.getName()).willReturn("간장 찜닭");
+        given(menu.getDescription()).willReturn("존맛탱 간장 찜닭");
+        given(menu.getPrice()).willReturn(Money.wons(10_000));
+        given(menu.isMain()).willReturn(Boolean.TRUE);
+        given(menu.isBest()).willReturn(Boolean.FALSE);
+        given(menu.getOptionGroups()).willReturn(
+            List.of(
+                MenuOptionGroup.builder()
+                    .name("맛 선택")
+                    .type(MenuOptionGroup.Type.BASIC)
+                    .minimumSelectCount(1)
+                    .maximumSelectCount(1)
+                    .options(
+                        List.of(
+                            MenuOption.create("순한맛", Money.ZERO),
+                            MenuOption.create("약간 매운맛", Money.ZERO),
+                            MenuOption.create("매운맛", Money.ZERO)
+                        )
+                    ).build()
+            )
+        );
+    }
 
     @Test
     void 벨리데이션_조건이_모두_성립하면_성공() {
         // given
-        final Menu menu = 기본판매가가_존재하는_찜닭메뉴();
-
-        given(categoryRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
-        given(groupRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
+        카테고리_조회시_성공한다();
+        메뉴그룹_조회시_성공한다();
 
         // when
-        validator.validate(menu);
+        메뉴_벨리데이션();
 
         // then
-        verify(categoryRepository).existsById(anyLong());
-        verify(groupRepository).existsById(anyLong());
+        카테고리_조회가_수행되어야_한다();
+        메뉴그룹_조회가_수행되어야_한다();
     }
 
     @Test
     void 카테고리가_없다면_예외_발생() {
         // given
-        final Menu menu = 기본판매가가_존재하는_찜닭메뉴();
-
         given(categoryRepository.existsById(anyLong())).willReturn(Boolean.FALSE);
 
         // when
-        HoneyBreadException ex = assertThrows(HoneyBreadException.class, () -> validator.validate(menu));
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::메뉴_벨리데이션);
 
         // then
+        카테고리_조회가_수행되어야_한다();
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
     }
 
     @Test
     void 메뉴_그룹이_없다면_예외_발생() {
         // given
-        final Menu menu = 기본판매가가_존재하는_찜닭메뉴();
-
-        given(categoryRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
+        카테고리_조회시_성공한다();
         given(groupRepository.existsById(anyLong())).willReturn(Boolean.FALSE);
 
         // when
-        HoneyBreadException ex = assertThrows(HoneyBreadException.class, () -> validator.validate(menu));
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::메뉴_벨리데이션);
 
         // then
+        카테고리_조회가_수행되어야_한다();
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.MENU_GROUP_NOT_FOUND);
     }
 
     @Test
     void 기본판매가가_0원이고_기본옵션_그룹이_존재한다면_벨리데이션_성공() {
         // given
-        final Menu menu = Menu.builder()
-            .menuGroupId(1L)
-            .categoryId(1L)
-            .name("간장 찜닭")
-            .description("존맛탱 간장 찜닭")
-            .price(Money.ZERO)
-            .isMain(Boolean.TRUE)
-            .isBest(Boolean.TRUE)
-            .optionGroups(
-                List.of(
-                    MenuOptionGroup.builder()
-                        .name("맛 선택")
-                        .type(MenuOptionGroup.Type.BASIC)
-                        .minimumSelectCount(1)
-                        .maximumSelectCount(1)
-                        .options(
-                            List.of(
-                                MenuOption.create("순한맛", Money.wons(10000L)),
-                                MenuOption.create("약간 매운맛", Money.wons(10000L)),
-                                MenuOption.create("매운맛", Money.wons(10000L))
-                            )
-                        ).build()
-                )
-            ).build();
-
-        given(categoryRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
-        given(groupRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
+        카테고리_조회시_성공한다();
+        메뉴그룹_조회시_성공한다();
+        기본판매가_0원으로_지정();
 
         // when
-        validator.validate(menu);
+        메뉴_벨리데이션();
 
         // then
-        verify(categoryRepository).existsById(anyLong());
-        verify(groupRepository).existsById(anyLong());
+        카테고리_조회가_수행되어야_한다();
+        메뉴그룹_조회가_수행되어야_한다();
     }
 
     @Test
     void 기본판매가가_0원이고_기본옵션_그룹이_존재하지_않는다면_벨리데이션_실패() {
         // given
-        final Menu menu = Menu.builder()
-            .menuGroupId(1L)
-            .categoryId(1L)
-            .name("간장 찜닭")
-            .description("존맛탱 간장 찜닭")
-            .price(Money.ZERO)
-            .isMain(Boolean.TRUE)
-            .isBest(Boolean.TRUE)
-            .optionGroups(
-                List.of(
-                    MenuOptionGroup.builder()
-                        .name("맛 선택")
-                        .type(MenuOptionGroup.Type.OPTIONAL)
-                        .minimumSelectCount(1)
-                        .maximumSelectCount(1)
-                        .options(
-                            List.of(
-                                MenuOption.create("순한맛", Money.ZERO),
-                                MenuOption.create("약간 매운맛", Money.ZERO),
-                                MenuOption.create("매운맛", Money.ZERO)
-                            )
-                        ).build()
-                )
-            ).build();
-
-        given(categoryRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
-        given(groupRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
+        카테고리_조회시_성공한다();
+        메뉴그룹_조회시_성공한다();
+        기본판매가_0원으로_지정();
+        given(menu.getOptionGroups()).willReturn(
+            List.of(
+                MenuOptionGroup.builder()
+                    .name("맛 선택")
+                    .type(MenuOptionGroup.Type.OPTIONAL)
+                    .minimumSelectCount(1)
+                    .maximumSelectCount(1)
+                    .options(
+                        List.of(
+                            MenuOption.create("순한맛", Money.ZERO),
+                            MenuOption.create("약간 매운맛", Money.ZERO),
+                            MenuOption.create("매운맛", Money.ZERO)
+                        )
+                    ).build()
+            )
+        );
 
         // when
-        ValidationException ex = assertThrows(ValidationException.class, () -> validator.validate(menu));
+        ValidationException ex = assertThrows(ValidationException.class, this::메뉴_벨리데이션);
 
         // then
+        카테고리_조회가_수행되어야_한다();
+        메뉴그룹_조회가_수행되어야_한다();
         assertThat(ex.getErrors().getErrorCount()).isEqualTo(1);
     }
 
-    private Menu 기본판매가가_존재하는_찜닭메뉴() {
-        return Menu.builder()
-            .menuGroupId(1L)
-            .categoryId(1L)
-            .name("간장 찜닭")
-            .description("존맛탱 간장 찜닭")
-            .price(Money.wons(10000L))
-            .isMain(Boolean.TRUE)
-            .isBest(Boolean.TRUE)
-            .optionGroups(
-                List.of(
-                    MenuOptionGroup.builder()
-                        .name("맛 선택")
-                        .type(MenuOptionGroup.Type.BASIC)
-                        .minimumSelectCount(1)
-                        .maximumSelectCount(1)
-                        .options(
-                            List.of(
-                                MenuOption.create("순한맛", Money.ZERO),
-                                MenuOption.create("약간 매운맛", Money.ZERO),
-                                MenuOption.create("매운맛", Money.ZERO)
-                            )
-                        ).build()
-                )
-            ).build();
+    /**
+     * Given
+     */
+    private void 카테고리_조회시_성공한다() {
+        given(categoryRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
+    }
+
+    private void 메뉴그룹_조회시_성공한다() {
+        given(groupRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
+    }
+
+    private void 기본판매가_0원으로_지정() {
+        given(menu.getPrice()).willReturn(Money.ZERO);
+    }
+
+    /**
+     * When
+     */
+    private void 메뉴_벨리데이션() {
+        validator.validate(menu);
+    }
+
+    /**
+     * Then
+     */
+    private void 카테고리_조회가_수행되어야_한다() {
+        then(categoryRepository).should().existsById(anyLong());
+    }
+
+    private void 메뉴그룹_조회가_수행되어야_한다() {
+        then(groupRepository).should().existsById(anyLong());
     }
 }
