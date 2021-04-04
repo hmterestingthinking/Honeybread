@@ -12,6 +12,7 @@ import org.springframework.test.context.TestConstructor;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @SpringBootTest(classes = MenuHistoryConverter.class)
@@ -26,7 +27,9 @@ class MenuHistoryConverterTest {
         Menu entity = Menu.builder()
             .menuGroupId(1L)
             .categoryId(1L)
+            .storeId(1L)
             .name("간장 찜닭")
+            .imageUrl("https://www.naver.com")
             .description("존맛탱 간장 찜닭")
             .price(Money.wons(10000L))
             .isMain(Boolean.TRUE)
@@ -54,15 +57,19 @@ class MenuHistoryConverterTest {
         MenuHistory history = converter.convert(entity);
 
         // then
-        assertThat(history.getId()).isEqualTo(entity.getId());
-        assertThat(history.getMenuGroupId()).isEqualTo(entity.getMenuGroupId());
-        assertThat(history.getCategoryId()).isEqualTo(entity.getCategoryId());
-        assertThat(history.getName()).isEqualTo(entity.getName());
-        assertThat(history.getPrice()).isEqualTo(entity.getPrice().getValue());
-        assertThat(history.getPrice()).isEqualTo(entity.getPrice().getValue());
-        assertThat(history.isMain()).isEqualTo(entity.isMain());
-        assertThat(history.isBest()).isEqualTo(entity.isBest());
-        assertThat(history.getOptionGroups().size()).isEqualTo(entity.getOptionGroups().size());
+        assertAll(
+            () -> assertThat(history.getId()).isEqualTo(entity.getId()),
+            () -> assertThat(history.getMenuGroupId()).isEqualTo(entity.getMenuGroupId()),
+            () -> assertThat(history.getCategoryId()).isEqualTo(entity.getCategoryId()),
+            () -> assertThat(history.getStoreId()).isEqualTo(history.getStoreId()),
+            () -> assertThat(history.getName()).isEqualTo(entity.getName()),
+            () -> assertThat(history.getDescription()).isEqualTo(entity.getDescription()),
+            () -> assertThat(history.getImageUrl()).isEqualTo(entity.getImageUrl()),
+            () -> assertThat(history.getPrice()).isEqualTo(entity.getPrice().getValue()),
+            () -> assertThat(history.isMain()).isEqualTo(entity.isMain()),
+            () -> assertThat(history.isBest()).isEqualTo(entity.isBest()),
+            () -> assertThat(history.getOptionGroups().size()).isEqualTo(entity.getOptionGroups().size())
+        );
 
         for (int i = 0; i < history.getOptionGroups().size(); i++) {
             MenuHistory.OptionGroup optionGroup = history.getOptionGroups().get(i);
