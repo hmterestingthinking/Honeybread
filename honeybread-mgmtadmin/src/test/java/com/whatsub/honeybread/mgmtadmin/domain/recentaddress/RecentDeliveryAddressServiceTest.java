@@ -1,0 +1,105 @@
+package com.whatsub.honeybread.mgmtadmin.domain.recentaddress;
+
+import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddress;
+import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddressRepository;
+import com.whatsub.honeybread.mgmtadmin.domain.recentaddress.dto.RecentDeliveryAddressServiceRequest;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestConstructor;
+
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
+
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@SpringBootTest(classes = RecentDeliveryAddressService.class)
+@RequiredArgsConstructor
+class RecentDeliveryAddressServiceTest {
+
+    final RecentDeliveryAddressService service;
+
+    @MockBean
+    RecentDeliveryAddressRepository repository;
+
+    @Mock
+    RecentDeliveryAddressServiceRequest mockRequest;
+
+    @Mock
+    RecentDeliveryAddress mockEntity;
+
+    @Test
+    void 주소검색시_등록된_주소가_아니라면_주소_등록() {
+        //given
+        주소_요청();
+        도로명주소_또는_지번주소로_검색_실패();
+        주소_등록();
+
+        //when
+        service.createIfAbsent(mockRequest);
+
+        //then
+        도로명주소_또는_지번주소로_검색되어야함();
+        주소_등록이_실행되어야함();
+        주소_사용시간이_업데이트되어야함();
+    }
+
+    @Test
+    void 주소검색시_등록된_주소라면_주소_사용시간_업데이트() {
+        //given
+        주소_요청();
+        도로명주소_또는_지번주소로_검색_성공();
+
+        //when
+        service.createIfAbsent(mockRequest);
+
+        //then
+        도로명주소_또는_지번주소로_검색되어야함();
+        주소_등록이_실행되지_않아야함();
+        주소_사용시간이_업데이트되어야함();
+    }
+
+    private void 주소_요청() {
+        given(mockRequest.getUserId()).willReturn(1L);
+        given(mockRequest.getDeliveryAddress()).willReturn("서울시 강남구 수서동 500 301동 404호");
+        given(mockRequest.getStateNameAddress()).willReturn("서울시 강남구 광평로101길 200 301동 404호");
+        given(mockRequest.toRecentDeliveryAddress()).willReturn(mockEntity);
+    }
+
+    private void 도로명주소_또는_지번주소로_검색_성공() {
+        given(repository.findByUserIdAndDeliveryAddressOrStateNameAddress(anyLong(), anyString(), anyString()))
+            .willReturn(Optional.of(mockEntity));
+    }
+
+    private void 도로명주소_또는_지번주소로_검색_실패() {
+        given(repository.findByUserIdAndDeliveryAddressOrStateNameAddress(anyLong(), anyString(), anyString()))
+            .willReturn(Optional.empty());
+    }
+
+    private void 주소_등록() {
+        given(repository.save(any(RecentDeliveryAddress.class))).willReturn(mockEntity);
+    }
+
+    private void 도로명주소_또는_지번주소로_검색되어야함() {
+        then(repository).should().findByUserIdAndDeliveryAddressOrStateNameAddress(anyLong(), anyString(), anyString());
+    }
+
+    private void 주소_등록이_실행되어야함() {
+        then(repository).should().save(any(RecentDeliveryAddress.class));
+    }
+
+    private void 주소_사용시간이_업데이트되어야함() {
+        then(mockEntity).should().updateUsedAt();
+    }
+
+    private void 주소_등록이_실행되지_않아야함() {
+        then(repository).should(never()).save(any(RecentDeliveryAddress.class));
+    }
+}

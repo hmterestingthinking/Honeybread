@@ -51,4 +51,8 @@ public class RecentDeliveryAddress extends BaseEntity {
         this.zipCode = zipCode;
         this.usedAt = usedAt;
     }
+
+    public void updateUsedAt() {
+        this.usedAt = LocalDateTime.now();
+    }
 }
