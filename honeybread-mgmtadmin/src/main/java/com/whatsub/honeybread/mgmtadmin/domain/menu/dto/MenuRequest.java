@@ -43,6 +43,10 @@ public class MenuRequest {
     @NotBlank(message = "메뉴 명 빈 값이 올 수 없습니다.")
     private String description;
 
+    @ApiModelProperty("메뉴 이미지")
+    @NotBlank(message = "메뉴 이미지는 빈 값이 올 수 없습니다.")
+    private String imageUrl;
+
     @ApiModelProperty("기본 판매 가격")
     @NotNull(message = "기본 판매 가격은 빈 값이 올 수 없습니다.")
     private Money basicPrice;
@@ -64,6 +68,7 @@ public class MenuRequest {
             .categoryId(this.categoryId)
             .name(this.name)
             .description(this.description)
+            .imageUrl(this.imageUrl)
             .price(this.basicPrice)
             .isMain(this.isMain)
             .isBest(this.isBest)

@@ -429,6 +429,7 @@ class MenuControllerTest {
             .categoryId(1L)
             .name("간장 찜닭")
             .description("존맛탱 간장 찜닭")
+            .imageUrl("https://www.naver.com")
             .basicPrice(Money.wons(10000L))
             .isMain(Boolean.TRUE)
             .isBest(Boolean.TRUE)
