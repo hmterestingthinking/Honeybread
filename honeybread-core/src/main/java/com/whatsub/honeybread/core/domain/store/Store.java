@@ -62,11 +62,11 @@ public class Store extends BaseEntity {
     @CollectionTable(name = "store_pay_methods", joinColumns = @JoinColumn(name = "store_id"))
     private List<StorePayMethod> payMethods = List.of();
 
-    public static Store createStore(Long sellerId,
-                                    StoreBasic storeBasic,
-                                    BankAccount bankAccount,
-                                    List<StoreCategory> categories,
-                                    List<StorePayMethod> payMethods) {
+    public static Store createStore(final Long sellerId,
+                                    final StoreBasic storeBasic,
+                                    final BankAccount bankAccount,
+                                    final List<StoreCategory> categories,
+                                    final List<StorePayMethod> payMethods) {
         Store store = new Store();
         store.sellerId = sellerId;
         store.operation = StoreOperation.createClosedOperation();
@@ -82,12 +82,12 @@ public class Store extends BaseEntity {
         this.uuid = uuid;
     }
 
-    public static Store updateStore(StoreOperation operation,
-                                    StoreStatus status,
-                                    StoreBasic storeBasic,
-                                    BankAccount bankAccount,
-                                    List<StoreCategory> categories,
-                                    List<StorePayMethod> payMethods) {
+    public static Store updateStore(final StoreOperation operation,
+                                    final StoreStatus status,
+                                    final StoreBasic storeBasic,
+                                    final BankAccount bankAccount,
+                                    final List<StoreCategory> categories,
+                                    final List<StorePayMethod> payMethods) {
         Store store = new Store();
         store.operation = operation;
         store.status = status;
@@ -98,7 +98,7 @@ public class Store extends BaseEntity {
         return store;
     }
 
-    public void update(Store store) {
+    public void update(final Store store) {
         this.operation = store.operation;
         this.status = store.status;
         this.basic = store.basic;

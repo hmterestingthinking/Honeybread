@@ -25,7 +25,7 @@ public class StoreService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public Long create(StoreCreateRequest storeCreateRequest) {
+    public Long create(final StoreCreateRequest storeCreateRequest) {
         checkSellerIdExistence(storeCreateRequest.getSellerId());
         checkStoreNameExistence(storeCreateRequest.getBasic().getName());
         checkCategoryIdsExistence(storeCreateRequest.getCategoryIds());
@@ -36,7 +36,7 @@ public class StoreService {
     }
 
     @Transactional
-    public void update(long storeId, StoreUpdateRequest storeUpdateRequest) {
+    public void update(final long storeId, final StoreUpdateRequest storeUpdateRequest) {
         checkStoreExistence(storeId);
         checkStoreNameExistence(storeId, storeUpdateRequest.getBasic().getName());
         checkCategoryIdsExistence(storeUpdateRequest.getCategoryIds());
@@ -44,31 +44,31 @@ public class StoreService {
         storeRepository.getOne(storeId).update(storeUpdateRequest.updateStore());
     }
 
-    private void checkStoreExistence(long storeId) {
+    private void checkStoreExistence(final long storeId) {
         if (!storeRepository.existsById(storeId)) {
             throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
         }
     }
 
-    private void checkSellerIdExistence(long sellerId) {
+    private void checkSellerIdExistence(final long sellerId) {
         if (!userRepository.existsById(sellerId)) {
             throw new HoneyBreadException(ErrorCode.USER_NOT_FOUND);
         }
     }
 
-    private void checkStoreNameExistence(String name) {
+    private void checkStoreNameExistence(final String name) {
         if (storeRepository.existsByBasicName(name)) {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME);
         }
     }
 
-    private void checkStoreNameExistence(long excludeStoreId, String name) {
+    private void checkStoreNameExistence(final long excludeStoreId, final String name) {
         if (storeRepository.existsByIdNotAndBasicName(excludeStoreId, name)) {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME);
         }
     }
 
-    private void checkCategoryIdsExistence(List<Long> categoryIds) {
+    private void checkCategoryIdsExistence(final List<Long> categoryIds) {
         categoryIds.forEach(categoryId -> {
             if (!categoryRepository.existsById(categoryId)) {
                 throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
