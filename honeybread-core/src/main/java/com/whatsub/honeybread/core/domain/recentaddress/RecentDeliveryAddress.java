@@ -38,7 +38,7 @@ public class RecentDeliveryAddress extends BaseEntity {
     private LocalDateTime usedAt;
 
     @Builder
-    public RecentDeliveryAddress (Long userId,
+    private RecentDeliveryAddress (Long userId,
                                   String deliveryAddress,
                                   String searchableDeliveryAddress,
                                   String stateNameAddress,
