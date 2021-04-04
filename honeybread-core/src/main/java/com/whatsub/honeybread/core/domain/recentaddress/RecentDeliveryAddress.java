@@ -1,16 +1,21 @@
 package com.whatsub.honeybread.core.domain.recentaddress;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
-import com.whatsub.honeybread.core.domain.user.User;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "recent_delivery_address")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(callSuper = true)
 public class RecentDeliveryAddress extends BaseEntity {
 
