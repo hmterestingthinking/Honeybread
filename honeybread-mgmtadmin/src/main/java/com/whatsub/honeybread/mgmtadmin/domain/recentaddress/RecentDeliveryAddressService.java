@@ -27,11 +27,11 @@ public class RecentDeliveryAddressService {
     }
 
     @Transactional
-    public void delete(long id) {
+    public void delete(Long id) {
         repository.delete(findById(id));
     }
 
-    public RecentDeliveryAddress findById(long id) {
+    public RecentDeliveryAddress findById(Long id) {
         return repository.findById(id)
             .orElseThrow(() -> new HoneyBreadException(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND));
     }
