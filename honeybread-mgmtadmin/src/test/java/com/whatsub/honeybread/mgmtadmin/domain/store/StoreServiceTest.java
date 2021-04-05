@@ -20,11 +20,12 @@ import org.springframework.test.context.TestConstructor;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @SpringBootTest(classes = StoreService.class)
@@ -89,7 +90,7 @@ public class StoreServiceTest {
 
         // then
         존재하는_셀러인지_검사를_수행했다();
-        assertEquals(exception.getErrorCode(), ErrorCode.USER_NOT_FOUND);
+        then(exception.getErrorCode()).equals(ErrorCode.USER_NOT_FOUND);
     }
 
     @Test
@@ -104,7 +105,7 @@ public class StoreServiceTest {
         // then
         존재하는_셀러인지_검사를_수행했다();
         스토어명이_중복되는지_검사를_수행했다();
-        assertEquals(exception.getErrorCode(), ErrorCode.DUPLICATE_STORE_NAME);
+        then(exception.getErrorCode()).equals(ErrorCode.DUPLICATE_STORE_NAME);
     }
 
     @Test
@@ -122,7 +123,7 @@ public class StoreServiceTest {
         존재하는_셀러인지_검사를_수행했다();
         스토어명이_중복되는지_검사를_수행했다();
         n번만큼_카테고리가_존재하는지_검사를_수행했다(카테고리_ID_목록.size());
-        assertEquals(exception.getErrorCode(), ErrorCode.CATEGORY_NOT_FOUND);
+        then(exception.getErrorCode()).equals(ErrorCode.CATEGORY_NOT_FOUND);
     }
 
     @Test
@@ -153,7 +154,7 @@ public class StoreServiceTest {
 
         // then
         스토어가_존재하는지_검사를_수행했다();
-        assertEquals(exception.getErrorCode(), ErrorCode.STORE_NOT_FOUND);
+        then(exception.getErrorCode()).equals(ErrorCode.STORE_NOT_FOUND);
     }
 
     @Test
@@ -168,7 +169,7 @@ public class StoreServiceTest {
         // then
         스토어가_존재하는지_검사를_수행했다();
         해당스토어명을_제외하고_스토어명이_중복되는지_검사를_수행했다();
-        assertEquals(exception.getErrorCode(), ErrorCode.DUPLICATE_STORE_NAME);
+        then(exception.getErrorCode()).equals(ErrorCode.DUPLICATE_STORE_NAME);
     }
 
     @Test
@@ -186,7 +187,7 @@ public class StoreServiceTest {
         스토어가_존재하는지_검사를_수행했다();
         해당스토어명을_제외하고_스토어명이_중복되는지_검사를_수행했다();
         n번만큼_카테고리가_존재하는지_검사를_수행했다(카테고리_ID_목록.size());
-        assertEquals(exception.getErrorCode(), ErrorCode.CATEGORY_NOT_FOUND);
+        then(exception.getErrorCode()).equals(ErrorCode.CATEGORY_NOT_FOUND);
     }
 
     @Test
@@ -268,27 +269,27 @@ public class StoreServiceTest {
      */
 
     private void 스토어가_존재하는지_검사를_수행했다() {
-        verify(storeRepository).existsById(anyLong());
+        then(storeRepository).should().existsById(anyLong());
     }
 
     private void 존재하는_셀러인지_검사를_수행했다() {
-        verify(userRepository).existsById(anyLong());
+        then(userRepository).should().existsById(anyLong());
     }
 
     private void 스토어명이_중복되는지_검사를_수행했다() {
-        verify(storeRepository).existsByBasicName(anyString());
+        then(storeRepository).should().existsByBasicName(anyString());
     }
 
     private void 해당스토어명을_제외하고_스토어명이_중복되는지_검사를_수행했다() {
-        verify(storeRepository).existsByIdNotAndBasicName(anyLong(), anyString());
+        then(storeRepository).should().existsByIdNotAndBasicName(anyLong(), anyString());
     }
 
     private void n번만큼_카테고리가_존재하는지_검사를_수행했다(int n) {
-        verify(categoryRepository, times(n)).existsById(anyLong());
+        then(categoryRepository).should(times(2)).existsById(anyLong());
     }
 
     private void 스토어가_등록됐다() {
-        verify(storeRepository).save(any());
+        then(storeRepository).should().save(any());
     }
 
 }
