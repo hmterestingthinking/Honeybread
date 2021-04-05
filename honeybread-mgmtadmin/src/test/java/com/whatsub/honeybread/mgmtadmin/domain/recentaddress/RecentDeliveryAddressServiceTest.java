@@ -2,6 +2,8 @@ package com.whatsub.honeybread.mgmtadmin.domain.recentaddress;
 
 import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddress;
 import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddressRepository;
+import com.whatsub.honeybread.core.infra.errors.ErrorCode;
+import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.recentaddress.dto.RecentDeliveryAddressServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,8 @@ import org.springframework.test.context.TestConstructor;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -66,6 +70,66 @@ class RecentDeliveryAddressServiceTest {
         주소_사용시간이_업데이트되어야함();
     }
 
+    @Test
+    void 주소_삭제() {
+        //given
+        주소_ID_검색_성공();
+
+        //when
+        service.delete(anyLong());
+
+        //then
+        주소가_삭제되어야함();
+    }
+
+    @Test
+    void 주소_삭제시_없을경우_에러() {
+        //given
+        주소_ID_검색_실패();
+
+        //when
+        HoneyBreadException honeyBreadException =
+            assertThrows(HoneyBreadException.class, () -> service.delete(anyLong()));
+
+        //then
+        RECENT_DELIVERY_ADDRESS_NOT_FOUND_에러_발생(honeyBreadException);
+    }
+
+    @Test
+    void 주소_ID_검색() {
+        //given
+        주소_ID_검색_성공();
+
+        //when
+        repository.findById(anyLong());
+
+        //then
+        주소가_ID로_검색되어야함();
+    }
+
+    @Test
+    void 주소_ID_검색시_없을경우_에러() {
+        //given
+        주소_ID_검색_실패();
+
+        //when
+        HoneyBreadException honeyBreadException =
+            assertThrows(HoneyBreadException.class, () -> service.delete(anyLong()));
+
+        //then
+        RECENT_DELIVERY_ADDRESS_NOT_FOUND_에러_발생(honeyBreadException);
+    }
+
+    private void 주소_ID_검색_성공() {
+        given(repository.findById(anyLong()))
+            .willReturn(Optional.of(mockEntity));
+    }
+
+    private void 주소_ID_검색_실패() {
+        given(repository.findById(anyLong()))
+            .willReturn(Optional.empty());
+    }
+
     private void 주소_요청() {
         given(mockRequest.getUserId()).willReturn(1L);
         given(mockRequest.getDeliveryAddress()).willReturn("서울시 강남구 수서동 500 301동 404호");
@@ -101,5 +165,19 @@ class RecentDeliveryAddressServiceTest {
 
     private void 주소_등록이_실행되지_않아야함() {
         then(repository).should(never()).save(any(RecentDeliveryAddress.class));
+    }
+
+    private void 주소가_삭제되어야함() {
+        then(repository).should().delete(any(RecentDeliveryAddress.class));
+    }
+
+    private void 주소가_ID로_검색되어야함() {
+        then(repository).should().findById(anyLong());
+    }
+
+    private void RECENT_DELIVERY_ADDRESS_NOT_FOUND_에러_발생(HoneyBreadException honeyBreadException) {
+        assertEquals(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND.getMessage(), honeyBreadException.getErrorCode().getMessage());
+        assertEquals(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND.getCode(), honeyBreadException.getErrorCode().getCode());
+        assertEquals(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND.getStatus(), honeyBreadException.getErrorCode().getStatus());
     }
 }

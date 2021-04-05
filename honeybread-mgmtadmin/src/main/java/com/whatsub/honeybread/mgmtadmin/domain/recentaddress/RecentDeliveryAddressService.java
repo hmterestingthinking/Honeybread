@@ -2,6 +2,8 @@ package com.whatsub.honeybread.mgmtadmin.domain.recentaddress;
 
 import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddress;
 import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddressRepository;
+import com.whatsub.honeybread.core.infra.errors.ErrorCode;
+import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.recentaddress.dto.RecentDeliveryAddressServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,21 @@ public class RecentDeliveryAddressService {
 
     @Transactional
     public void createIfAbsent(RecentDeliveryAddressServiceRequest request) {
-        RecentDeliveryAddress recentDeliveryAddress = repository.findByUserIdAndDeliveryAddressOrStateNameAddress(request.getUserId(), request.getDeliveryAddress(), request.getStateNameAddress())
-            .orElseGet(() -> repository.save(request.toRecentDeliveryAddress()));
+        RecentDeliveryAddress recentDeliveryAddress =
+            repository.findByUserIdAndDeliveryAddressOrStateNameAddress(request.getUserId(),
+                                                                        request.getDeliveryAddress(),
+                                                                        request.getStateNameAddress())
+                    .orElseGet(() -> repository.save(request.toRecentDeliveryAddress()));
         recentDeliveryAddress.updateUsedAt();
+    }
+
+    @Transactional
+    public void delete(long id) {
+        repository.delete(findById(id));
+    }
+
+    public RecentDeliveryAddress findById(long id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new HoneyBreadException(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND));
     }
 }
