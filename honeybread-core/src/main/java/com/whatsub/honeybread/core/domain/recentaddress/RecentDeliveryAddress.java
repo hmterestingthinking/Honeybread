@@ -55,4 +55,5 @@ public class RecentDeliveryAddress extends BaseEntity {
     public void updateUsedAt() {
         this.usedAt = LocalDateTime.now();
     }
+
 }
