@@ -22,8 +22,17 @@ public class RecentDeliveryAddressService {
             repository.findByUserIdAndDeliveryAddressOrStateNameAddress(request.getUserId(),
                                                                         request.getDeliveryAddress(),
                                                                         request.getStateNameAddress())
-                    .orElseGet(() -> repository.save(request.toRecentDeliveryAddress()));
+                    .orElseGet(() -> {
+                        deleteIfCountGreaterThanOrEqual10(repository.countByUserId(request.getUserId()), request.getUserId());
+                        return repository.save(request.toRecentDeliveryAddress());
+                    });
         recentDeliveryAddress.updateUsedAt();
+    }
+
+    private void deleteIfCountGreaterThanOrEqual10(int count, Long userId) {
+        if(count >= 10) {
+            repository.delete(repository.findTop1ByUserIdOrderByUsedAtAsc(userId).get());
+        }
     }
 
     @Transactional

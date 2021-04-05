@@ -6,6 +6,7 @@ import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.recentaddress.dto.RecentDeliveryAddressServiceRequest;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,6 +45,7 @@ class RecentDeliveryAddressServiceTest {
         //given
         주소_요청();
         도로명주소_또는_지번주소로_검색_실패();
+        등록된_주소가_10개_이하();
         주소_등록();
 
         //when
@@ -53,6 +55,8 @@ class RecentDeliveryAddressServiceTest {
         도로명주소_또는_지번주소로_검색되어야함();
         주소_등록이_실행되어야함();
         주소_사용시간이_업데이트되어야함();
+        주소가_삭제되지_않아야함();
+        주소개수가_카운팅되어야함();
     }
 
     @Test
@@ -68,6 +72,29 @@ class RecentDeliveryAddressServiceTest {
         도로명주소_또는_지번주소로_검색되어야함();
         주소_등록이_실행되지_않아야함();
         주소_사용시간이_업데이트되어야함();
+        주소가_삭제되지_않아야함();
+    }
+
+    @Test
+    @DisplayName("주소가 등록될때 해당 User의 주소가 10개 이상이라면 사용시간이 가장 오래된 최근배달주소를 삭제")
+    void 주소검색시_가장_오래된_주소_삭제하기() {
+        //given
+        주소_요청();
+        도로명주소_또는_지번주소로_검색_실패();
+        등록된_주소가_10개_이상();
+        가장오래된_주소_1개_검색();
+        주소_등록();
+
+        //when
+        service.createIfAbsent(mockRequest);
+
+        //then
+        도로명주소_또는_지번주소로_검색되어야함();
+        주소_등록이_실행되어야함();
+        주소_사용시간이_업데이트되어야함();
+        가장_오래된_주소가_검색되어야함();
+        주소가_삭제되어야함();
+        주소개수가_카운팅되어야함();
     }
 
     @Test
@@ -118,6 +145,18 @@ class RecentDeliveryAddressServiceTest {
 
         //then
         RECENT_DELIVERY_ADDRESS_NOT_FOUND_에러_발생(honeyBreadException);
+    }
+
+    private void 가장오래된_주소_1개_검색() {
+        given(repository.findTop1ByUserIdOrderByUsedAtAsc(anyLong())).willReturn(Optional.of(mockEntity));
+    }
+
+    private void 등록된_주소가_10개_이상() {
+        given(repository.countByUserId(anyLong())).willReturn(10);
+    }
+
+    private void 등록된_주소가_10개_이하() {
+        given(repository.countByUserId(anyLong())).willReturn(9);
     }
 
     private void 주소_ID_검색_성공() {
@@ -171,8 +210,20 @@ class RecentDeliveryAddressServiceTest {
         then(repository).should().delete(any(RecentDeliveryAddress.class));
     }
 
+    private void 주소가_삭제되지_않아야함() {
+        then(repository).should(never()).delete(any(RecentDeliveryAddress.class));
+    }
+
     private void 주소가_ID로_검색되어야함() {
         then(repository).should().findById(anyLong());
+    }
+
+    private void 가장_오래된_주소가_검색되어야함() {
+        then(repository).should().findTop1ByUserIdOrderByUsedAtAsc(anyLong());
+    }
+
+    private void 주소개수가_카운팅되어야함() {
+        then(repository).should().countByUserId(anyLong());
     }
 
     private void RECENT_DELIVERY_ADDRESS_NOT_FOUND_에러_발생(HoneyBreadException honeyBreadException) {
