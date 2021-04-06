@@ -1,6 +1,7 @@
 package com.whatsub.honeybread.mgmtadmin.domain.store;
 
 import com.whatsub.honeybread.common.util.Sha256Utils;
+import com.whatsub.honeybread.core.domain.base.BaseEntity;
 import com.whatsub.honeybread.core.domain.category.CategoryRepository;
 import com.whatsub.honeybread.core.domain.store.Store;
 import com.whatsub.honeybread.core.domain.store.StoreRepository;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -41,7 +44,9 @@ public class StoreService {
         checkStoreNameExistence(storeId, storeUpdateRequest.getBasic().getName());
         checkCategoryIdsExistence(storeUpdateRequest.getCategoryIds());
 
-        storeRepository.getOne(storeId).update(storeUpdateRequest.updateStore());
+        storeRepository.findById(storeId)
+                .orElseThrow(() -> new HoneyBreadException(ErrorCode.STORE_NOT_FOUND))
+                .update(storeUpdateRequest.updateStore());
     }
 
     private void checkStoreExistence(final long storeId) {
@@ -69,11 +74,11 @@ public class StoreService {
     }
 
     private void checkCategoryIdsExistence(final List<Long> categoryIds) {
-        categoryIds.forEach(categoryId -> {
-            if (!categoryRepository.existsById(categoryId)) {
-                throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
-            }
-        });
+        Set<Long> savedCategoryIdSet = categoryRepository.findAllById(categoryIds).stream()
+                .map(BaseEntity::getId).collect(Collectors.toSet());
+        if (categoryIds.stream().anyMatch(id -> !savedCategoryIdSet.contains(id))) {
+            throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
     }
 
 }

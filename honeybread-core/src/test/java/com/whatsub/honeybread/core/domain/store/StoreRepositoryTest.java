@@ -28,8 +28,6 @@ public class StoreRepositoryTest {
 
     @Test
     void 스토어명_없는지_확인() {
-        //given
-
         //when
         boolean result = repository.existsByBasicName(스토어A.getBasic().getName());
 
