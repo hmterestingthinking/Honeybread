@@ -4,7 +4,7 @@ import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddress;
 import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddressRepository;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
-import com.whatsub.honeybread.mgmtadmin.domain.recentaddress.dto.RecentDeliveryAddressServiceRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.recentaddress.dto.RecentDeliveryAddressRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class RecentDeliveryAddressServiceTest {
     RecentDeliveryAddressRepository repository;
 
     @Mock
-    RecentDeliveryAddressServiceRequest mockRequest;
+    RecentDeliveryAddressRequest mockRequest;
 
     @Mock
     RecentDeliveryAddress mockEntity;

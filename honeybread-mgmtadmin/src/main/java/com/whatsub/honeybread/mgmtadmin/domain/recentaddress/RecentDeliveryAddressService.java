@@ -4,7 +4,7 @@ import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddress;
 import com.whatsub.honeybread.core.domain.recentaddress.RecentDeliveryAddressRepository;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
-import com.whatsub.honeybread.mgmtadmin.domain.recentaddress.dto.RecentDeliveryAddressServiceRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.recentaddress.dto.RecentDeliveryAddressRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ public class RecentDeliveryAddressService {
     private final RecentDeliveryAddressRepository repository;
 
     @Transactional
-    public void createIfAbsent(RecentDeliveryAddressServiceRequest request) {
+    public void createIfAbsent(RecentDeliveryAddressRequest request) {
         RecentDeliveryAddress recentDeliveryAddress =
             repository.findByUserIdAndDeliveryAddressOrStateNameAddress(request.getUserId(),
                                                                         request.getDeliveryAddress(),
