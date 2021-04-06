@@ -29,19 +29,19 @@ public class RecentDeliveryAddressService {
         recentDeliveryAddress.updateUsedAt();
     }
 
-    private void deleteIfCountGreaterThanOrEqual10(int count, Long userId) {
-        if(count >= 10) {
-            repository.delete(repository.findTop1ByUserIdOrderByUsedAtAsc(userId).get());
-        }
-    }
-
     @Transactional
     public void delete(Long id) {
         repository.delete(findById(id));
     }
 
-    public RecentDeliveryAddress findById(Long id) {
+    private RecentDeliveryAddress findById(Long id) {
         return repository.findById(id)
             .orElseThrow(() -> new HoneyBreadException(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND));
+    }
+
+    private void deleteIfCountGreaterThanOrEqual10(int count, Long userId) {
+        if(count >= 10) {
+            repository.delete(repository.findTop1ByUserIdOrderByUsedAtAsc(userId).get());
+        }
     }
 }
