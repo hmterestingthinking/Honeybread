@@ -141,20 +141,18 @@ class UserStoreFavoriteRepositoryTest {
     }
 
     Store 스토어_가져오기(int value) {
-        return Store.createStore(
-                anyLong(),
-                new StoreBasic(anyString(),
+        return Store.builder()
+                .sellerId(anyLong())
+                .storeBasic(new StoreBasic(anyString(),
                         anyString(),
                         anyString(),
                         new Address(anyString()),
                         new StoreAnnouncement(anyString(), anyString(), anyString()),
                         new BusinessHours(anyString(), anyString(), anyString()),
-                        new BusinessLicense(anyString())
-                ),
-                new BankAccount(any(), anyString()),
-                anyList(),
-                anyList()
-        );
+                        new BusinessLicense(anyString())))
+                .bankAccount(new BankAccount(any(), anyString()))
+                .categories(anyList())
+                .payMethods(anyList()).build();
     }
 
 }

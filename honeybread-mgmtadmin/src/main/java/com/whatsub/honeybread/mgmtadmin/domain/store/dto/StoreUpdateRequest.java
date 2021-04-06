@@ -32,13 +32,14 @@ public class StoreUpdateRequest extends StoreCommandCommonRequest {
         this.status = status;
     }
 
-    public Store updateStore() {
-        return Store.updateStore(
-                operation.toStoreOperation(),
-                status,
-                basic.toStoreBasic(),
-                bankAccount.toBankAccount(),
-                categoryIds.stream().map(StoreCategory::new).collect(Collectors.toList()),
-                payMethods.stream().map(StorePayMethod::new).collect(Collectors.toList()));
+    public Store toEntity() {
+        return Store.builder()
+                .operation(operation.toStoreOperation())
+                .status(status)
+                .storeBasic(basic.toStoreBasic())
+                .bankAccount(bankAccount.toBankAccount())
+                .categories(categoryIds.stream().map(StoreCategory::new).collect(Collectors.toList()))
+                .payMethods(payMethods.stream().map(StorePayMethod::new).collect(Collectors.toList()))
+                .build();
     }
 }

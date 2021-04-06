@@ -87,20 +87,20 @@ public class StoreRepositoryTest {
     }
 
     private Store 스토어_객체_만들기(String name) {
-        return Store.createStore(
-                anyLong(),
-                new StoreBasic(name,
+        return Store.builder()
+                .sellerId(anyLong())
+                .storeBasic(new StoreBasic(name,
                         anyString(),
                         anyString(),
                         new Address(anyString()),
                         new StoreAnnouncement(anyString(), anyString(), anyString()),
                         new BusinessHours(anyString(), anyString(), anyString()),
                         new BusinessLicense(anyString())
-                ),
-                new BankAccount(any(), anyString()),
-                anyList(),
-                anyList()
-        );
+                ))
+                .bankAccount(new BankAccount(any(), anyString()))
+                .categories(anyList())
+                .payMethods(anyList())
+                .build();
     }
 
 }

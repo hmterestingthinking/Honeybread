@@ -2,6 +2,7 @@ package com.whatsub.honeybread.core.domain.store;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "stores")
@@ -62,40 +64,25 @@ public class Store extends BaseEntity {
     @CollectionTable(name = "store_pay_methods", joinColumns = @JoinColumn(name = "store_id"))
     private List<StorePayMethod> payMethods = List.of();
 
-    public static Store createStore(final Long sellerId,
-                                    final StoreBasic storeBasic,
-                                    final BankAccount bankAccount,
-                                    final List<StoreCategory> categories,
-                                    final List<StorePayMethod> payMethods) {
-        Store store = new Store();
-        store.sellerId = sellerId;
-        store.operation = StoreOperation.createClosedOperation();
-        store.status = StoreStatus.WAITING;
-        store.basic = storeBasic;
-        store.bankAccount = bankAccount;
-        store.categories = categories;
-        store.payMethods = payMethods;
-        return store;
+    @Builder
+    public Store(final Long sellerId,
+                 final StoreOperation operation,
+                 final StoreStatus status,
+                 final StoreBasic storeBasic,
+                 final BankAccount bankAccount,
+                 final List<StoreCategory> categories,
+                 final List<StorePayMethod> payMethods) {
+        this.sellerId = sellerId;
+        this.operation = Objects.requireNonNullElse(operation, StoreOperation.createClosedOperation());
+        this.status = Objects.requireNonNullElse(status, StoreStatus.WAITING);
+        this.basic = storeBasic;
+        this.bankAccount = bankAccount;
+        this.categories = categories;
+        this.payMethods = payMethods;
     }
 
     public void updateUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public static Store updateStore(final StoreOperation operation,
-                                    final StoreStatus status,
-                                    final StoreBasic storeBasic,
-                                    final BankAccount bankAccount,
-                                    final List<StoreCategory> categories,
-                                    final List<StorePayMethod> payMethods) {
-        Store store = new Store();
-        store.operation = operation;
-        store.status = status;
-        store.basic = storeBasic;
-        store.bankAccount = bankAccount;
-        store.categories = categories;
-        store.payMethods = payMethods;
-        return store;
     }
 
     public void update(final Store store) {

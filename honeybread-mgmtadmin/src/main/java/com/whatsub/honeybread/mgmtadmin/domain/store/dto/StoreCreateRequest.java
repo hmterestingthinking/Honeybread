@@ -27,13 +27,14 @@ public class StoreCreateRequest extends StoreCommandCommonRequest {
         this.sellerId = sellerId;
     }
 
-    public Store createStore() {
-        return Store.createStore(
-                sellerId,
-                basic.toStoreBasic(),
-                bankAccount.toBankAccount(),
-                categoryIds.stream().map(StoreCategory::new).collect(Collectors.toList()),
-                payMethods.stream().map(StorePayMethod::new).collect(Collectors.toList()));
+    public Store toEntity() {
+        return Store.builder()
+                .sellerId(sellerId)
+                .storeBasic(basic.toStoreBasic())
+                .bankAccount(bankAccount.toBankAccount())
+                .categories(categoryIds.stream().map(StoreCategory::new).collect(Collectors.toList()))
+                .payMethods(payMethods.stream().map(StorePayMethod::new).collect(Collectors.toList()))
+                .build();
     }
 
 }

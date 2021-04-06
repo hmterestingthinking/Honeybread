@@ -33,7 +33,7 @@ public class StoreService {
         checkStoreNameExistence(storeCreateRequest.getBasic().getName());
         checkCategoryIdsExistence(storeCreateRequest.getCategoryIds());
 
-        Store saved = storeRepository.save(storeCreateRequest.createStore());
+        Store saved = storeRepository.save(storeCreateRequest.toEntity());
         saved.updateUuid(Sha256Utils.generate(saved.getId(), saved.getBasic().getName()));
         return saved.getId();
     }
@@ -46,7 +46,7 @@ public class StoreService {
 
         storeRepository.findById(storeId)
                 .orElseThrow(() -> new HoneyBreadException(ErrorCode.STORE_NOT_FOUND))
-                .update(storeUpdateRequest.updateStore());
+                .update(storeUpdateRequest.toEntity());
     }
 
     private void checkStoreExistence(final long storeId) {

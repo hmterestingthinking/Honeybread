@@ -2,8 +2,7 @@ package com.whatsub.honeybread.common.util;
 
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -11,10 +10,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public final class Sha256Utils {
 
-    public static String generate(String salt) {
+    public String generate(String salt) {
         byte[] raw = new byte[16];
         ThreadLocalRandom.current().nextBytes(raw);
 
@@ -30,7 +29,7 @@ public final class Sha256Utils {
         return String.format("%064x", new BigInteger(1, md.digest()));
     }
 
-    public static String generate(Object... saltItem) {
+    public String generate(Object... saltItem) {
         StringBuilder builder = new StringBuilder();
         Arrays.stream(saltItem).forEach(item -> builder.append("_").append(item));
         return generate(builder.toString());
