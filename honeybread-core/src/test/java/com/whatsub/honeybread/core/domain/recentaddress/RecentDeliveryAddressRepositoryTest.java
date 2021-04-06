@@ -78,7 +78,7 @@ class RecentDeliveryAddressRepositoryTest {
     }
 
     @Test
-    public void UserId로_최근배달주소들_검색() {
+    void UserId로_최근배달주소들_검색() {
         //given
         final long userId = 1L;
         사이즈만큼_최근배달주소_등록(10, userId);
@@ -91,7 +91,7 @@ class RecentDeliveryAddressRepositoryTest {
     }
 
     @Test
-    public void UserId로_최근배달주소들_개수_검색() {
+    void UserId로_최근배달주소들_개수_검색() {
         //given
         final long userId = 1L;
         사이즈만큼_최근배달주소_등록(10, userId);
@@ -104,7 +104,7 @@ class RecentDeliveryAddressRepositoryTest {
     }
 
     @Test
-    public void UserId로_최근배달주소들중_가장_오래된_최근배달주소_검색() {
+    void UserId로_최근배달주소들중_가장_오래된_최근배달주소_검색() {
         //given
         final long userId = 1L;
         final RecentDeliveryAddress old = RecentDeliveryAddress.builder()
