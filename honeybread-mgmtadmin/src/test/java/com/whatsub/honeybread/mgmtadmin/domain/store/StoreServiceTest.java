@@ -285,7 +285,7 @@ public class StoreServiceTest {
     }
 
     private void n번만큼_카테고리가_존재하는지_검사를_수행했다(int n) {
-        then(categoryRepository).should(times(2)).existsById(anyLong());
+        then(categoryRepository).should(times(n)).existsById(anyLong());
     }
 
     private void 스토어가_등록됐다() {
