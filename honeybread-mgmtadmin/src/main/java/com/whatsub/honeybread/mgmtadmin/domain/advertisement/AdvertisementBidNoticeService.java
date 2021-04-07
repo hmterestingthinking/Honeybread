@@ -29,21 +29,29 @@ public class AdvertisementBidNoticeService {
     @Transactional
     public void update(final Long id, AdvertisementBidNoticeRequest request) {
         AdvertisementBidNotice entity = findAdvertiseBidNotice(id);
+        validateProgress(entity);
+        entity.update(request.toEntity());
+        validator.validate(entity);
+    }
+
+    // 삭제
+    @Transactional
+    public void delete(final Long id) {
+        AdvertisementBidNotice entity = findAdvertiseBidNotice(id);
+        validateProgress(entity);
+        repository.delete(entity);
+    }
+
+    // 종료 (마감)
+
+    private void validateProgress(AdvertisementBidNotice entity) {
         if (entity.isProcess()) {
             throw new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY);
         }
-        entity.update(request.toEntity());
-        validator.validate(entity);
     }
 
     private AdvertisementBidNotice findAdvertiseBidNotice(final Long id) {
         return repository.findById(id)
             .orElseThrow(() -> new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_NOT_FOUND));
     }
-
-
-
-    // 삭제
-
-    // 종료 (마감)
 }

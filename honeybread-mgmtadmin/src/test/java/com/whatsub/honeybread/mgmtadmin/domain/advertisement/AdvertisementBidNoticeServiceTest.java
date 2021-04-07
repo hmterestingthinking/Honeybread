@@ -45,103 +45,242 @@ class AdvertisementBidNoticeServiceTest {
     @Test
     void 벨리데이션_성공시_등록_성공() {
         // given
-        given(entity.getId()).willReturn(1L);
-        willDoNothing().given(validator).validate(any(AdvertisementBidNotice.class));
-        given(repository.save(any(AdvertisementBidNotice.class))).willReturn(entity);
+        벨리데이션시_성공한다();
+        등록시_성공한다();
 
         // when
         입찰공고_등록();
 
         // then
-        then(validator).should().validate(any(AdvertisementBidNotice.class));
-        then(repository).should().save(any(AdvertisementBidNotice.class));
-        then(entity).should().getId();
+        벨리데이션이_수행되어야_한다();
+        입찰공고_등록이_수행되어야_한다();
+        입찰공고_식별자가_반환되어야_한다();
     }
 
     @Test
     void 벨리데이션_실패시_등록_실패() {
         // given
-        willThrow(ValidationException.class).given(validator).validate(any(AdvertisementBidNotice.class));
-        given(repository.save(any(AdvertisementBidNotice.class))).willReturn(entity);
+        벨리데이션시_실패한다();
+        등록시_성공한다();
 
         // when
         assertThrows(ValidationException.class, this::입찰공고_등록);
 
         // then
-        then(validator).should().validate(any(AdvertisementBidNotice.class));
-        then(repository).should(never()).save(any(AdvertisementBidNotice.class));
-        then(entity).should(never()).getId();
+        벨리데이션이_수행되어야_한다();
+        입찰공고_등록이_수행되어서는_안된다();
+        입찰공고_식별자가_반환되어서는_안된다();
     }
 
     // 수정
     @Test
     void 벨리데이션_성공시_수정_성공() {
         // given
-        given(repository.findById(anyLong())).willReturn(Optional.of(entity));
-        willDoNothing().given(validator).validate(any(AdvertisementBidNotice.class));
+        입찰공고_조회시_성공한다();
+        입찰이_진행중이_아니다();
+        벨리데이션시_성공한다();
 
         // when
         입찰공고_수정();
 
         // then
-        then(repository).should().findById(anyLong());
-        then(entity).should().isProcess();
-        then(validator).should().validate(any(AdvertisementBidNotice.class));
+        입찰공고_조회가_수행되어야_한다();
+        입찰_진행중_확인이_수행되어야_한다();
+        벨리데이션이_수행되어야_한다();
     }
 
     @Test
     void 벨리데이션_실패시_수정_실패() {
         // given
-        given(repository.findById(anyLong())).willReturn(Optional.of(entity));
-        willThrow(ValidationException.class).given(validator).validate(any(AdvertisementBidNotice.class));
+        입찰공고_조회시_성공한다();
+        입찰이_진행중이_아니다();
+        벨리데이션시_실패한다();
 
         // when
         assertThrows(ValidationException.class, this::입찰공고_수정);
 
         // then
-        then(repository).should().findById(anyLong());
-        then(entity).should().isProcess();
-        then(validator).should().validate(any(AdvertisementBidNotice.class));
+        입찰공고_조회가_수행되어야_한다();
+        입찰_진행중_확인이_수행되어야_한다();
+        벨리데이션이_수행되어야_한다();
     }
 
     @Test
     void 입찰공고가_존재하지_않는다면_수정_실패() {
         // given
-        given(repository.findById(anyLong())).willReturn(Optional.empty());
+        입찰공고_조회시_실패한다();
 
         // when
         HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::입찰공고_수정);
 
         // then
-        then(repository).should().findById(anyLong());
-        then(entity).should(never()).isProcess();
-        then(validator).should(never()).validate(any(AdvertisementBidNotice.class));
-
-        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.ADVERTISEMENT_BID_NOTICE_NOT_FOUND);
+        입찰공고_조회가_수행되어야_한다();
+        입찰_진행중_확인이_수행되어서는_안된다();
+        벨리데이션이_수행되어서는_안된다();
+        입찰공고_찾지못함_에러코드_확인(ex);
     }
 
     @Test
     void 입찰진행중_이라면_수정_실패() {
         // given
-        given(entity.isProcess()).willReturn(true);
-        given(repository.findById(anyLong())).willReturn(Optional.of(entity));
-        willDoNothing().given(validator).validate(any(AdvertisementBidNotice.class));
+        입찰공고_조회시_성공한다();
+        입찰이_진행중이다();
+        벨리데이션시_성공한다();
 
         // when
         HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::입찰공고_수정);
 
         // then
-        then(repository).should().findById(anyLong());
-        then(entity).should().isProcess();
-        then(validator).should(never()).validate(any(AdvertisementBidNotice.class));
+        입찰공고_조회가_수행되어야_한다();
+        입찰_진행중_확인이_수행되어야_한다();
+        벨리데이션이_수행되어서는_안된다();
 
-        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY);
+        입찰공고_진행_에러코드_확인(ex);
     }
 
     // 삭제
+    @Test
+    void 입찰공고_삭제_성공() {
+        // given
+        입찰공고_조회시_성공한다();
+        입찰이_진행중이_아니다();
+
+        // when
+        입찰공고_삭제();
+
+        // then
+        입찰공고_조회가_수행되어야_한다();
+
+    }
+
+    @Test
+    void 입찰공고가_존재하지_않는다면_삭제_실패() {
+        // given
+        입찰공고_조회시_실패한다();
+
+        // when
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::입찰공고_삭제);
+
+        // then
+        입찰공고_조회가_수행되어야_한다();
+        입찰공고_찾지못함_에러코드_확인(ex);
+    }
+
+    @Test
+    void 입찰_진행중이라면_삭제_실패() {
+        // given
+        입찰공고_조회시_성공한다();
+        입찰이_진행중이다();
+
+        // when
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::입찰공고_삭제);
+
+        // then
+        입찰공고_조회가_수행되어야_한다();
+        입찰_진행중_확인이_수행되어야_한다();
+        입찰공고_진행_에러코드_확인(ex);
+    }
 
     // 종료 (마감)
 
+    /**
+     * Given
+     */
+    private void 등록시_성공한다() {
+        given(entity.getId()).willReturn(1L);
+        given(repository.save(any(AdvertisementBidNotice.class))).willReturn(entity);
+    }
+
+    private void 벨리데이션시_성공한다() {
+        willDoNothing().given(validator).validate(any(AdvertisementBidNotice.class));
+    }
+
+    private void 벨리데이션시_실패한다() {
+        willThrow(ValidationException.class).given(validator).validate(any(AdvertisementBidNotice.class));
+    }
+
+    private void 입찰공고_조회시_성공한다() {
+        given(repository.findById(anyLong())).willReturn(Optional.of(entity));
+    }
+
+    private void 입찰공고_조회시_실패한다() {
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+    }
+
+    private void 입찰이_진행중이다() {
+        given(entity.isProcess()).willReturn(true);
+    }
+
+    private void 입찰이_진행중이_아니다() {
+        given(entity.isProcess()).willReturn(false);
+    }
+
+    /**
+     * When
+     */
+    private void 입찰공고_등록() {
+        service.create(공고_요청());
+    }
+
+    private void 입찰공고_수정() {
+        service.update(anyLong(), 공고_요청());
+    }
+
+    private void 입찰공고_삭제() {
+        service.delete(anyLong());
+    }
+
+    /**
+     * Then
+     */
+    private void 벨리데이션이_수행되어야_한다() {
+        then(validator).should().validate(any(AdvertisementBidNotice.class));
+    }
+
+    private void 입찰공고_등록이_수행되어야_한다() {
+        then(repository).should().save(any(AdvertisementBidNotice.class));
+    }
+
+    private void 입찰공고_등록이_수행되어서는_안된다() {
+        then(repository).should(never()).save(any(AdvertisementBidNotice.class));
+    }
+
+    private void 입찰공고_식별자가_반환되어야_한다() {
+        then(entity).should().getId();
+    }
+
+    private void 입찰공고_식별자가_반환되어서는_안된다() {
+        then(entity).should(never()).getId();
+    }
+
+    private void 입찰공고_조회가_수행되어야_한다() {
+        then(repository).should().findById(anyLong());
+    }
+
+    private void 입찰_진행중_확인이_수행되어야_한다() {
+        then(entity).should().isProcess();
+    }
+
+    private void 벨리데이션이_수행되어서는_안된다() {
+        then(validator).should(never()).validate(any(AdvertisementBidNotice.class));
+    }
+
+    private void 입찰_진행중_확인이_수행되어서는_안된다() {
+        then(entity).should(never()).isProcess();
+    }
+
+    private void 입찰공고_진행_에러코드_확인(HoneyBreadException ex) {
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY);
+    }
+
+    private void 입찰공고_찾지못함_에러코드_확인(HoneyBreadException ex) {
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.ADVERTISEMENT_BID_NOTICE_NOT_FOUND);
+    }
+
+
+    /**
+     * Helper
+     */
     private AdvertisementBidNoticeRequest 공고_요청() {
         final AdvertisementType 광고_타입 = AdvertisementType.OPEN_LIST;
         final TimePeriod 광고_기간 = TimePeriod.of(
@@ -158,13 +297,5 @@ class AdvertisementBidNoticeServiceTest {
             .bidPriceUnit(입찰_단위)
             .maximumStoreCounts(최대_낙찰_가능_스토어_수)
             .build();
-    }
-
-    private void 입찰공고_등록() {
-        service.create(공고_요청());
-    }
-
-    private void 입찰공고_수정() {
-        service.update(1L, 공고_요청());
     }
 }
