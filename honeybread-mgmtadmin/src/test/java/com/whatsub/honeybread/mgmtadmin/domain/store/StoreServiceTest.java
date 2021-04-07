@@ -156,7 +156,6 @@ public class StoreServiceTest {
         존재하는_셀러다();
         중복되지않은_스토어명이다();
         모두_존재하는_카테고리아이디로_등록요청을_한다();
-        모두_존재하는_카테고리아이디로_카테고리_조회시_요청한_모든카테고리가_조회된다();
         스토어를_저장하면_엔티티가_반환된다();
 
         // when
@@ -286,9 +285,6 @@ public class StoreServiceTest {
 
     private void 모두_존재하는_카테고리아이디로_등록요청을_한다() {
         given(스토어_등록요청.getCategoryIds()).willReturn(카테고리_아이디_목록_정상_요청);
-    }
-
-    private void 모두_존재하는_카테고리아이디로_카테고리_조회시_요청한_모든카테고리가_조회된다() {
         given(categoryRepository.findAllById(카테고리_아이디_목록_정상_요청)).willReturn(카테고리_아이디_목록_정상_요청에_대한_조회결과);
     }
 
