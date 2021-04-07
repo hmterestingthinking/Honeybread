@@ -101,7 +101,7 @@ class MenuValidatorTest {
     @Test
     void 카테고리가_없다면_예외_발생() {
         // given
-        given(categoryRepository.existsById(anyLong())).willReturn(Boolean.FALSE);
+        카테고리_조회시_실패한다();
 
         // when
         HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::메뉴_벨리데이션);
@@ -177,6 +177,10 @@ class MenuValidatorTest {
      */
     private void 카테고리_조회시_성공한다() {
         given(categoryRepository.existsById(anyLong())).willReturn(Boolean.TRUE);
+    }
+
+    private void 카테고리_조회시_실패한다() {
+        given(categoryRepository.existsById(anyLong())).willReturn(Boolean.FALSE);
     }
 
     private void 메뉴그룹_조회시_성공한다() {
