@@ -47,12 +47,6 @@ public class StoreServiceCreateTest {
     String 스토어명 = "테스트스토어";
     Store 스토어;
 
-    long 저장되어있는_카테고리_1_아이디 = 1L;
-    long 저장되어있는_카테고리_2_아이디 = 2L;
-    long 저장되어있지_않은_카테고리_아이디 = 999999L;
-    Category 저장되어있는_카테고리_1;
-    Category 저장되어있는_카테고리_2;
-
     Set<Long> 카테고리_아이디_목록_비정상_요청;
     Set<Long> 카테고리_아이디_목록_정상_요청;
     List<Category> 카테고리_아이디_목록_비정상_요청에_대한_조회결과;
@@ -73,8 +67,12 @@ public class StoreServiceCreateTest {
 
     @BeforeEach
     void 카테고리_셋업() {
-        저장되어있는_카테고리_1 = mock(Category.class);
-        저장되어있는_카테고리_2 = mock(Category.class);
+        long 저장되어있는_카테고리_1_아이디 = 1L;
+        long 저장되어있는_카테고리_2_아이디 = 2L;
+        long 저장되어있지_않은_카테고리_아이디 = 999999L;
+
+        Category 저장되어있는_카테고리_1 = mock(Category.class);
+        Category 저장되어있는_카테고리_2 = mock(Category.class);
         given(저장되어있는_카테고리_1.getId()).willReturn(저장되어있는_카테고리_1_아이디);
         given(저장되어있는_카테고리_2.getId()).willReturn(저장되어있는_카테고리_2_아이디);
 
@@ -183,7 +181,6 @@ public class StoreServiceCreateTest {
     private void 모두_존재하는_카테고리아이디로_카테고리_조회시_요청한_모든카테고리가_조회된다() {
         given(categoryRepository.findAllById(카테고리_아이디_목록_정상_요청)).willReturn(카테고리_아이디_목록_정상_요청에_대한_조회결과);
     }
-
 
     /**
      * when

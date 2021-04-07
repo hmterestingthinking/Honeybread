@@ -52,12 +52,6 @@ public class StoreServiceUpdateTest {
 
     String 저장되어있는_다른_스토어명 = "다른 스토어명";
 
-    long 저장되어있는_카테고리_1_아이디 = 1L;
-    long 저장되어있는_카테고리_2_아이디 = 2L;
-    long 저장되어있지_않은_카테고리_아이디 = 999999L;
-    Category 저장되어있는_카테고리_1;
-    Category 저장되어있는_카테고리_2;
-
     Set<Long> 카테고리_아이디_목록_비정상_요청;
     Set<Long> 카테고리_아이디_목록_정상_요청;
     List<Category> 카테고리_아이디_목록_비정상_요청에_대한_조회결과;
@@ -77,8 +71,12 @@ public class StoreServiceUpdateTest {
 
     @BeforeEach
     void 카테고리_셋업() {
-        저장되어있는_카테고리_1 = mock(Category.class);
-        저장되어있는_카테고리_2 = mock(Category.class);
+        long 저장되어있는_카테고리_1_아이디 = 1L;
+        long 저장되어있는_카테고리_2_아이디 = 2L;
+        long 저장되어있지_않은_카테고리_아이디 = 999999L;
+
+        Category 저장되어있는_카테고리_1 = mock(Category.class);
+        Category 저장되어있는_카테고리_2 = mock(Category.class);
         given(저장되어있는_카테고리_1.getId()).willReturn(저장되어있는_카테고리_1_아이디);
         given(저장되어있는_카테고리_2.getId()).willReturn(저장되어있는_카테고리_2_아이디);
 
@@ -148,7 +146,6 @@ public class StoreServiceUpdateTest {
         // given
         저장된_스토어가_조회된다();
         일부_존재하지않는_카테고리아이디로_수정요청을_한다();
-        일부_존재하지않는_카테고리아이디로_카테고리_조회시_저장된카테고리만_조회된다();
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::수정한다);
@@ -165,7 +162,6 @@ public class StoreServiceUpdateTest {
         // given
         저장된_스토어가_조회된다();
         모두_존재하는_카테고리아이디로_수정요청을_한다();
-        모두_존재하는_카테고리아이디로_카테고리_조회시_요청한_모든카테고리가_조회된다();
 
         // when
         수정한다();
@@ -203,17 +199,11 @@ public class StoreServiceUpdateTest {
 
     private void 일부_존재하지않는_카테고리아이디로_수정요청을_한다() {
         given(스토어_수정요청.getCategoryIds()).willReturn(카테고리_아이디_목록_비정상_요청);
-    }
-
-    private void 일부_존재하지않는_카테고리아이디로_카테고리_조회시_저장된카테고리만_조회된다() {
         given(categoryRepository.findAllById(카테고리_아이디_목록_비정상_요청)).willReturn(카테고리_아이디_목록_비정상_요청에_대한_조회결과);
     }
 
     private void 모두_존재하는_카테고리아이디로_수정요청을_한다() {
         given(스토어_수정요청.getCategoryIds()).willReturn(카테고리_아이디_목록_정상_요청);
-    }
-
-    private void 모두_존재하는_카테고리아이디로_카테고리_조회시_요청한_모든카테고리가_조회된다() {
         given(categoryRepository.findAllById(카테고리_아이디_목록_정상_요청)).willReturn(카테고리_아이디_목록_정상_요청에_대한_조회결과);
     }
 
