@@ -43,8 +43,9 @@ public class StoreServiceCreateTest {
     CategoryRepository categoryRepository;
 
     StoreCreateRequest 스토어_등록요청;
-    Long 스토어아이디 = 1000L;
-    String 스토어명 = "테스트스토어";
+
+    Long 스토어_아이디 = 1000L;
+    String 스토어명 = "등록할스토어";
     Store 스토어;
 
     Set<Long> 카테고리_아이디_목록_비정상_요청;
@@ -59,10 +60,9 @@ public class StoreServiceCreateTest {
         given(스토어_등록요청.getBasic().getName()).willReturn(스토어명);
 
         스토어 = mock(Store.class);
-        given(스토어.getId()).willReturn(스토어아이디);
+        given(스토어.getId()).willReturn(스토어_아이디);
         given(스토어.getBasic()).willReturn(mock(StoreBasic.class));
         given(스토어.getBasic().getName()).willReturn(스토어명);
-        given(storeRepository.save(any())).willReturn(스토어);
     }
 
     @BeforeEach
@@ -135,6 +135,7 @@ public class StoreServiceCreateTest {
         중복되지않은_스토어명이다();
         모두_존재하는_카테고리아이디로_등록요청을_한다();
         모두_존재하는_카테고리아이디로_카테고리_조회시_요청한_모든카테고리가_조회된다();
+        스토어를_저장하면_엔티티가_반환된다();
 
         // when
         스토어를_등록한다();
@@ -180,6 +181,10 @@ public class StoreServiceCreateTest {
 
     private void 모두_존재하는_카테고리아이디로_카테고리_조회시_요청한_모든카테고리가_조회된다() {
         given(categoryRepository.findAllById(카테고리_아이디_목록_정상_요청)).willReturn(카테고리_아이디_목록_정상_요청에_대한_조회결과);
+    }
+
+    private void 스토어를_저장하면_엔티티가_반환된다() {
+        given(storeRepository.save(스토어_등록요청.toEntity())).willReturn(스토어);
     }
 
     /**

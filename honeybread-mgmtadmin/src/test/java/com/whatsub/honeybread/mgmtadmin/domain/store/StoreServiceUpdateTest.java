@@ -47,7 +47,7 @@ public class StoreServiceUpdateTest {
     StoreUpdateRequest 스토어_수정요청;
 
     long 저장된_스토어_아이디 = 1L;
-    String 저장된_스토어의_이름 = "저장된 스토어의 이름";
+    String 저장된_스토어명 = "스토어명";
     Store 저장된_스토어;
 
     String 저장되어있는_다른_스토어명 = "다른 스토어명";
@@ -61,12 +61,11 @@ public class StoreServiceUpdateTest {
     void 스토어_셋업() {
         저장된_스토어 = mock(Store.class);
         given(저장된_스토어.getBasic()).willReturn(mock(StoreBasic.class));
-        given(저장된_스토어.getBasic().getName()).willReturn(저장된_스토어의_이름);
+        given(저장된_스토어.getBasic().getName()).willReturn(저장된_스토어명);
 
         스토어_수정요청 = mock(StoreUpdateRequest.class);
-
         given(스토어_수정요청.getBasic()).willReturn(mock(StoreBasicRequest.class));
-        given(스토어_수정요청.getBasic().getName()).willReturn(저장된_스토어의_이름);
+        given(스토어_수정요청.getBasic().getName()).willReturn(저장된_스토어명);
     }
 
     @BeforeEach
