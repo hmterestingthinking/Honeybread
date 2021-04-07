@@ -1,13 +1,11 @@
 package com.whatsub.honeybread.core.domain.menu.repository.query;
 
 import com.whatsub.honeybread.core.domain.menu.MenuGroup;
-import lombok.Builder;
 import lombok.Value;
 
 import java.util.List;
 
 @Value
-@Builder
 public class MenuGroupDto {
     long id;
     String name;
@@ -22,5 +20,4 @@ public class MenuGroupDto {
             menus
         );
     }
-
 }
