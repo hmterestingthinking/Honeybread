@@ -20,7 +20,6 @@ public class RecentDeliveryAddressRequest {
 
     public RecentDeliveryAddress toRecentDeliveryAddress() {
         return RecentDeliveryAddress.builder()
-            .usedAt(LocalDateTime.now())
             .zipCode(this.zipCode)
             .stateNameAddress(this.stateNameAddress)
             .searchableDeliveryAddress(this.searchableDeliveryAddress)
