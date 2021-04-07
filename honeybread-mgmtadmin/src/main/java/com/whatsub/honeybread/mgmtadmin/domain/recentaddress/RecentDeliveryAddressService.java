@@ -9,6 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
@@ -23,7 +27,7 @@ public class RecentDeliveryAddressService {
                                                                         request.getDeliveryAddress(),
                                                                         request.getStateNameAddress())
                     .orElseGet(() -> {
-                        deleteIfCountGreaterThanOrEqual10(repository.countByUserId(request.getUserId()), request.getUserId());
+                        deleteEldestIfSizeGreaterThanOrEqual10(repository.findAllByUserId(request.getUserId()));
                         return repository.save(request.toRecentDeliveryAddress());
                     });
         recentDeliveryAddress.updateUsedAt();
@@ -39,9 +43,12 @@ public class RecentDeliveryAddressService {
             .orElseThrow(() -> new HoneyBreadException(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND));
     }
 
-    private void deleteIfCountGreaterThanOrEqual10(int count, Long userId) {
-        if(count >= 10) {
-            repository.delete(repository.findTop1ByUserIdOrderByUsedAtAsc(userId).get());
+    private void deleteEldestIfSizeGreaterThanOrEqual10(List<RecentDeliveryAddress> list) {
+        if(list.size() >= 10) {
+            list.stream()
+                .sorted(Comparator.comparing(RecentDeliveryAddress::getUsedAt))
+                .collect(Collectors.toList());
+            repository.delete(list.get(0));
         }
     }
 }

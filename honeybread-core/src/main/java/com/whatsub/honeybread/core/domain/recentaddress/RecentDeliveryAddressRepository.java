@@ -8,6 +8,4 @@ import java.util.Optional;
 public interface RecentDeliveryAddressRepository extends JpaRepository<RecentDeliveryAddress, Long> {
     Optional<RecentDeliveryAddress> findByUserIdAndDeliveryAddressOrStateNameAddress(Long userId, String deliveryAddress, String stateNameAddress);
     List<RecentDeliveryAddress> findAllByUserId(Long userId);
-    int countByUserId(Long userId);
-    Optional<RecentDeliveryAddress> findTop1ByUserIdOrderByUsedAtAsc(Long userId);
 }
