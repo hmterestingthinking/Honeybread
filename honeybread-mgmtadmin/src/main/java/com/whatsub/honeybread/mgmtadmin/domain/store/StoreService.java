@@ -39,19 +39,17 @@ public class StoreService {
 
     @Transactional
     public void update(final long storeId, final StoreUpdateRequest storeUpdateRequest) {
-        checkStoreExistence(storeId);
-        checkStoreNameExistence(storeId, storeUpdateRequest.getBasic().getName());
+        Store savedStore = getSavedStore(storeId);
+        checkStoreNameExistenceExcludeSelf(savedStore, storeUpdateRequest.getBasic().getName());
         checkCategoryIdsExistence(storeUpdateRequest.getCategoryIds());
 
-        storeRepository.findById(storeId)
-                .orElseThrow(() -> new HoneyBreadException(ErrorCode.STORE_NOT_FOUND))
-                .update(storeUpdateRequest.toEntity());
+        savedStore.update(storeUpdateRequest.toEntity());
     }
 
-    private void checkStoreExistence(final long storeId) {
-        if (!storeRepository.existsById(storeId)) {
+    private Store getSavedStore(final long storeId) {
+        return storeRepository.findById(storeId).orElseThrow(() -> {
             throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
-        }
+        });
     }
 
     private void checkSellerIdExistence(final long sellerId) {
@@ -66,8 +64,12 @@ public class StoreService {
         }
     }
 
-    private void checkStoreNameExistence(final long excludeStoreId, final String name) {
-        if (storeRepository.existsByIdNotAndBasicName(excludeStoreId, name)) {
+    private void checkStoreNameExistenceExcludeSelf(final Store savedStore, final String name) {
+        if (savedStore.getBasic().getName().equals(name)) {
+            return;
+        }
+
+        if (storeRepository.existsByBasicName(name)) {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME);
         }
     }
