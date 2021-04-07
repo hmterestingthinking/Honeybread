@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -15,8 +15,8 @@ public abstract class StoreCommandCommonRequest {
 
     protected final BankAccountRequest bankAccount;
 
-    protected final List<Long> categoryIds;
+    protected final Set<Long> categoryIds;
 
-    protected final List<PayType> payMethods;
+    protected final Set<PayType> payMethods;
 
 }

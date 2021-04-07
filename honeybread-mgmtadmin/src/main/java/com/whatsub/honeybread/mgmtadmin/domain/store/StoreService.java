@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -73,7 +72,7 @@ public class StoreService {
         }
     }
 
-    private void checkCategoryIdsExistence(final List<Long> categoryIds) {
+    private void checkCategoryIdsExistence(final Set<Long> categoryIds) {
         Set<Long> savedCategoryIdSet = categoryRepository.findAllById(categoryIds).stream()
                 .map(BaseEntity::getId).collect(Collectors.toSet());
         if (categoryIds.stream().anyMatch(id -> !savedCategoryIdSet.contains(id))) {

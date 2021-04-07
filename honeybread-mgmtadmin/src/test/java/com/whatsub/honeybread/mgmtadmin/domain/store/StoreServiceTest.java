@@ -21,6 +21,7 @@ import org.springframework.test.context.TestConstructor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
@@ -58,7 +59,7 @@ public class StoreServiceTest {
     Long 카테고리_ID_2 = 2L;
     Category 카테고리_2;
 
-    List<Long> 카테고리_ID_목록 = List.of(카테고리_ID_1, 카테고리_ID_2);
+    Set<Long> 카테고리_ID_목록 = Set.of(카테고리_ID_1, 카테고리_ID_2);
 
     Long 스토어아이디 = 1000L;
     String 스토어명 = "테스트스토어";

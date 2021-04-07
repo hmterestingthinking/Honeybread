@@ -9,7 +9,7 @@ import com.whatsub.honeybread.core.domain.store.StoreStatus;
 import io.swagger.annotations.ApiModel;
 import lombok.Value;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ApiModel("스토어 수정 요청")
@@ -25,8 +25,8 @@ public class StoreUpdateRequest extends StoreCommandCommonRequest {
                               StoreStatus status,
                               StoreBasicRequest basic,
                               BankAccountRequest bankAccount,
-                              List<Long> categoryIds,
-                              List<PayType> payMethods) {
+                              Set<Long> categoryIds,
+                              Set<PayType> payMethods) {
         super(basic, bankAccount, categoryIds, payMethods);
         this.operation = operation;
         this.status = status;

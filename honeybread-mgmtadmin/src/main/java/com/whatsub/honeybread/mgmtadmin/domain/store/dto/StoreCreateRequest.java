@@ -8,7 +8,7 @@ import com.whatsub.honeybread.core.domain.store.StorePayMethod;
 import io.swagger.annotations.ApiModel;
 import lombok.Value;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ApiModel("스토어 등록 요청")
@@ -21,8 +21,8 @@ public class StoreCreateRequest extends StoreCommandCommonRequest {
     public StoreCreateRequest(Long sellerId,
                               StoreBasicRequest basic,
                               BankAccountRequest bankAccount,
-                              List<Long> categoryIds,
-                              List<PayType> payMethods) {
+                              Set<Long> categoryIds,
+                              Set<PayType> payMethods) {
         super(basic, bankAccount, categoryIds, payMethods);
         this.sellerId = sellerId;
     }
