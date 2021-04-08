@@ -213,7 +213,7 @@ class RecentDeliveryAddressServiceTest {
     }
 
     private void 주소_사용시간이_업데이트되어야함() {
-        then(mockEntity).should().updateUsedAt();
+        then(mockEntity).should().updateUsedAt(any(LocalDateTime.class));
     }
 
     private void 주소_등록이_실행되지_않아야함() {
