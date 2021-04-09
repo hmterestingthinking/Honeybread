@@ -98,6 +98,10 @@ public class StoreControllerTest {
         given(스토어_수정요청.getOperation()).willReturn(운영정보_요청);
     }
 
+    /**
+     * 테스트
+     */
+
     @Test
     void 셀러아이디를_입력하지_않아_등록_실패() throws Exception {
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
@@ -108,7 +112,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -121,72 +125,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 주소정보를_입력하지_않으면_등록_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
-        다음과같은_주소정보로_요청했다(null);
-
-        // when
-        ResultActions result = 등록_요청하다(스토어_등록요청);
-
-        // then
-        등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 안내정보를_입력하지_않으면_등록_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
-        다음과같은_안내정보로_요청했다(null);
-
-        // when
-        ResultActions result = 등록_요청하다(스토어_등록요청);
-
-        // then
-        등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 운영시간정보를_입력하지_않으면_등록_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
-        다음과같은_운영시간정보로_요청했다(null);
-
-        // when
-        ResultActions result = 등록_요청하다(스토어_등록요청);
-
-        // then
-        등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 사업자등록정보를_입력하지_않으면_등록_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
-        다음과같은_사업자등록정보로_요청했다(null);
-
-        // when
-        ResultActions result = 등록_요청하다(스토어_등록요청);
-
-        // then
-        등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 계좌정보를_입력하지_않으면_등록_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
-        다음과같은_계좌정보로_등록을_요청했다(null);
-
-        // when
-        ResultActions result = 등록_요청하다(스토어_등록요청);
-
-        // then
-        등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -199,7 +138,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -218,7 +157,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -231,7 +170,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -251,7 +190,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -264,7 +203,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -282,20 +221,33 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
-    void 주소를_입력하지_않아_등록_실패() throws Exception {
+    void 주소정보를_입력하지_않으면_등록_실패() throws Exception {
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
-        다음과같은_주소로_요청했다(null);
+        다음과같은_주소정보로_요청했다(null);
 
         // when
         ResultActions result = 등록_요청하다(스토어_등록요청);
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
+    void 주소를_입력하지_않아_등록_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
+        다음과같은_상세주소로_요청했다(null);
+
+        // when
+        ResultActions result = 등록_요청하다(스토어_등록요청);
+
+        // then
+        등록요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -311,14 +263,27 @@ public class StoreControllerTest {
     })
     void 주소가_형식에_맞지않아_등록_실패(String 주소) throws Exception {
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
-        다음과같은_주소로_요청했다(주소);
+        다음과같은_상세주소로_요청했다(주소);
 
         // when
         ResultActions result = 등록_요청하다(스토어_등록요청);
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
+    void 안내정보를_입력하지_않으면_등록_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
+        다음과같은_안내정보로_요청했다(null);
+
+        // when
+        ResultActions result = 등록_요청하다(스토어_등록요청);
+
+        // then
+        등록요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -331,7 +296,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -364,7 +329,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -377,7 +342,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -427,7 +392,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -440,7 +405,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -475,7 +440,20 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
+    void 운영시간정보를_입력하지_않으면_등록_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
+        다음과같은_운영시간정보로_요청했다(null);
+
+        // when
+        ResultActions result = 등록_요청하다(스토어_등록요청);
+
+        // then
+        등록요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -488,7 +466,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -511,7 +489,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -532,7 +510,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -553,7 +531,20 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
+    void 사업자등록정보를_입력하지_않으면_등록_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
+        다음과같은_사업자등록정보로_요청했다(null);
+
+        // when
+        ResultActions result = 등록_요청하다(스토어_등록요청);
+
+        // then
+        등록요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -566,7 +557,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -588,7 +579,20 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
+    void 계좌정보를_입력하지_않으면_등록_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
+        다음과같은_계좌정보로_등록을_요청했다(null);
+
+        // when
+        ResultActions result = 등록_요청하다(스토어_등록요청);
+
+        // then
+        등록요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -601,20 +605,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 계좌정보를_입력하지_않아_등록_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
-        given(스토어_등록요청.getBankAccount()).willReturn(null);
-
-        // when
-        ResultActions result = 등록_요청하다(스토어_등록요청);
-
-        // then
-        등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -627,7 +618,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -640,7 +631,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -653,7 +644,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -666,7 +657,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -679,20 +670,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 모두_정상적으로_요청하면_등록_성공() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
-        정상적으로_스토어가_등록되었다();
-
-        // when
-        ResultActions result = 등록_요청하다(스토어_등록요청);
-
-        // then
-        등록요청_서비스가_수행되었다();
-        요청의_응답은_201_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -705,7 +683,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되었다();
-        요청의_응답은_404_응답이다(result);
+        요청의_응답은_NOT_FOUND(result);
     }
 
     @Test
@@ -718,7 +696,7 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되었다();
-        요청의_응답은_409_응답이다(result);
+        요청의_응답은_CONFLICT(result);
     }
 
     @Test
@@ -731,7 +709,20 @@ public class StoreControllerTest {
 
         // then
         등록요청_서비스가_수행되었다();
-        요청의_응답은_404_응답이다(result);
+        요청의_응답은_NOT_FOUND(result);
+    }
+
+    @Test
+    void 모두_정상적으로_요청하면_등록_성공() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
+        정상적으로_스토어가_등록되었다();
+
+        // when
+        ResultActions result = 등록_요청하다(스토어_등록요청);
+
+        // then
+        등록요청_서비스가_수행되었다();
+        요청의_응답은_CREATED(result);
     }
 
     @Test
@@ -740,11 +731,11 @@ public class StoreControllerTest {
         다음과같은_운영정보로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -753,11 +744,11 @@ public class StoreControllerTest {
         다음과같은_운영상태로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -766,11 +757,11 @@ public class StoreControllerTest {
         다음과같은_운영기간으로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -779,11 +770,11 @@ public class StoreControllerTest {
         다음과같은_상태정보로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -792,76 +783,11 @@ public class StoreControllerTest {
         다음과같은_기본정보로_수정을_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 주소정보를_입력하지_않으면_수정_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
-        다음과같은_주소정보로_요청했다(null);
-
-        // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
-
-        // then
-        수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 안내정보를_입력하지_않으면_수정_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
-        다음과같은_안내정보로_요청했다(null);
-
-        // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
-
-        // then
-        수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 운영시간정보를_입력하지_않으면_수정_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
-        다음과같은_운영시간정보로_요청했다(null);
-
-        // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
-
-        // then
-        수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 사업자수정정보를_입력하지_않으면_수정_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
-        다음과같은_사업자등록정보로_요청했다(null);
-
-        // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
-
-        // then
-        수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 계좌정보를_입력하지_않으면_수정_실패() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
-        다음과같은_계좌정보로_수정을_요청했다(null);
-
-        // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
-
-        // then
-        수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -870,11 +796,11 @@ public class StoreControllerTest {
         다음과같은_스토어명으로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -889,11 +815,11 @@ public class StoreControllerTest {
         다음과같은_스토어명으로_요청했다(스토어명);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -902,11 +828,11 @@ public class StoreControllerTest {
         다음과같은_전화번호로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -922,11 +848,11 @@ public class StoreControllerTest {
         다음과같은_전화번호로_요청했다(전화번호);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -935,11 +861,11 @@ public class StoreControllerTest {
         다음과같은_이미지URL로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -953,24 +879,37 @@ public class StoreControllerTest {
         다음과같은_이미지URL로_요청했다(이미지URL);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
-    void 주소를_입력하지_않아_수정_실패() throws Exception {
+    void 주소정보를_입력하지_않으면_수정_실패() throws Exception {
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
-        다음과같은_주소로_요청했다(null);
+        다음과같은_주소정보로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
+    void 상세주소를_입력하지_않아_수정_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
+        다음과같은_상세주소로_요청했다(null);
+
+        // when
+        ResultActions result = 수정_요청하다(스토어_수정요청);
+
+        // then
+        수정요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -984,29 +923,41 @@ public class StoreControllerTest {
                     "오늘은 허리가 아파서 늦게 일어났다" +
                     "100글자가 넘었다"
     })
-    void 주소가_형식에_맞지않아_수정_실패(String 주소) throws Exception {
+    void 상세주소가_형식에_맞지않아_수정_실패(String 주소) throws Exception {
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
-        다음과같은_주소로_요청했다(주소);
+        다음과같은_상세주소로_요청했다(주소);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
+    @Test
+    void 안내정보를_입력하지_않으면_수정_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
+        다음과같은_안내정보로_요청했다(null);
+
+        // when
+        ResultActions result = 수정_요청하다(스토어_수정요청);
+
+        // then
+        수정요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
+    }
     @Test
     void 소개글을_입력하지_않아_수정_실패() throws Exception {
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_소개글로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -1035,11 +986,11 @@ public class StoreControllerTest {
         다음과같은_소개글로_요청했다(소개글);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1048,11 +999,11 @@ public class StoreControllerTest {
         다음과같은_안내글로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -1098,11 +1049,11 @@ public class StoreControllerTest {
         다음과같은_안내글로_요청했다(안내글);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1111,11 +1062,11 @@ public class StoreControllerTest {
         다음과같은_원산지로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -1146,11 +1097,24 @@ public class StoreControllerTest {
         다음과같은_원산지로_요청했다(원산지);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
+    void 운영시간정보를_입력하지_않으면_수정_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
+        다음과같은_운영시간정보로_요청했다(null);
+
+        // when
+        ResultActions result = 수정_요청하다(스토어_수정요청);
+
+        // then
+        수정요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1159,11 +1123,11 @@ public class StoreControllerTest {
         다음과같은_운영시간으로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -1182,11 +1146,11 @@ public class StoreControllerTest {
         다음과같은_운영시간으로_요청했다(운영시간);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -1203,11 +1167,11 @@ public class StoreControllerTest {
         다음과같은_휴무일로_요청했다(휴무일);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -1224,24 +1188,37 @@ public class StoreControllerTest {
         다음과같은_휴게시간으로_요청했다(휴게시간);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
-    void 사업자수정번호를_입력하지_않아_수정_실패() throws Exception {
+    void 사업자등록정보를_입력하지_않으면_수정_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
+        다음과같은_사업자등록정보로_요청했다(null);
+
+        // when
+        ResultActions result = 수정_요청하다(스토어_수정요청);
+
+        // then
+        수정요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
+    void 사업자등록번호를_입력하지_않아_수정_실패() throws Exception {
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_사업자등록번호로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @ParameterizedTest
@@ -1254,16 +1231,29 @@ public class StoreControllerTest {
             "012-3-45678",
             "012-34-567",
     })
-    void 사업자수정번호_형식이_맞지않아_수정_실패(String 사업자수정번호) throws Exception {
+    void 사업자등록번호_형식이_맞지않아_수정_실패(String 사업자등록번호) throws Exception {
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
-        다음과같은_사업자등록번호로_요청했다(사업자수정번호);
+        다음과같은_사업자등록번호로_요청했다(사업자등록번호);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
+    void 계좌정보를_입력하지_않으면_수정_실패() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
+        다음과같은_계좌정보로_수정을_요청했다(null);
+
+        // when
+        ResultActions result = 수정_요청하다(스토어_수정요청);
+
+        // then
+        수정요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1272,11 +1262,11 @@ public class StoreControllerTest {
         다음과같은_은행으로_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1285,11 +1275,11 @@ public class StoreControllerTest {
         given(스토어_수정요청.getBankAccount()).willReturn(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1298,11 +1288,11 @@ public class StoreControllerTest {
         다음과같은_계좌번호_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1311,11 +1301,11 @@ public class StoreControllerTest {
         다음과같은_카테고리목록으로_수정을_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1324,11 +1314,11 @@ public class StoreControllerTest {
         다음과같은_카테고리목록으로_수정을_요청했다(Collections.emptySet());
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1337,11 +1327,11 @@ public class StoreControllerTest {
         다음과같은_결제방식목록으로_수정을_요청했다(null);
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1350,23 +1340,11 @@ public class StoreControllerTest {
         다음과같은_결제방식목록으로_수정을_요청했다(Collections.emptySet());
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되지_않았다();
-        요청의_응답은_4xx_응답이다(result);
-    }
-
-    @Test
-    void 모두_정상적으로_요청하면_수정_성공() throws Exception {
-        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
-
-        // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
-
-        // then
-        수정요청_서비스가_수행되었다();
-        요청의_응답은_200_응답이다(result);
+        요청의_응답은_BAD_REQUEST(result);
     }
 
     @Test
@@ -1375,11 +1353,11 @@ public class StoreControllerTest {
         수정을_시도했더니_없는_스토어_정보이다();
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되었다();
-        요청의_응답은_404_응답이다(result);
+        요청의_응답은_NOT_FOUND(result);
     }
 
     @Test
@@ -1388,11 +1366,11 @@ public class StoreControllerTest {
         수정을_시도했더니_겹치는_스토어명이다();
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되었다();
-        요청의_응답은_409_응답이다(result);
+        요청의_응답은_CONFLICT(result);
     }
 
     @Test
@@ -1401,11 +1379,23 @@ public class StoreControllerTest {
         수정을_시도했더니_없는_카테고리_정보이다();
 
         // when
-        ResultActions result = 수정_요청하다(1L, 스토어_수정요청);
+        ResultActions result = 수정_요청하다(스토어_수정요청);
 
         // then
         수정요청_서비스가_수행되었다();
-        요청의_응답은_404_응답이다(result);
+        요청의_응답은_NOT_FOUND(result);
+    }
+
+    @Test
+    void 모두_정상적으로_요청하면_수정_성공() throws Exception {
+        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
+
+        // when
+        ResultActions result = 수정_요청하다(스토어_수정요청);
+
+        // then
+        수정요청_서비스가_수행되었다();
+        요청의_응답은_OK(result);
     }
 
     /**
@@ -1444,8 +1434,8 @@ public class StoreControllerTest {
         given(스토어_수정요청.getBankAccount()).willReturn(계좌정보_요청);
     }
 
-    private void 다음과같은_셀러아이디로_요청했다(Long t) {
-        given(스토어_등록요청.getSellerId()).willReturn(t);
+    private void 다음과같은_셀러아이디로_요청했다(Long 셀러아이디) {
+        given(스토어_등록요청.getSellerId()).willReturn(셀러아이디);
     }
 
     private void 다음과같은_스토어명으로_요청했다(String 스토어명) {
@@ -1460,7 +1450,7 @@ public class StoreControllerTest {
         given(기본정보_요청.getImageUrl()).willReturn(이미지URL);
     }
 
-    private void 다음과같은_주소로_요청했다(String 주소) {
+    private void 다음과같은_상세주소로_요청했다(String 주소) {
         given(주소정보_요청.getDetailAddress()).willReturn(주소);
     }
 
@@ -1504,12 +1494,12 @@ public class StoreControllerTest {
         given(스토어_등록요청.getCategoryIds()).willReturn(카테고리아이디_목록);
     }
 
-    private void 다음과같은_카테고리목록으로_수정을_요청했다(Set<Long> 카테고리아이디_목록) {
-        given(스토어_수정요청.getCategoryIds()).willReturn(카테고리아이디_목록);
-    }
-
     private void 다음과같은_결제방식목록으로_등록을_요청했다(Set<PayType> 결제방식아이디_목록) {
         given(스토어_등록요청.getPayMethods()).willReturn(결제방식아이디_목록);
+    }
+
+    private void 다음과같은_카테고리목록으로_수정을_요청했다(Set<Long> 카테고리아이디_목록) {
+        given(스토어_수정요청.getCategoryIds()).willReturn(카테고리아이디_목록);
     }
 
     private void 다음과같은_결제방식목록으로_수정을_요청했다(Set<PayType> 결제방식아이디_목록) {
@@ -1532,29 +1522,11 @@ public class StoreControllerTest {
         given(스토어_수정요청.getStatus()).willReturn(상태);
     }
 
-    private void 모든_프로퍼티가_정상적으로_입력된_등록요청이다() {
-        모든_프로퍼티가_정상적으로_입력된_등록수정_공통요청이다();
-
-        다음과같은_셀러아이디로_요청했다(1L);
-        다음과같은_카테고리목록으로_등록을_요청했다(Set.of(1L));
-        다음과같은_결제방식목록으로_등록을_요청했다(Set.of(PayType.ACCOUNT_TRANSFER));
-    }
-
-    private void 모든_프로퍼티가_정상적으로_입력된_수정요청이다() {
-        모든_프로퍼티가_정상적으로_입력된_등록수정_공통요청이다();
-
-        다음과같은_운영상태로_요청했다(OperationStatus.OPERATING);
-        다음과같은_운영기간으로_요청했다(TimePeriod.of(LocalDateTime.now(), LocalDateTime.now()));
-        다음과같은_상태정보로_요청했다(StoreStatus.ACTIVATED);
-        다음과같은_카테고리목록으로_수정을_요청했다(Set.of(1L));
-        다음과같은_결제방식목록으로_수정을_요청했다(Set.of(PayType.ACCOUNT_TRANSFER));
-    }
-
-    private void 모든_프로퍼티가_정상적으로_입력된_등록수정_공통요청이다() {
+    private void 모든_프로퍼티가_정상적으로_입력된_등록수정_요청이다() {
         다음과같은_스토어명으로_요청했다("테스트스토어");
         다음과같은_전화번호로_요청했다("010-1234-1234");
         다음과같은_이미지URL로_요청했다("https://avatars.githubusercontent.com/u/55195022?s=200&v=4");
-        다음과같은_주소로_요청했다("경기도 성남시 분당구 판교동 1111번지 유스페이스 a동");
+        다음과같은_상세주소로_요청했다("경기도 성남시 분당구 판교동 1111번지 유스페이스 a동");
         다음과같은_소개글로_요청했다("우리집은 닭발과 곱창을 같이 팔아요. " +
                 "두마리 토끼를 어떻게 잡냐라는 분이 계신데 호식이도 두마리 치킨을 하는데 저라고 못하겠어요?");
         다음과같은_안내글로_요청했다("우리 가게가 성남에서 가장 많이 팔리는 곱창집이 되었어요~" +
@@ -1577,6 +1549,24 @@ public class StoreControllerTest {
         다음과같은_계좌번호_요청했다("000000-00-000000");
     }
 
+    private void 모든_프로퍼티가_정상적으로_입력된_등록요청이다() {
+        모든_프로퍼티가_정상적으로_입력된_등록수정_요청이다();
+
+        다음과같은_셀러아이디로_요청했다(1L);
+        다음과같은_카테고리목록으로_등록을_요청했다(Set.of(1L));
+        다음과같은_결제방식목록으로_등록을_요청했다(Set.of(PayType.ACCOUNT_TRANSFER));
+    }
+
+    private void 모든_프로퍼티가_정상적으로_입력된_수정요청이다() {
+        모든_프로퍼티가_정상적으로_입력된_등록수정_요청이다();
+
+        다음과같은_운영상태로_요청했다(OperationStatus.OPERATING);
+        다음과같은_운영기간으로_요청했다(TimePeriod.of(LocalDateTime.now(), LocalDateTime.now()));
+        다음과같은_상태정보로_요청했다(StoreStatus.ACTIVATED);
+        다음과같은_카테고리목록으로_수정을_요청했다(Set.of(1L));
+        다음과같은_결제방식목록으로_수정을_요청했다(Set.of(PayType.ACCOUNT_TRANSFER));
+    }
+
     /**
      * when
      */
@@ -1589,9 +1579,9 @@ public class StoreControllerTest {
         ).andDo(print());
     }
 
-    private ResultActions 수정_요청하다(long storeId, StoreUpdateRequest 스토어_수정요청) throws Exception {
+    private ResultActions 수정_요청하다(StoreUpdateRequest 스토어_수정요청) throws Exception {
         return mockMvc.perform(
-                put(BASE_URL + "/" + storeId)
+                put(BASE_URL + "/" + 1)
                         .content(mapper.writeValueAsString(스토어_수정요청))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1610,14 +1600,6 @@ public class StoreControllerTest {
         then(service).should().create(any());
     }
 
-    private void 수정요청_서비스가_수행되지_않았다() {
-        then(service).should(never()).update(anyLong(), any());
-    }
-
-    private void 수정요청_서비스가_수행되었다() {
-        then(service).should().update(anyLong(), any());
-    }
-
     private void 정상적으로_스토어가_등록되었다() {
         given(service.create(스토어_등록요청)).willReturn(1L);
     }
@@ -1628,22 +1610,10 @@ public class StoreControllerTest {
         }).when(service).create(any());
     }
 
-    private void 수정을_시도했더니_없는_스토어_정보이다() {
-        doAnswer(m -> {
-            throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
-        }).when(service).update(anyLong(), any());
-    }
-
     private void 등록을_시도했더니_겹치는_스토어명이다() {
         doAnswer(m -> {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME);
         }).when(service).create(any());
-    }
-
-    private void 수정을_시도했더니_겹치는_스토어명이다() {
-        doAnswer(m -> {
-            throw new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME);
-        }).when(service).update(anyLong(), any());
     }
 
     private void 등록을_시도했더니_없는_카테고리_정보이다() {
@@ -1652,29 +1622,49 @@ public class StoreControllerTest {
         }).when(service).create(any());
     }
 
+    private void 수정요청_서비스가_수행되었다() {
+        then(service).should().update(anyLong(), any());
+    }
+
+    private void 수정요청_서비스가_수행되지_않았다() {
+        then(service).should(never()).update(anyLong(), any());
+    }
+
+    private void 수정을_시도했더니_없는_스토어_정보이다() {
+        doAnswer(m -> {
+            throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
+        }).when(service).update(anyLong(), any());
+    }
+
+    private void 수정을_시도했더니_겹치는_스토어명이다() {
+        doAnswer(m -> {
+            throw new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME);
+        }).when(service).update(anyLong(), any());
+    }
+
     private void 수정을_시도했더니_없는_카테고리_정보이다() {
         doAnswer(m -> {
             throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
         }).when(service).update(anyLong(), any());
     }
 
-    private void 요청의_응답은_4xx_응답이다(ResultActions result) throws Exception {
-        result.andExpect(status().is4xxClientError());
+    private void 요청의_응답은_BAD_REQUEST(ResultActions result) throws Exception {
+        result.andExpect(status().isBadRequest());
     }
 
-    private void 요청의_응답은_200_응답이다(ResultActions result) throws Exception {
+    private void 요청의_응답은_OK(ResultActions result) throws Exception {
         result.andExpect(status().isOk());
     }
 
-    private void 요청의_응답은_201_응답이다(ResultActions result) throws Exception {
+    private void 요청의_응답은_CREATED(ResultActions result) throws Exception {
         result.andExpect(status().isCreated());
     }
 
-    private void 요청의_응답은_404_응답이다(ResultActions result) throws Exception {
+    private void 요청의_응답은_NOT_FOUND(ResultActions result) throws Exception {
         result.andExpect(status().isNotFound());
     }
 
-    private void 요청의_응답은_409_응답이다(ResultActions result) throws Exception {
+    private void 요청의_응답은_CONFLICT(ResultActions result) throws Exception {
         result.andExpect(status().isConflict());
     }
 
