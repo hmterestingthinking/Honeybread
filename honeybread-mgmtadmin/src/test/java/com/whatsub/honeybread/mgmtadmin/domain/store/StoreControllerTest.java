@@ -104,6 +104,7 @@ public class StoreControllerTest {
 
     @Test
     void 셀러아이디를_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_셀러아이디로_요청했다(null);
 
@@ -117,6 +118,7 @@ public class StoreControllerTest {
 
     @Test
     void 기본정보를_입력하지_않으면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_기본정보로_등록을_요청했다(null);
 
@@ -130,6 +132,7 @@ public class StoreControllerTest {
 
     @Test
     void 스토어명을_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_스토어명으로_요청했다(null);
 
@@ -149,6 +152,7 @@ public class StoreControllerTest {
             "누가스토어명을30글자이상입력하래스토어명30글자라라고얘기했는데!!!!!"
     })
     void 스토어명을_5글자미만_30글자초과로_입력하면_등록_실패(String 스토어명) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_스토어명으로_요청했다(스토어명);
 
@@ -162,6 +166,7 @@ public class StoreControllerTest {
 
     @Test
     void 전화변호를_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_전화번호로_요청했다(null);
 
@@ -182,6 +187,7 @@ public class StoreControllerTest {
             "012-12345-1234"
     })
     void 전화번호_형식이_맞지않아_등록_실패(String 전화번호) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_전화번호로_요청했다(전화번호);
 
@@ -195,6 +201,7 @@ public class StoreControllerTest {
 
     @Test
     void 이미지URL을_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_이미지URL로_요청했다(null);
 
@@ -213,6 +220,7 @@ public class StoreControllerTest {
             "얘는이미지URL이아니지",
     })
     void 이미지URL이_형식에_맞지않아_등록_실패(String 이미지URL) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_이미지URL로_요청했다(이미지URL);
 
@@ -226,6 +234,7 @@ public class StoreControllerTest {
 
     @Test
     void 주소정보를_입력하지_않으면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_주소정보로_요청했다(null);
 
@@ -239,6 +248,7 @@ public class StoreControllerTest {
 
     @Test
     void 주소를_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_상세주소로_요청했다(null);
 
@@ -262,6 +272,7 @@ public class StoreControllerTest {
                     "100글자가 넘었다"
     })
     void 주소가_형식에_맞지않아_등록_실패(String 주소) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_상세주소로_요청했다(주소);
 
@@ -275,6 +286,7 @@ public class StoreControllerTest {
 
     @Test
     void 안내정보를_입력하지_않으면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_안내정보로_요청했다(null);
 
@@ -288,6 +300,7 @@ public class StoreControllerTest {
 
     @Test
     void 소개글을_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_소개글로_요청했다(null);
 
@@ -321,6 +334,7 @@ public class StoreControllerTest {
                     "힘들겠지만 좋은게 좋다고 생각하세요. "
     })
     void 소개글을_50글자미만_300글자초과로_입력하면_등록_실패(String 소개글) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_소개글로_요청했다(소개글);
 
@@ -334,6 +348,7 @@ public class StoreControllerTest {
 
     @Test
     void 안내글을_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_안내글로_요청했다(null);
 
@@ -384,6 +399,7 @@ public class StoreControllerTest {
                     "힘들겠지만 좋은게 좋다고 생각하세요. "
     })
     void 안내글을_200글자미만_1000글자초과로_입력하면_등록_실패(String 안내글) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_안내글로_요청했다(안내글);
 
@@ -397,6 +413,7 @@ public class StoreControllerTest {
 
     @Test
     void 원산지를_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_원산지로_요청했다(null);
 
@@ -432,6 +449,7 @@ public class StoreControllerTest {
                     "힘들겠지만 좋은게 좋다고 생각하세요. "
     })
     void 원산지를_200글자미만_1000글자초과로_입력하면_등록_실패(String 원산지) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_원산지로_요청했다(원산지);
 
@@ -445,6 +463,7 @@ public class StoreControllerTest {
 
     @Test
     void 운영시간정보를_입력하지_않으면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_운영시간정보로_요청했다(null);
 
@@ -458,6 +477,7 @@ public class StoreControllerTest {
 
     @Test
     void 운영시간을_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_운영시간으로_요청했다(null);
 
@@ -481,6 +501,7 @@ public class StoreControllerTest {
                     "자기 생일이라도 써놨나?"
     })
     void 운영시간을_100글자초과로_입력하면_등록_실패(String 운영시간) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_운영시간으로_요청했다(운영시간);
 
@@ -502,6 +523,7 @@ public class StoreControllerTest {
                     "자기 생일이라도 써놨나?"
     })
     void 휴무일을_100글자초과로_입력하면_등록_실패(String 휴무일) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_휴무일로_요청했다(휴무일);
 
@@ -523,6 +545,7 @@ public class StoreControllerTest {
                     "자기 생일이라도 써놨나?"
     })
     void 휴게시간을_100글자초과로_입력하면_등록_실패(String 휴게시간) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_휴게시간으로_요청했다(휴게시간);
 
@@ -536,6 +559,7 @@ public class StoreControllerTest {
 
     @Test
     void 사업자등록정보를_입력하지_않으면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_사업자등록정보로_요청했다(null);
 
@@ -549,6 +573,7 @@ public class StoreControllerTest {
 
     @Test
     void 사업자등록번호를_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_사업자등록번호로_요청했다(null);
 
@@ -571,6 +596,7 @@ public class StoreControllerTest {
             "012-34-567",
     })
     void 사업자등록번호_형식이_맞지않아_등록_실패(String 사업자등록번호) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_사업자등록번호로_요청했다(사업자등록번호);
 
@@ -584,6 +610,7 @@ public class StoreControllerTest {
 
     @Test
     void 계좌정보를_입력하지_않으면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_계좌정보로_등록을_요청했다(null);
 
@@ -597,6 +624,7 @@ public class StoreControllerTest {
 
     @Test
     void 은행정보를_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_은행으로_요청했다(null);
 
@@ -610,6 +638,7 @@ public class StoreControllerTest {
 
     @Test
     void 계좌번호를_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_계좌번호_요청했다(null);
 
@@ -623,6 +652,7 @@ public class StoreControllerTest {
 
     @Test
     void 카테고리목록을_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_카테고리목록으로_등록을_요청했다(null);
 
@@ -636,6 +666,7 @@ public class StoreControllerTest {
 
     @Test
     void 카테고리목록을_empty하게_요청하면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_카테고리목록으로_등록을_요청했다(Collections.emptySet());
 
@@ -649,6 +680,7 @@ public class StoreControllerTest {
 
     @Test
     void 결제방식목록을_입력하지_않아_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_결제방식목록으로_등록을_요청했다(null);
 
@@ -662,6 +694,7 @@ public class StoreControllerTest {
 
     @Test
     void 결제방식목록을_empty하게_요청하면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         다음과같은_결제방식목록으로_등록을_요청했다(Collections.emptySet());
 
@@ -675,6 +708,7 @@ public class StoreControllerTest {
 
     @Test
     void 셀러가_존재하지_않으면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         등록을_시도했더니_없는_판매자_정보이다();
 
@@ -688,6 +722,7 @@ public class StoreControllerTest {
 
     @Test
     void 스토어명이_겹치면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         등록을_시도했더니_겹치는_스토어명이다();
 
@@ -701,6 +736,7 @@ public class StoreControllerTest {
 
     @Test
     void 카테고리가_존재하지_않으면_등록_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         등록을_시도했더니_없는_카테고리_정보이다();
 
@@ -714,6 +750,7 @@ public class StoreControllerTest {
 
     @Test
     void 모두_정상적으로_요청하면_등록_성공() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_등록요청이다();
         정상적으로_스토어가_등록되었다();
 
@@ -727,6 +764,7 @@ public class StoreControllerTest {
 
     @Test
     void 운영정보를_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_운영정보로_요청했다(null);
 
@@ -740,6 +778,7 @@ public class StoreControllerTest {
 
     @Test
     void 운영상태를_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_운영상태로_요청했다(null);
 
@@ -753,6 +792,7 @@ public class StoreControllerTest {
 
     @Test
     void 운영기간을_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_운영기간으로_요청했다(null);
 
@@ -766,6 +806,7 @@ public class StoreControllerTest {
 
     @Test
     void 상태를_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_상태정보로_요청했다(null);
 
@@ -779,6 +820,7 @@ public class StoreControllerTest {
 
     @Test
     void 기본정보를_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_기본정보로_수정을_요청했다(null);
 
@@ -792,6 +834,7 @@ public class StoreControllerTest {
 
     @Test
     void 스토어명을_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_스토어명으로_요청했다(null);
 
@@ -811,6 +854,7 @@ public class StoreControllerTest {
             "누가스토어명을30글자이상입력하래스토어명30글자라라고얘기했는데!!!!!"
     })
     void 스토어명을_5글자미만_30글자초과로_입력하면_수정_실패(String 스토어명) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_스토어명으로_요청했다(스토어명);
 
@@ -824,6 +868,7 @@ public class StoreControllerTest {
 
     @Test
     void 전화변호를_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_전화번호로_요청했다(null);
 
@@ -844,6 +889,7 @@ public class StoreControllerTest {
             "012-12345-1234"
     })
     void 전화번호_형식이_맞지않아_수정_실패(String 전화번호) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_전화번호로_요청했다(전화번호);
 
@@ -857,6 +903,7 @@ public class StoreControllerTest {
 
     @Test
     void 이미지URL을_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_이미지URL로_요청했다(null);
 
@@ -875,6 +922,7 @@ public class StoreControllerTest {
             "얘는이미지URL이아니지",
     })
     void 이미지URL이_형식에_맞지않아_수정_실패(String 이미지URL) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_이미지URL로_요청했다(이미지URL);
 
@@ -888,6 +936,7 @@ public class StoreControllerTest {
 
     @Test
     void 주소정보를_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_주소정보로_요청했다(null);
 
@@ -901,6 +950,7 @@ public class StoreControllerTest {
 
     @Test
     void 상세주소를_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_상세주소로_요청했다(null);
 
@@ -924,6 +974,7 @@ public class StoreControllerTest {
                     "100글자가 넘었다"
     })
     void 상세주소가_형식에_맞지않아_수정_실패(String 주소) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_상세주소로_요청했다(주소);
 
@@ -937,6 +988,7 @@ public class StoreControllerTest {
 
     @Test
     void 안내정보를_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_안내정보로_요청했다(null);
 
@@ -949,6 +1001,7 @@ public class StoreControllerTest {
     }
     @Test
     void 소개글을_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_소개글로_요청했다(null);
 
@@ -982,6 +1035,7 @@ public class StoreControllerTest {
                     "힘들겠지만 좋은게 좋다고 생각하세요. "
     })
     void 소개글을_50글자미만_300글자초과로_입력하면_수정_실패(String 소개글) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_소개글로_요청했다(소개글);
 
@@ -995,6 +1049,7 @@ public class StoreControllerTest {
 
     @Test
     void 안내글을_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_안내글로_요청했다(null);
 
@@ -1045,6 +1100,7 @@ public class StoreControllerTest {
                     "힘들겠지만 좋은게 좋다고 생각하세요. "
     })
     void 안내글을_200글자미만_1000글자초과로_입력하면_수정_실패(String 안내글) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_안내글로_요청했다(안내글);
 
@@ -1058,6 +1114,7 @@ public class StoreControllerTest {
 
     @Test
     void 원산지를_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_원산지로_요청했다(null);
 
@@ -1093,6 +1150,7 @@ public class StoreControllerTest {
                     "힘들겠지만 좋은게 좋다고 생각하세요. "
     })
     void 원산지를_200글자미만_1000글자초과로_입력하면_수정_실패(String 원산지) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_원산지로_요청했다(원산지);
 
@@ -1106,6 +1164,7 @@ public class StoreControllerTest {
 
     @Test
     void 운영시간정보를_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_운영시간정보로_요청했다(null);
 
@@ -1119,6 +1178,7 @@ public class StoreControllerTest {
 
     @Test
     void 운영시간을_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_운영시간으로_요청했다(null);
 
@@ -1142,6 +1202,7 @@ public class StoreControllerTest {
                     "자기 생일이라도 써놨나?"
     })
     void 운영시간을_100글자초과로_입력하면_수정_실패(String 운영시간) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_운영시간으로_요청했다(운영시간);
 
@@ -1163,6 +1224,7 @@ public class StoreControllerTest {
                     "자기 생일이라도 써놨나?"
     })
     void 휴무일을_100글자초과로_입력하면_수정_실패(String 휴무일) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_휴무일로_요청했다(휴무일);
 
@@ -1184,6 +1246,7 @@ public class StoreControllerTest {
                     "자기 생일이라도 써놨나?"
     })
     void 휴게시간을_100글자초과로_입력하면_수정_실패(String 휴게시간) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_휴게시간으로_요청했다(휴게시간);
 
@@ -1197,6 +1260,7 @@ public class StoreControllerTest {
 
     @Test
     void 사업자등록정보를_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_사업자등록정보로_요청했다(null);
 
@@ -1210,6 +1274,7 @@ public class StoreControllerTest {
 
     @Test
     void 사업자등록번호를_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_사업자등록번호로_요청했다(null);
 
@@ -1232,6 +1297,7 @@ public class StoreControllerTest {
             "012-34-567",
     })
     void 사업자등록번호_형식이_맞지않아_수정_실패(String 사업자등록번호) throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_사업자등록번호로_요청했다(사업자등록번호);
 
@@ -1245,6 +1311,7 @@ public class StoreControllerTest {
 
     @Test
     void 계좌정보를_입력하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_계좌정보로_수정을_요청했다(null);
 
@@ -1258,6 +1325,7 @@ public class StoreControllerTest {
 
     @Test
     void 은행정보를_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_은행으로_요청했다(null);
 
@@ -1271,6 +1339,7 @@ public class StoreControllerTest {
 
     @Test
     void 계좌정보를_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         given(스토어_수정요청.getBankAccount()).willReturn(null);
 
@@ -1284,6 +1353,7 @@ public class StoreControllerTest {
 
     @Test
     void 계좌번호를_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_계좌번호_요청했다(null);
 
@@ -1297,6 +1367,7 @@ public class StoreControllerTest {
 
     @Test
     void 카테고리목록을_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_카테고리목록으로_수정을_요청했다(null);
 
@@ -1310,6 +1381,7 @@ public class StoreControllerTest {
 
     @Test
     void 카테고리목록을_empty하게_요청하면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_카테고리목록으로_수정을_요청했다(Collections.emptySet());
 
@@ -1323,6 +1395,7 @@ public class StoreControllerTest {
 
     @Test
     void 결제방식목록을_입력하지_않아_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_결제방식목록으로_수정을_요청했다(null);
 
@@ -1336,6 +1409,7 @@ public class StoreControllerTest {
 
     @Test
     void 결제방식목록을_empty하게_요청하면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         다음과같은_결제방식목록으로_수정을_요청했다(Collections.emptySet());
 
@@ -1349,6 +1423,7 @@ public class StoreControllerTest {
 
     @Test
     void 셀러가_존재하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         수정을_시도했더니_없는_스토어_정보이다();
 
@@ -1362,6 +1437,7 @@ public class StoreControllerTest {
 
     @Test
     void 스토어명이_겹치면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         수정을_시도했더니_겹치는_스토어명이다();
 
@@ -1375,6 +1451,7 @@ public class StoreControllerTest {
 
     @Test
     void 카테고리가_존재하지_않으면_수정_실패() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
         수정을_시도했더니_없는_카테고리_정보이다();
 
@@ -1388,6 +1465,7 @@ public class StoreControllerTest {
 
     @Test
     void 모두_정상적으로_요청하면_수정_성공() throws Exception {
+        // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
 
         // when
