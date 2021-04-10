@@ -17,7 +17,6 @@ public class AdvertisementBidNoticeService {
     private final AdvertisementBidNoticeRepository repository;
     private final AdvertiseBidNoticeValidator validator;
 
-    // 등록
     @Transactional
     public Long create(AdvertisementBidNoticeRequest request) {
         AdvertisementBidNotice entity = request.toEntity();
@@ -25,7 +24,6 @@ public class AdvertisementBidNoticeService {
         return repository.save(entity).getId();
     }
 
-    // 수정
     @Transactional
     public void update(final Long id, AdvertisementBidNoticeRequest request) {
         AdvertisementBidNotice entity = findAdvertiseBidNotice(id);
@@ -34,7 +32,6 @@ public class AdvertisementBidNoticeService {
         validator.validate(entity);
     }
 
-    // 삭제
     @Transactional
     public void delete(final Long id) {
         AdvertisementBidNotice entity = findAdvertiseBidNotice(id);
@@ -42,16 +39,20 @@ public class AdvertisementBidNoticeService {
         repository.delete(entity);
     }
 
-    // 종료 (마감)
-
-    private void validateProgress(AdvertisementBidNotice entity) {
-        if (entity.isProcess()) {
-            throw new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY);
-        }
+    @Transactional
+    public void close(final Long id) {
+        AdvertisementBidNotice entity = findAdvertiseBidNotice(id);
+        entity.close();
     }
 
     private AdvertisementBidNotice findAdvertiseBidNotice(final Long id) {
         return repository.findById(id)
             .orElseThrow(() -> new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_NOT_FOUND));
+    }
+
+    private void validateProgress(AdvertisementBidNotice entity) {
+        if (entity.isProcess()) {
+            throw new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY);
+        }
     }
 }

@@ -23,7 +23,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.never;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @SpringBootTest(classes = AdvertisementBidNoticeService.class)
@@ -41,7 +46,6 @@ class AdvertisementBidNoticeServiceTest {
     @Mock
     AdvertisementBidNotice entity;
 
-    // 등록
     @Test
     void 벨리데이션_성공시_등록_성공() {
         // given
@@ -72,7 +76,6 @@ class AdvertisementBidNoticeServiceTest {
         입찰공고_식별자가_반환되어서는_안된다();
     }
 
-    // 수정
     @Test
     void 벨리데이션_성공시_수정_성공() {
         // given
@@ -138,7 +141,6 @@ class AdvertisementBidNoticeServiceTest {
         입찰공고_진행_에러코드_확인(ex);
     }
 
-    // 삭제
     @Test
     void 입찰공고_삭제_성공() {
         // given
@@ -181,7 +183,30 @@ class AdvertisementBidNoticeServiceTest {
         입찰공고_진행_에러코드_확인(ex);
     }
 
-    // 종료 (마감)
+    @Test
+    void 입찰_종료_성공() {
+        // given
+        입찰공고_조회시_성공한다();
+
+        // when
+        입찰_종료();
+
+        // then
+        입찰공고_조회가_수행되어야_한다();
+        입찰_종료가_수행되어야_한다();
+    }
+
+    @Test
+    void 입찰공고가_존재하지_않는다면_종료_실패() {
+        // given
+        입찰공고_조회시_실패한다();
+
+        // when
+        HoneyBreadException ex = assertThrows(HoneyBreadException.class, this::입찰_종료);
+
+        // then
+        입찰공고_찾지못함_에러코드_확인(ex);
+    }
 
     /**
      * Given
@@ -230,6 +255,10 @@ class AdvertisementBidNoticeServiceTest {
         service.delete(anyLong());
     }
 
+    private void 입찰_종료() {
+        service.close(anyLong());
+    }
+
     /**
      * Then
      */
@@ -267,6 +296,10 @@ class AdvertisementBidNoticeServiceTest {
 
     private void 입찰_진행중_확인이_수행되어서는_안된다() {
         then(entity).should(never()).isProcess();
+    }
+
+    private void 입찰_종료가_수행되어야_한다() {
+        then(entity).should().close();
     }
 
     private void 입찰공고_진행_에러코드_확인(HoneyBreadException ex) {

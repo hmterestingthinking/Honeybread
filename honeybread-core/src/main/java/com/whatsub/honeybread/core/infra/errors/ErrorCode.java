@@ -25,7 +25,7 @@ public enum ErrorCode {
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "-22000", "Store Not Found"),
 
     ADVERTISEMENT_BID_NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "-23000", "Advertise Bid Notice Not Found"),
-    ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY(HttpStatus.BAD_REQUEST, "-23001", "In-progress Advertise Bid Notice Cannot be Modified"),
+    ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY(HttpStatus.NOT_ACCEPTABLE, "-23001", "In-progress Advertise Bid Notice Cannot be Modified"),
     ;
     private final HttpStatus status;
     private final String code;

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,7 +34,6 @@ public class AdvertisementBidController {
 
     // 입찰 공고 상세
 
-    // 입찰 공고 등록
     @ApiOperation(
         value = "입찰 공고 등록",
         tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
@@ -48,7 +49,7 @@ public class AdvertisementBidController {
         noticeService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    // 입찰 공고 수정
+
     @ApiOperation(
         value = "입찰 공고 수정",
         tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
@@ -67,4 +68,23 @@ public class AdvertisementBidController {
     }
 
     // 입찰 공고 삭제
+    @ApiOperation(
+        value = "입찰 공고 삭제",
+        tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
+    )
+    @DeleteMapping(NOTICE_MAPPING + "/{id}")
+    public ResponseEntity<Void> deleteBidNotice(@PathVariable Long id) {
+        noticeService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @ApiOperation(
+        value = "입찰 공고 종료",
+        tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
+    )
+    @PatchMapping(NOTICE_MAPPING + "/{id}")
+    public ResponseEntity<Void> closeBidNotice(@PathVariable Long id) {
+        noticeService.close(id);
+        return ResponseEntity.ok().build();
+    }
 }

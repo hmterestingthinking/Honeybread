@@ -21,8 +21,7 @@ import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -145,7 +144,72 @@ class AdvertisementBidControllerTest {
 
         // then
         입찰공고_수정이_수행되어야_한다();
-        result.andExpect(status().is4xxClientError());
+        result.andExpect(status().isNotAcceptable());
+    }
+
+    @Test
+    void 입찰공고_삭제에_성공한다() throws Exception {
+        // given
+        입찰공고_삭제시_성공한다();
+
+        // when
+        ResultActions result = 입찰공고_삭제();
+
+        // then
+        입찰공고_삭제가_수행되어야_한다();
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    void 입찰공고가_존재하지_않는다면_삭제에_실패한다() throws Exception {
+        // given
+        입찰공고_삭제시_입찰공고를_찾지_못한다();
+
+        // when
+        ResultActions result = 입찰공고_삭제();
+
+        // then
+        입찰공고_삭제가_수행되어야_한다();
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void 입찰공고가_진행중이라면_삭제에_실패한다() throws Exception {
+        // given
+        입찰공고_삭제시_입찰이_진행중이다();
+
+        // when
+        ResultActions result = 입찰공고_삭제();
+
+        // then
+        입찰공고_삭제가_수행되어야_한다();
+        result.andExpect(status().isNotAcceptable());
+    }
+
+    @Test
+    void 입찰공고_종료에_성공한다() throws Exception {
+        // given
+        입찰공고_종료시_성공한다();
+
+        // when
+        ResultActions result = 입찰공고_종료();
+
+        // then
+        입찰공고_종료가_수행되어야_한다();
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void 입찰공고가_존재하지_않는다면_종료에_실패한다() throws Exception {
+        // given
+        입찰공고_종료시_입찰공고를_찾지_못한다();
+
+        // when
+        ResultActions result = 입찰공고_종료();
+
+        // then
+        입찰공고_종료가_수행되어야_한다();
+        result.andExpect(status().isNotFound());
     }
 
     /**
@@ -177,6 +241,28 @@ class AdvertisementBidControllerTest {
             .given(service).update(anyLong(), any(AdvertisementBidNoticeRequest.class));
     }
 
+    private void 입찰공고_삭제시_성공한다() {
+        willDoNothing().given(service).delete(anyLong());
+    }
+
+    private void 입찰공고_삭제시_입찰공고를_찾지_못한다() {
+        willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_NOT_FOUND))
+            .given(service).delete(anyLong());
+    }
+
+    private void 입찰공고_삭제시_입찰이_진행중이다() {
+        willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY))
+            .given(service).delete(anyLong());
+    }
+
+    private void 입찰공고_종료시_성공한다() {
+        willDoNothing().given(service).close(anyLong());
+    }
+
+    private void 입찰공고_종료시_입찰공고를_찾지_못한다() {
+        willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_NOT_FOUND)).given(service).close(anyLong());
+    }
+
     /**
      * When
      */
@@ -198,6 +284,24 @@ class AdvertisementBidControllerTest {
         ).andDo(print());
     }
 
+    private ResultActions 입찰공고_삭제() throws Exception {
+        return mockMvc.perform(
+            delete(NOTICE_BASE_URL + "/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+    }
+
+    private ResultActions 입찰공고_종료() throws Exception {
+        ResultActions result = mockMvc.perform(
+            patch(NOTICE_BASE_URL + "/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+        return result;
+    }
+
+
     /**
      * Then
      */
@@ -215,6 +319,14 @@ class AdvertisementBidControllerTest {
 
     private void 입찰공고_수정이_수행되어서는_안된다() {
         then(service).should(never()).update(anyLong(), any(AdvertisementBidNoticeRequest.class));
+    }
+
+    private void 입찰공고_삭제가_수행되어야_한다() {
+        then(service).should().delete(anyLong());
+    }
+
+    private void 입찰공고_종료가_수행되어야_한다() {
+        then(service).should().close(anyLong());
     }
 
     /**

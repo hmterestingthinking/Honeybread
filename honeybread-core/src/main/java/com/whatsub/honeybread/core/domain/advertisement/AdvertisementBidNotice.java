@@ -8,7 +8,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 
 @Getter
 @Entity
@@ -69,6 +75,10 @@ public class AdvertisementBidNotice extends BaseEntity {
         this.minimumBidPrice = entity.getMinimumBidPrice();
         this.bidPriceUnit = entity.getBidPriceUnit();
         this.period = entity.getPeriod();
+    }
+
+    public void close() {
+        this.status = Status.CLOSED;
     }
 
     public boolean isProcess() {
