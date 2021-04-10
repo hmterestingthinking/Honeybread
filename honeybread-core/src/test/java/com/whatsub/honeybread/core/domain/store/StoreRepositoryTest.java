@@ -47,45 +47,6 @@ public class StoreRepositoryTest {
         assertTrue(result);
     }
 
-    @Test
-    void 다른_스토어명으로_스토어명_중복검사() {
-        //given
-        repository.save(스토어A);
-        repository.save(스토어B);
-
-        //when
-        boolean result = repository.existsByIdNotAndBasicName(스토어A.getId(), 스토어B.getBasic().getName());
-
-        //then
-        assertTrue(result);
-    }
-
-    @Test
-    void 자신의_스토어명으로_스토어명_중복검사() {
-        //given
-        repository.save(스토어A);
-        repository.save(스토어B);
-
-        //when
-        boolean result = repository.existsByIdNotAndBasicName(스토어A.getId(), 스토어A.getBasic().getName());
-
-        //then
-        assertFalse(result);
-    }
-
-    @Test
-    void 아예_없던_스토어명으로_스토어명_중복검사() {
-        //given
-        repository.save(스토어A);
-        repository.save(스토어B);
-
-        //when
-        boolean result = repository.existsByIdNotAndBasicName(스토어A.getId(), anyString());
-
-        //then
-        assertFalse(result);
-    }
-
     private Store 스토어_객체_만들기(String name) {
         return Store.builder()
                 .sellerId(anyLong())
