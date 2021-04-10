@@ -15,7 +15,7 @@ import javax.validation.constraints.Pattern;
 public class StoreBasicRequest {
 
     @NotBlank
-    @Length(min = 5, max = 30)
+    @Length(min = 5, max = 30, message = "스토어의 이름은 5에서 30글자이어야 합니다.")
     String name;
 
     @NotBlank
@@ -23,23 +23,23 @@ public class StoreBasicRequest {
     String tel;
 
     @NotBlank
-    @URL
+    @URL(message = "URL 형식이 올바르지 않습니다.")
     String imageUrl;
 
     @Valid
-    @NotNull
+    @NotNull(message = "주소 정보는 필수 입력입니다.")
     AddressRequest address;
 
     @Valid
-    @NotNull
+    @NotNull(message = "안내 정보는 필수 입력입니다.")
     StoreAnnouncementRequest storeIntroduce;
 
     @Valid
-    @NotNull
+    @NotNull(message = "운영시간 정보는 필수 입력입니다.")
     BusinessHoursRequest operationTime;
 
     @Valid
-    @NotNull
+    @NotNull(message = "사업자등록 정보는 필수 입력입니다.")
     BusinessLicenseRequest businessLicense;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

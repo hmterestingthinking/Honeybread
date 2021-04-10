@@ -11,10 +11,10 @@ import javax.validation.constraints.NotNull;
 @Value
 public class BankAccountRequest {
 
-    @NotNull
+    @NotNull(message = "은행정보는 필수 입력입니다.")
     BankType bankType;
 
-    @NotBlank
+    @NotBlank(message = "계좌번호는 빈 값이 올 수 없습니다.")
     String accountNumber;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

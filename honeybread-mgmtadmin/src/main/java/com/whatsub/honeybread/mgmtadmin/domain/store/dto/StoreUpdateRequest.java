@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 public class StoreUpdateRequest extends StoreCommandCommonRequest {
 
     @Valid
-    @NotNull
+    @NotNull(message = "운영 정보는 필수 입력입니다.")
     StoreOperationRequest operation;
 
-    @NotNull
+    @NotNull(message = "상태 정보는 필수 입력입니다.")
     StoreStatus status;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

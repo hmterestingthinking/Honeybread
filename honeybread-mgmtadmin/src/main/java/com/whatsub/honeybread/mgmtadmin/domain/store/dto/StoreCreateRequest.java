@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Value
 public class StoreCreateRequest extends StoreCommandCommonRequest {
 
-    @NotNull
+    @NotNull(message = "판매자 정보는 필수 입력입니다.")
     Long sellerId;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

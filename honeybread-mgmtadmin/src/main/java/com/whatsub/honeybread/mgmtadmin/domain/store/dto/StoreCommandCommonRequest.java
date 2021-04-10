@@ -18,17 +18,17 @@ import java.util.Set;
 public abstract class StoreCommandCommonRequest {
 
     @Valid
-    @NotNull
+    @NotNull(message = "기본 정보는 필수 입력입니다.")
     protected final StoreBasicRequest basic;
 
     @Valid
-    @NotNull
+    @NotNull(message = "계좌 정보는 필수 입력입니다.")
     protected final BankAccountRequest bankAccount;
 
-    @NotEmpty
+    @NotEmpty(message = "카테고리는 최소 1개 필수 입력입니다.")
     protected final Set<Long> categoryIds;
 
-    @NotEmpty
+    @NotEmpty(message = "결제방식은 최소 1개 필수 입력입니다.")
     protected final Set<PayType> payMethods;
 
 }

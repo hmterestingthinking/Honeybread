@@ -11,10 +11,10 @@ import javax.validation.constraints.NotNull;
 @Value
 public class StoreOperationRequest {
 
-    @NotNull
+    @NotNull(message = "운영상태 정보는 필수 입력입니다.")
     OperationStatus status;
 
-    @NotNull
+    @NotNull(message = "운영시간 정보는 필수 입력입니다.")
     TimePeriod period;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

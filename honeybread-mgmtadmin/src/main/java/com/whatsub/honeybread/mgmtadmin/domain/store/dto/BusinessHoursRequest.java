@@ -10,14 +10,14 @@ import javax.validation.constraints.NotBlank;
 @Value
 public class BusinessHoursRequest {
 
-    @NotBlank
-    @Length(max = 100)
+    @NotBlank(message = "운영시간 정보는 빈 값이 올 수 없습니다.")
+    @Length(max = 100, message = "운영시간 정보는 최대 100글자입니다.")
     String businessHour;
 
-    @Length(max = 100)
+    @Length(max = 100, message = "운영시간 정보는 최대 100글자입니다.")
     String holiday;
 
-    @Length(max = 100)
+    @Length(max = 100, message = "운영시간 정보는 최대 100글자입니다.")
     String breakTime;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
