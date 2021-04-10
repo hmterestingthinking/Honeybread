@@ -9,6 +9,8 @@ import com.whatsub.honeybread.core.domain.store.StoreStatus;
 import io.swagger.annotations.ApiModel;
 import lombok.Value;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,8 +18,11 @@ import java.util.stream.Collectors;
 @Value
 public class StoreUpdateRequest extends StoreCommandCommonRequest {
 
+    @Valid
+    @NotNull
     StoreOperationRequest operation;
 
+    @NotNull
     StoreStatus status;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

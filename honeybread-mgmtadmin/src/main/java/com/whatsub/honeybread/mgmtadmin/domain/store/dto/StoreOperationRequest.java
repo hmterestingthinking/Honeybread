@@ -6,11 +6,15 @@ import com.whatsub.honeybread.core.domain.store.OperationStatus;
 import com.whatsub.honeybread.core.domain.store.StoreOperation;
 import lombok.Value;
 
+import javax.validation.constraints.NotNull;
+
 @Value
 public class StoreOperationRequest {
 
+    @NotNull
     OperationStatus status;
 
+    @NotNull
     TimePeriod period;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

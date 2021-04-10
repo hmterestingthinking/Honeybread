@@ -8,6 +8,8 @@ import com.whatsub.honeybread.core.domain.store.StorePayMethod;
 import io.swagger.annotations.ApiModel;
 import lombok.Value;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 @Value
 public class StoreCreateRequest extends StoreCommandCommonRequest {
 
+    @NotNull
     Long sellerId;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
