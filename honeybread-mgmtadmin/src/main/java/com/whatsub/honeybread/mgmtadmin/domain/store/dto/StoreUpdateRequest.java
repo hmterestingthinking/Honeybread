@@ -26,12 +26,12 @@ public class StoreUpdateRequest extends StoreCommandCommonRequest {
     StoreStatus status;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public StoreUpdateRequest(StoreOperationRequest operation,
-                              StoreStatus status,
-                              StoreBasicRequest basic,
-                              BankAccountRequest bankAccount,
-                              Set<Long> categoryIds,
-                              Set<PayType> payMethods) {
+    public StoreUpdateRequest(final StoreOperationRequest operation,
+                              final StoreStatus status,
+                              final StoreBasicRequest basic,
+                              final BankAccountRequest bankAccount,
+                              final Set<Long> categoryIds,
+                              final Set<PayType> payMethods) {
         super(basic, bankAccount, categoryIds, payMethods);
         this.operation = operation;
         this.status = status;

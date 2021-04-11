@@ -15,7 +15,7 @@ public class BusinessLicenseRequest {
     String businessLicenseNumber;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public BusinessLicenseRequest(String businessLicenseNumber) {
+    public BusinessLicenseRequest(final String businessLicenseNumber) {
         this.businessLicenseNumber = businessLicenseNumber;
     }
 

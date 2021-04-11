@@ -23,15 +23,15 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements St
                         equalStoreStatus(search.getStatus())));
     }
 
-    private BooleanExpression likeName(String name) {
+    private BooleanExpression likeName(final String name) {
         return StringUtils.isBlank(name) ? null : store.basic.name.like(name + "%");
     }
 
-    private BooleanExpression equalSellerId(Long sellerId) {
+    private BooleanExpression equalSellerId(final Long sellerId) {
         return sellerId == null ? null : store.sellerId.eq(sellerId);
     }
 
-    private BooleanExpression equalStoreStatus(StoreStatus status) {
+    private BooleanExpression equalStoreStatus(final StoreStatus status) {
         return status == null ? null : store.status.eq(status);
     }
 

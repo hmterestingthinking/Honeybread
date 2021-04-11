@@ -15,7 +15,7 @@ public class AddressRequest {
     String detailAddress;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public AddressRequest(String detailAddress) {
+    public AddressRequest(final String detailAddress) {
         this.detailAddress = detailAddress;
     }
 

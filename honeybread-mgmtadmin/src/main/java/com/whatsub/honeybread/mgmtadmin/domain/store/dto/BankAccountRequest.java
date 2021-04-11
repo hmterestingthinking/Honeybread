@@ -20,7 +20,7 @@ public class BankAccountRequest {
     String accountNumber;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public BankAccountRequest(BankType bankType, String accountNumber) {
+    public BankAccountRequest(final BankType bankType, final String accountNumber) {
         this.bankType = bankType;
         this.accountNumber = accountNumber;
     }

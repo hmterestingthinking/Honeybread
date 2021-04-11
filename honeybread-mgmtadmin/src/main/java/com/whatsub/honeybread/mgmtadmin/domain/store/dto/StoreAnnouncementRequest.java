@@ -23,7 +23,7 @@ public class StoreAnnouncementRequest {
     String originCountry;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public StoreAnnouncementRequest(String introduce, String information, String originCountry) {
+    public StoreAnnouncementRequest(final String introduce, final String information, final String originCountry) {
         this.introduce = introduce;
         this.information = information;
         this.originCountry = originCountry;

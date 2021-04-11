@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface StoreRepositoryCustom {
 
-    Page<Store> getStores(Pageable pageable, StoreSearch search);
+    Page<Store> getStores(final Pageable pageable, final StoreSearch search);
 
 }

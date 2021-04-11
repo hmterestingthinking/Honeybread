@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @UtilityClass
 public final class Sha256Utils {
 
-    public String generate(String salt) {
+    public String generate(final String salt) {
         byte[] raw = new byte[16];
         ThreadLocalRandom.current().nextBytes(raw);
 
@@ -29,7 +29,7 @@ public final class Sha256Utils {
         return String.format("%064x", new BigInteger(1, md.digest()));
     }
 
-    public String generate(Object... saltItem) {
+    public String generate(final Object... saltItem) {
         StringBuilder builder = new StringBuilder();
         Arrays.stream(saltItem).forEach(item -> builder.append("_").append(item));
         return generate(builder.toString());

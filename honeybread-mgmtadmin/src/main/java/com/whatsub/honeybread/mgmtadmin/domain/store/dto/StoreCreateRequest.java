@@ -21,11 +21,11 @@ public class StoreCreateRequest extends StoreCommandCommonRequest {
     Long sellerId;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public StoreCreateRequest(Long sellerId,
-                              StoreBasicRequest basic,
-                              BankAccountRequest bankAccount,
-                              Set<Long> categoryIds,
-                              Set<PayType> payMethods) {
+    public StoreCreateRequest(final Long sellerId,
+                              final StoreBasicRequest basic,
+                              final BankAccountRequest bankAccount,
+                              final Set<Long> categoryIds,
+                              final Set<PayType> payMethods) {
         super(basic, bankAccount, categoryIds, payMethods);
         this.sellerId = sellerId;
     }

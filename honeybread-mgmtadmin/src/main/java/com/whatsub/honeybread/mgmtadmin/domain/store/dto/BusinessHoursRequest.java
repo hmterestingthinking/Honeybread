@@ -21,7 +21,7 @@ public class BusinessHoursRequest {
     String breakTime;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public BusinessHoursRequest(String businessHour, String holiday, String breakTime) {
+    public BusinessHoursRequest(final String businessHour, final String holiday, final String breakTime) {
         this.businessHour = businessHour;
         this.holiday = holiday;
         this.breakTime = breakTime;

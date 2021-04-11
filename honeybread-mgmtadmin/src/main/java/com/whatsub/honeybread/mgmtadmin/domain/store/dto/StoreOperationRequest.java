@@ -18,7 +18,8 @@ public class StoreOperationRequest {
     TimePeriod period;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public StoreOperationRequest(OperationStatus status, TimePeriod period) {
+    public StoreOperationRequest(final OperationStatus status,
+                                 final TimePeriod period) {
         this.status = status;
         this.period = period;
     }

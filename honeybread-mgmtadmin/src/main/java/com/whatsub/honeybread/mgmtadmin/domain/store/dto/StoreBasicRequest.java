@@ -43,13 +43,13 @@ public class StoreBasicRequest {
     BusinessLicenseRequest businessLicense;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public StoreBasicRequest(String name,
-                             String tel,
-                             String imageUrl,
-                             AddressRequest address,
-                             StoreAnnouncementRequest storeIntroduce,
-                             BusinessHoursRequest operationTime,
-                             BusinessLicenseRequest businessLicense) {
+    public StoreBasicRequest(final String name,
+                             final String tel,
+                             final String imageUrl,
+                             final AddressRequest address,
+                             final StoreAnnouncementRequest storeIntroduce,
+                             final BusinessHoursRequest operationTime,
+                             final BusinessLicenseRequest businessLicense) {
         this.name = name;
         this.tel = tel;
         this.imageUrl = imageUrl;
