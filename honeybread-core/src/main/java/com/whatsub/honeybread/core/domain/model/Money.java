@@ -1,8 +1,11 @@
 package com.whatsub.honeybread.core.domain.model;
 
+import lombok.EqualsAndHashCode;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+@EqualsAndHashCode(of = "value")
 public class Money implements Serializable, Comparable<Money> {
     public static final Money ZERO = new Money(BigDecimal.ZERO);
 
