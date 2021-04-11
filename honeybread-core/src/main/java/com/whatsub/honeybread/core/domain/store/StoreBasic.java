@@ -35,7 +35,7 @@ public class StoreBasic {
 
     // 안내 관련 정보
     @Embedded
-    private StoreAnnouncement storeIntroduce;
+    private StoreAnnouncement storeAnnouncement;
 
     // 영업 관련 정보
     @Embedded

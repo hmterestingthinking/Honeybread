@@ -80,7 +80,7 @@ public class StoreControllerTest {
     @BeforeEach
     void 등록수정_공통요청_초기화() {
         given(기본정보_요청.getAddress()).willReturn(주소정보_요청);
-        given(기본정보_요청.getStoreIntroduce()).willReturn(안내정보_요청);
+        given(기본정보_요청.getStoreAnnouncement()).willReturn(안내정보_요청);
         given(기본정보_요청.getOperationTime()).willReturn(운영시간정보_요청);
         given(기본정보_요청.getBusinessLicense()).willReturn(사업자등록증정보_요청);
     }
@@ -1517,7 +1517,7 @@ public class StoreControllerTest {
     }
 
     private void 다음과같은_안내정보로_요청했다(StoreAnnouncementRequest 안내정보_요청) {
-        given(기본정보_요청.getStoreIntroduce()).willReturn(안내정보_요청);
+        given(기본정보_요청.getStoreAnnouncement()).willReturn(안내정보_요청);
     }
 
     private void 다음과같은_운영시간정보로_요청했다(BusinessHoursRequest 운영시간정보_요청) {

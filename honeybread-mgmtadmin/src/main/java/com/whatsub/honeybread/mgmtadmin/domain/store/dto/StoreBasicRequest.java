@@ -32,7 +32,7 @@ public class StoreBasicRequest {
 
     @Valid
     @NotNull(message = "안내 정보는 필수 입력입니다.")
-    StoreAnnouncementRequest storeIntroduce;
+    StoreAnnouncementRequest storeAnnouncement;
 
     @Valid
     @NotNull(message = "운영시간 정보는 필수 입력입니다.")
@@ -47,14 +47,14 @@ public class StoreBasicRequest {
                              final String tel,
                              final String imageUrl,
                              final AddressRequest address,
-                             final StoreAnnouncementRequest storeIntroduce,
+                             final StoreAnnouncementRequest storeAnnouncement,
                              final BusinessHoursRequest operationTime,
                              final BusinessLicenseRequest businessLicense) {
         this.name = name;
         this.tel = tel;
         this.imageUrl = imageUrl;
         this.address = address;
-        this.storeIntroduce = storeIntroduce;
+        this.storeAnnouncement = storeAnnouncement;
         this.operationTime = operationTime;
         this.businessLicense = businessLicense;
     }
@@ -64,7 +64,7 @@ public class StoreBasicRequest {
                 tel,
                 imageUrl,
                 address.toAddress(),
-                storeIntroduce.toStoreAnnouncement(),
+                storeAnnouncement.toStoreAnnouncement(),
                 operationTime.toBusinessHours(),
                 businessLicense.toBusinessLicense()
         );
