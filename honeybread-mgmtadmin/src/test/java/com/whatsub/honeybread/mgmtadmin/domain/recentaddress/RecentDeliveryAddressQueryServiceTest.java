@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @SpringBootTest(classes = RecentDeliveryAddressQueryService.class)
@@ -30,9 +31,6 @@ class RecentDeliveryAddressQueryServiceTest {
 
     @MockBean
     RecentDeliveryAddressRepository repository;
-
-    @Mock
-    List<RecentDeliveryAddress> mockList;
 
     @Test
     void UserId로_최근배달주소들_검색() {
@@ -51,10 +49,8 @@ class RecentDeliveryAddressQueryServiceTest {
 
     private void 사이즈만큼_최근배달주소들_검색(int expectSize) {
         List<RecentDeliveryAddress> recentDeliveryAddresses = 사이즈만큼_최근배달주소_생성(expectSize);
-        given(mockList.stream()).willReturn(Stream.of(recentDeliveryAddresses.toArray(RecentDeliveryAddress[]::new)));
-        given(mockList.size()).willReturn(expectSize);
         given(repository.findAllByUserId(anyLong()))
-            .willReturn(mockList);
+            .willReturn(recentDeliveryAddresses);
     }
 
     private void UserId로_최근배달주소들_검색되어야함() {
@@ -63,14 +59,7 @@ class RecentDeliveryAddressQueryServiceTest {
 
     private List<RecentDeliveryAddress> 사이즈만큼_최근배달주소_생성(int i) {
         return IntStream.range(0, i)
-            .mapToObj((v) -> RecentDeliveryAddress.builder()
-                .userId(1L)
-                .deliveryAddress("서울시 강남구 수서동 500 301동 404호 " + v)
-                .searchableDeliveryAddress("서울시 강남구 수서동")
-                .stateNameAddress("서울시 강남구 광평로101길 200 301호 404호" + v)
-                .zipCode("99999")
-                .usedAt(LocalDateTime.now())
-                .build())
+            .mapToObj((ignore) -> mock(RecentDeliveryAddress.class))
             .collect(Collectors.toList());
     }
 }
