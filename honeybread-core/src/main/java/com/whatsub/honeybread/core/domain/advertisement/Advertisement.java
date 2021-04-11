@@ -37,6 +37,6 @@ public class Advertisement extends BaseEntity {
     )
     private TimePeriod period = TimePeriod.EMPTY;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "advertisement")
+    @OneToMany(fetch = FetchType.LAZY)
     private List<AdvertisedStore> advertisedStores = List.of();
 }
