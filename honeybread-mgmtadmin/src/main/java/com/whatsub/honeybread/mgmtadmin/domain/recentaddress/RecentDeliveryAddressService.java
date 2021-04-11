@@ -50,10 +50,9 @@ public class RecentDeliveryAddressService {
 
     private void deleteEldestIfSizeGreaterThanOrEqual(List<RecentDeliveryAddress> list) {
         if(list.size() >= recentDeliveryAddressSize) {
-            list.stream()
-                .sorted(Comparator.comparing(RecentDeliveryAddress::getUsedAt))
-                .collect(Collectors.toList());
-            repository.delete(list.get(0));
+            repository.delete(list.stream()
+                .min(Comparator.comparing(RecentDeliveryAddress::getUsedAt))
+                .get());
         }
     }
 }
