@@ -241,8 +241,6 @@ class RecentDeliveryAddressServiceTest {
     }
 
     private void RECENT_DELIVERY_ADDRESS_NOT_FOUND_에러_발생(HoneyBreadException honeyBreadException) {
-        assertEquals(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND.getMessage(), honeyBreadException.getErrorCode().getMessage());
-        assertEquals(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND.getCode(), honeyBreadException.getErrorCode().getCode());
-        assertEquals(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND.getStatus(), honeyBreadException.getErrorCode().getStatus());
+        assertEquals(ErrorCode.RECENT_DELIVERY_ADDRESS_NOT_FOUND, honeyBreadException.getErrorCode());
     }
 }
