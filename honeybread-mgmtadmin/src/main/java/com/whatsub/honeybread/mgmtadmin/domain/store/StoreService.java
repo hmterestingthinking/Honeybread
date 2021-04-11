@@ -76,7 +76,7 @@ public class StoreService {
     private void checkCategoryIdsExistence(final Set<Long> categoryIds) {
         Set<Long> savedCategoryIdSet = categoryRepository.findAllById(categoryIds).stream()
                 .map(BaseEntity::getId).collect(Collectors.toSet());
-        if (categoryIds.stream().anyMatch(id -> !savedCategoryIdSet.contains(id))) {
+        if (!savedCategoryIdSet.containsAll(categoryIds)) {
             throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
         }
     }
