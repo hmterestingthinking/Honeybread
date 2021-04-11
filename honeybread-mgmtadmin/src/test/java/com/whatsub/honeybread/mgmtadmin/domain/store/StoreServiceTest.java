@@ -280,12 +280,14 @@ public class StoreServiceTest {
     }
 
     private void 일부_존재하지않는_카테고리아이디로_카테고리_조회시_저장된카테고리만_조회된다() {
-        given(categoryRepository.findAllById(카테고리_아이디_목록_비정상_요청)).willReturn(카테고리_아이디_목록_비정상_요청에_대한_조회결과);
+        given(categoryRepository.findAllById(카테고리_아이디_목록_비정상_요청))
+                .willReturn(카테고리_아이디_목록_비정상_요청에_대한_조회결과);
     }
 
     private void 모두_존재하는_카테고리아이디로_등록요청을_한다() {
         given(스토어_등록요청.getCategoryIds()).willReturn(카테고리_아이디_목록_정상_요청);
-        given(categoryRepository.findAllById(카테고리_아이디_목록_정상_요청)).willReturn(카테고리_아이디_목록_정상_요청에_대한_조회결과);
+        given(categoryRepository.findAllById(카테고리_아이디_목록_정상_요청))
+                .willReturn(카테고리_아이디_목록_정상_요청에_대한_조회결과);
     }
 
     private void 스토어를_저장하면_엔티티가_반환된다() {
@@ -313,13 +315,17 @@ public class StoreServiceTest {
     }
 
     private void 일부_존재하지않는_카테고리아이디로_수정요청을_한다() {
-        given(스토어_수정요청.getCategoryIds()).willReturn(카테고리_아이디_목록_비정상_요청);
-        given(categoryRepository.findAllById(카테고리_아이디_목록_비정상_요청)).willReturn(카테고리_아이디_목록_비정상_요청에_대한_조회결과);
+        given(스토어_수정요청.getCategoryIds())
+                .willReturn(카테고리_아이디_목록_비정상_요청);
+        given(categoryRepository.findAllById(카테고리_아이디_목록_비정상_요청))
+                .willReturn(카테고리_아이디_목록_비정상_요청에_대한_조회결과);
     }
 
     private void 모두_존재하는_카테고리아이디로_수정요청을_한다() {
-        given(스토어_수정요청.getCategoryIds()).willReturn(카테고리_아이디_목록_정상_요청);
-        given(categoryRepository.findAllById(카테고리_아이디_목록_정상_요청)).willReturn(카테고리_아이디_목록_정상_요청에_대한_조회결과);
+        given(스토어_수정요청.getCategoryIds())
+                .willReturn(카테고리_아이디_목록_정상_요청);
+        given(categoryRepository.findAllById(카테고리_아이디_목록_정상_요청))
+                .willReturn(카테고리_아이디_목록_정상_요청에_대한_조회결과);
     }
 
     /**

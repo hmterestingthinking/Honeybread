@@ -33,7 +33,8 @@ public class StoreController {
             tags = MgmtAdminSwaggerTags.STORE
     )
     @PostMapping
-    public ResponseEntity<Void> createStore(@Valid @RequestBody StoreCreateRequest request, BindingResult result) {
+    public ResponseEntity<Void> createStore(@Valid @RequestBody StoreCreateRequest request,
+                                            BindingResult result) {
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -46,7 +47,9 @@ public class StoreController {
             tags = MgmtAdminSwaggerTags.STORE
     )
     @PutMapping("{storeId}")
-    public ResponseEntity<Void> updateStore(@PathVariable long storeId, @Valid @RequestBody StoreUpdateRequest request, BindingResult result) {
+    public ResponseEntity<Void> updateStore(@PathVariable long storeId,
+                                            @Valid @RequestBody StoreUpdateRequest request,
+                                            BindingResult result) {
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }

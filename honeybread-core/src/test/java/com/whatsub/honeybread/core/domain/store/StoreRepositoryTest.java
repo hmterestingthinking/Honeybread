@@ -101,10 +101,7 @@ public class StoreRepositoryTest {
         // then
         assertEquals(stores.getTotalElements(), N);
         assertEquals(stores.getContent().size(), 조회되어야하는_데이터_개수);
-        assertEquals(stores.getContent().stream()
-                        .filter(store -> store.getBasic().getName().startsWith(허니브레드))
-                        .count(),
-                조회되어야하는_데이터_개수);
+        assertTrue(stores.getContent().stream().allMatch(store -> store.getBasic().getName().startsWith(허니브레드)));
     }
 
     @ParameterizedTest
@@ -124,10 +121,7 @@ public class StoreRepositoryTest {
         // then
         assertEquals(stores.getTotalElements(), N);
         assertEquals(stores.getContent().size(), 조회되어야하는_데이터_개수);
-        assertEquals(stores.getContent().stream()
-                        .filter(store -> store.getSellerId().equals(셀러아이디))
-                        .count(),
-                조회되어야하는_데이터_개수);
+        assertTrue(stores.getContent().stream().allMatch(store -> store.getSellerId().equals(셀러아이디)));
     }
 
     @ParameterizedTest
@@ -147,10 +141,7 @@ public class StoreRepositoryTest {
         // then
         assertEquals(stores.getTotalElements(), N);
         assertEquals(stores.getContent().size(), 조회되어야하는_데이터_개수);
-        assertEquals(stores.getContent().stream()
-                        .filter(store -> store.getStatus() == 상태)
-                        .count(),
-                조회되어야하는_데이터_개수);
+        assertTrue(stores.getContent().stream().allMatch(store -> store.getStatus() == 상태));
     }
 
     @ParameterizedTest
@@ -176,12 +167,11 @@ public class StoreRepositoryTest {
         // then
         assertEquals(stores.getTotalElements(), N);
         assertEquals(stores.getContent().size(), 조회되어야하는_데이터_개수);
-        assertEquals(stores.getContent().stream()
-                        .filter(store -> store.getBasic().getName().equals(스토어명))
-                        .filter(store -> store.getSellerId().equals(셀러아이디))
-                        .filter(store -> store.getStatus() == 상태)
-                        .count(),
-                조회되어야하는_데이터_개수);
+        assertTrue(stores.getContent().stream().allMatch(
+                store -> store.getBasic().getName().equals(스토어명)
+                        && store.getSellerId().equals(셀러아이디)
+                        && store.getStatus() == 상태)
+        );
     }
 
     /**

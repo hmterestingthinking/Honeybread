@@ -17,22 +17,36 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements St
 
     @Override
     public Page<Store> getStores(final Pageable pageable, final StoreSearch search) {
-        return applyPagination(pageable, query -> query.from(store)
-                .where(likeName(search.getName()),
-                        equalSellerId(search.getSellerId()),
-                        equalStoreStatus(search.getStatus())));
+        return applyPagination(pageable,
+                query -> query
+                        .from(store)
+                        .where(
+                                likeName(search.getName()),
+                                equalSellerId(search.getSellerId()),
+                                equalStoreStatus(search.getStatus())
+                        )
+        );
     }
 
     private BooleanExpression likeName(final String name) {
-        return StringUtils.isBlank(name) ? null : store.basic.name.like(name + "%");
+        if (StringUtils.isBlank(name)) {
+            return null;
+        }
+        return store.basic.name.like(name + "%");
     }
 
     private BooleanExpression equalSellerId(final Long sellerId) {
-        return sellerId == null ? null : store.sellerId.eq(sellerId);
+        if (sellerId == null) {
+            return null;
+        }
+        return store.sellerId.eq(sellerId);
     }
 
     private BooleanExpression equalStoreStatus(final StoreStatus status) {
-        return status == null ? null : store.status.eq(status);
+        if (status == null) {
+            return null;
+        }
+        return store.status.eq(status);
     }
 
 }
