@@ -650,6 +650,29 @@ public class StoreControllerTest {
         요청의_응답은_BAD_REQUEST(result);
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "",
+            " ",
+            "124abc",
+            "124@#$",
+            "124",
+            "123456789",
+            "123456789012345678901234567890123456789012345678901",
+    })
+    void 계좌번호가_형식에_맞지않아_등록_실패(String 계좌번호) throws Exception {
+        // given
+        모든_프로퍼티가_정상적으로_입력된_등록요청이다();
+        다음과같은_계좌번호_요청했다(계좌번호);
+
+        // when
+        ResultActions result = 등록_요청하다(스토어_등록요청);
+
+        // then
+        등록요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
     @Test
     void 카테고리목록을_입력하지_않아_등록_실패() throws Exception {
         // given

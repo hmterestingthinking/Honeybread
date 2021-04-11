@@ -7,6 +7,7 @@ import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Value
 public class BankAccountRequest {
@@ -15,6 +16,7 @@ public class BankAccountRequest {
     BankType bankType;
 
     @NotBlank(message = "계좌번호는 빈 값이 올 수 없습니다.")
+    @Pattern(regexp = "^([[0-9]]{10,50})$", message = "계좌번호는 숫자와 -를 제외하고는 입력하실 수 없습니다.")
     String accountNumber;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
