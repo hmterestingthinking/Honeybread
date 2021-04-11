@@ -10,3 +10,4 @@ logging:
     org:
       hibernate:
         type: trace
+      springframework.data.mongodb.core.MongoTemplate: DEBUG
