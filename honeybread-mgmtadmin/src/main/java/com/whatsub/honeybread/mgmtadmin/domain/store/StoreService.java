@@ -47,9 +47,8 @@ public class StoreService {
     }
 
     private Store getSavedStore(final long storeId) {
-        return storeRepository.findById(storeId).orElseThrow(() -> {
-            throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
-        });
+        return storeRepository.findById(storeId)
+                .orElseThrow(() -> new HoneyBreadException(ErrorCode.STORE_NOT_FOUND));
     }
 
     private void checkSellerIdExistence(final long sellerId) {

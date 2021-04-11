@@ -37,7 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -1022,6 +1022,7 @@ public class StoreControllerTest {
         수정요청_서비스가_수행되지_않았다();
         요청의_응답은_BAD_REQUEST(result);
     }
+
     @Test
     void 소개글을_입력하지_않아_수정_실패() throws Exception {
         // given
@@ -1706,21 +1707,18 @@ public class StoreControllerTest {
     }
 
     private void 등록을_시도했더니_없는_판매자_정보이다() {
-        doAnswer(m -> {
-            throw new HoneyBreadException(ErrorCode.USER_NOT_FOUND);
-        }).when(service).create(any());
+        doThrow(new HoneyBreadException(ErrorCode.USER_NOT_FOUND))
+                .when(service).create(any());
     }
 
     private void 등록을_시도했더니_겹치는_스토어명이다() {
-        doAnswer(m -> {
-            throw new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME);
-        }).when(service).create(any());
+        doThrow(new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME))
+                .when(service).create(any());
     }
 
     private void 등록을_시도했더니_없는_카테고리_정보이다() {
-        doAnswer(m -> {
-            throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
-        }).when(service).create(any());
+        doThrow(new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND))
+                .when(service).create(any());
     }
 
     private void 수정요청_서비스가_수행되었다() {
@@ -1732,21 +1730,18 @@ public class StoreControllerTest {
     }
 
     private void 수정을_시도했더니_없는_스토어_정보이다() {
-        doAnswer(m -> {
-            throw new HoneyBreadException(ErrorCode.STORE_NOT_FOUND);
-        }).when(service).update(anyLong(), any());
+        doThrow(new HoneyBreadException(ErrorCode.STORE_NOT_FOUND))
+                .when(service).update(anyLong(), any());
     }
 
     private void 수정을_시도했더니_겹치는_스토어명이다() {
-        doAnswer(m -> {
-            throw new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME);
-        }).when(service).update(anyLong(), any());
+        doThrow(new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME))
+                .when(service).update(anyLong(), any());
     }
 
     private void 수정을_시도했더니_없는_카테고리_정보이다() {
-        doAnswer(m -> {
-            throw new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND);
-        }).when(service).update(anyLong(), any());
+        doThrow(new HoneyBreadException(ErrorCode.CATEGORY_NOT_FOUND))
+                .when(service).update(anyLong(), any());
     }
 
     private void 요청의_응답은_BAD_REQUEST(ResultActions result) throws Exception {
