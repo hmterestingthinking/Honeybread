@@ -60,7 +60,8 @@ class StoreDeliveryPriceServiceTest {
         주소별_배달금액이_중복됨();
 
         //when
-        HoneyBreadException honeyBreadException = assertThrows(HoneyBreadException.class, () -> service.create(request));
+        HoneyBreadException honeyBreadException
+            = assertThrows(HoneyBreadException.class, () -> service.create(request));
 
         //then
         주소별_배달금액이_등록되지않아야함();
@@ -86,6 +87,7 @@ class StoreDeliveryPriceServiceTest {
     void 주소별_배달금액_수정시_없을경우_에러() {
         //given
         StoreDeliveryPriceModifyRequest request = 주소별_배달금액_수정_요청_생성(5000);
+        주소별_배달금액을_Id로_검색_실패();
 
         //when
         HoneyBreadException honeyBreadException
@@ -93,6 +95,42 @@ class StoreDeliveryPriceServiceTest {
 
         //then
         예상된_에러_발생(ErrorCode.STORE_DELIVERY_PRICE_NOT_FOUND, honeyBreadException);
+    }
+
+    @Test
+    void 주소별_배달금액_삭제() {
+        //given
+        final Long id = 1L;
+        주소별_배달금액을_Id로_검색();
+
+        //when
+        service.delete(id);
+
+        //then
+        주소별_배달금액이_Id로_검색되어야함();
+        주소별_배달금액이_삭제되어야함();
+    }
+
+    @Test
+    void 주소별_배달금액_삭제시_없을경우_에러() {
+        //given
+        final Long id = 1L;
+        주소별_배달금액을_Id로_검색_실패();
+
+        //when
+        HoneyBreadException honeyBreadException
+            = assertThrows(HoneyBreadException.class, () -> service.delete(id));
+
+        //then
+        예상된_에러_발생(ErrorCode.STORE_DELIVERY_PRICE_NOT_FOUND, honeyBreadException);
+    }
+
+    private void 주소별_배달금액을_Id로_검색_실패() {
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+    }
+
+    private void 주소별_배달금액이_삭제되어야함() {
+        then(repository).should().delete(any(StoreDeliveryPrice.class));
     }
 
     private void 주소별_배달금액이_수정되어야함(final StoreDeliveryPriceModifyRequest request) {

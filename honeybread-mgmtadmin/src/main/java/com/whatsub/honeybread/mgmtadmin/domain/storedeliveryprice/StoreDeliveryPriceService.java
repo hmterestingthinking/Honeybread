@@ -27,10 +27,17 @@ public class StoreDeliveryPriceService {
 
     @Transactional
     public void update(final Long id, final StoreDeliveryPriceModifyRequest request) {
-        StoreDeliveryPrice storeDeliveryPrice = repository.findById(id)
-            .orElseThrow(() -> new HoneyBreadException(ErrorCode.STORE_DELIVERY_PRICE_NOT_FOUND));
-
+        StoreDeliveryPrice storeDeliveryPrice = findById(id);
         StoreDeliveryPrice modifyEntity = request.toEntity();
         storeDeliveryPrice.update(modifyEntity);
+    }
+
+    public void delete(final Long id) {
+        repository.delete(findById(id));
+    }
+
+    private StoreDeliveryPrice findById(final Long id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new HoneyBreadException(ErrorCode.STORE_DELIVERY_PRICE_NOT_FOUND));
     }
 }
