@@ -125,30 +125,48 @@ class StoreDeliveryPriceServiceTest {
         예상된_에러_발생(ErrorCode.STORE_DELIVERY_PRICE_NOT_FOUND, honeyBreadException);
     }
 
+    //given
     private void 주소별_배달금액을_Id로_검색_실패() {
         given(repository.findById(anyLong())).willReturn(Optional.empty());
     }
 
-    private void 주소별_배달금액이_삭제되어야함() {
-        then(repository).should().delete(any(StoreDeliveryPrice.class));
+    private void 주소별_배달금액이_중복되지_않음() {
+        given(repository.existsByStoreIdAndSearchableDeliveryAddress(anyLong(), anyString())).willReturn(false);
     }
 
-    private void 주소별_배달금액이_수정되어야함(final StoreDeliveryPriceModifyRequest request) {
-        assertEquals(request.getPrice(), mockEntity.getPrice());
+    private void 주소별_배달금액이_중복됨() {
+        given(repository.existsByStoreIdAndSearchableDeliveryAddress(anyLong(), anyString())).willReturn(true);
     }
 
     private void 주소별_배달금액을_Id로_검색() {
         given(repository.findById(anyLong())).willReturn(Optional.of(mockEntity));
     }
 
-    private void 주소별_배달금액이_Id로_검색되어야함() {
-        then(repository).should().findById(anyLong());
-    }
-
     private StoreDeliveryPriceModifyRequest 주소별_배달금액_수정_요청_생성(final int price) {
         StoreDeliveryPriceModifyRequest mockRequest = mock(StoreDeliveryPriceModifyRequest.class);
         given(mockRequest.toEntity()).willReturn(StoreDeliveryPrice.builder().price(Money.wons(price)).build());
         return mockRequest;
+    }
+
+    private StoreDeliveryPriceRequest 주소별_배달금액_등록_요청_생성(final long storeId, final String address) {
+        StoreDeliveryPriceRequest mockRequest = mock(StoreDeliveryPriceRequest.class);
+        given(mockRequest.getStoreId()).willReturn(storeId);
+        given(mockRequest.getSearchableDeliveryAddress()).willReturn(address);
+        given(mockRequest.toEntity()).willReturn(mockEntity);
+        return mockRequest;
+    }
+
+    //then
+    private void 주소별_배달금액이_삭제되어야함() {
+        then(repository).should().delete(any(StoreDeliveryPrice.class));
+    }
+
+    private void 주소별_배달금액이_Id로_검색되어야함() {
+        then(repository).should().findById(anyLong());
+    }
+
+    private void 주소별_배달금액이_수정되어야함(final StoreDeliveryPriceModifyRequest request) {
+        assertEquals(request.getPrice(), mockEntity.getPrice());
     }
 
     private void 예상된_에러_발생(final ErrorCode storeDeliveryPriceNotFound, final HoneyBreadException honeyBreadException) {
@@ -165,22 +183,6 @@ class StoreDeliveryPriceServiceTest {
 
     private void 주소별_배달금액이_등록되지않아야함() {
         then(repository).should(never()).save(any(StoreDeliveryPrice.class));
-    }
-
-    private void 주소별_배달금액이_중복되지_않음() {
-        given(repository.existsByStoreIdAndSearchableDeliveryAddress(anyLong(), anyString())).willReturn(false);
-    }
-
-    private void 주소별_배달금액이_중복됨() {
-        given(repository.existsByStoreIdAndSearchableDeliveryAddress(anyLong(), anyString())).willReturn(true);
-    }
-
-    private StoreDeliveryPriceRequest 주소별_배달금액_등록_요청_생성(final long storeId, final String address) {
-        StoreDeliveryPriceRequest mockRequest = mock(StoreDeliveryPriceRequest.class);
-        given(mockRequest.getStoreId()).willReturn(storeId);
-        given(mockRequest.getSearchableDeliveryAddress()).willReturn(address);
-        given(mockRequest.toEntity()).willReturn(mockEntity);
-        return mockRequest;
     }
 
 }
