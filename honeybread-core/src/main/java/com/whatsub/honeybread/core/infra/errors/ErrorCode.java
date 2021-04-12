@@ -24,10 +24,12 @@ public enum ErrorCode {
 
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "-22000", "Store Not Found"),
 
-    STORE_DELIVERY_PRICE_NOT_FOUND(HttpStatus.NOT_FOUND, "-23000", "Store Delivery Price Not Found"),
+    DUPLICATE_STORE_DELIVERY_PRICE(HttpStatus.CONFLICT, "-23000", "Duplicate Store Delivery Price"),
+    STORE_DELIVERY_PRICE_NOT_FOUND(HttpStatus.NOT_FOUND, "-23001", "Store Delivery Price Not Found"),
 
     MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "-30001", "Menu NotFound"),
     MENU_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "-31001", "Menu Group NotFound"),
+
     ;
     private final HttpStatus status;
     private final String code;

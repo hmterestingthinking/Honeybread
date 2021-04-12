@@ -37,4 +37,8 @@ public class StoreDeliveryPrice extends BaseEntity {
         this.searchableDeliveryAddress = searchableDeliveryAddress;
         this.price = price;
     }
+
+    public void update(final StoreDeliveryPrice modifyEntity) {
+        this.price = modifyEntity.price;
+    }
 }
