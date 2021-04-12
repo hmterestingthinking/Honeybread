@@ -64,12 +64,8 @@ public class StoreService {
     }
 
     private void checkStoreNameExistenceExcludeSelf(final Store savedStore, final String name) {
-        if (savedStore.getBasic().getName().equals(name)) {
-            return;
-        }
-
-        if (storeRepository.existsByBasicName(name)) {
-            throw new HoneyBreadException(ErrorCode.DUPLICATE_STORE_NAME);
+        if (!savedStore.getBasic().getName().equals(name)) {
+            checkStoreNameExistence(name);
         }
     }
 

@@ -8,6 +8,6 @@ public interface StoreRepository extends JpaRepository<Store, Long>, StoreReposi
 
     boolean existsByBasicName(final String name);
 
-    Optional<Store> findAllByUuid(final String uuid);
+    Optional<Store> findByUuid(final String uuid);
 
 }

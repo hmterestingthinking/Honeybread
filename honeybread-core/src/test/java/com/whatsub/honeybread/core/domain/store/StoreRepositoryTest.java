@@ -64,7 +64,7 @@ public class StoreRepositoryTest {
         String uuid = anyString();
 
         // when
-        Optional<Store> store = repository.findAllByUuid(uuid);
+        Optional<Store> store = repository.findByUuid(uuid);
 
         // then
         assertFalse(store.isPresent());
@@ -77,7 +77,7 @@ public class StoreRepositoryTest {
         다음과같은_UUID의_스토어를_저장한다(uuid);
 
         // when
-        Optional<Store> store = repository.findAllByUuid(uuid);
+        Optional<Store> store = repository.findByUuid(uuid);
 
         // then
         assertTrue(store.isPresent());
