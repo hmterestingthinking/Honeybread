@@ -289,25 +289,23 @@ class MenuControllerTest {
      */
     private void 스토어_메뉴목록_조회시_성공한다() {
         List<MenuGroupDto> menus = List.of(
-            MenuGroupDto.builder()
-                .id(1L)
-                .name("식사류")
-                .description("식사류 입니다")
-                .menus(
-                    List.of(
-                        MenuDto.builder()
-                            .id(1L)
-                            .name("볶음밥")
-                            .menuGroupId(1L)
-                            .categoryId(1L)
-                            .imageUrl("https://www.naver.com")
-                            .isMain(true)
-                            .isBest(true)
-                            .price(Money.wons(10000))
-                            .build()
-                    )
+            new MenuGroupDto(
+                1L,
+                "식사류",
+                "식사류 입니다",
+                List.of(
+                    MenuDto.builder()
+                        .id(1L)
+                        .name("볶음밥")
+                        .menuGroupId(1L)
+                        .categoryId(1L)
+                        .imageUrl("https://www.naver.com")
+                        .isMain(true)
+                        .isBest(true)
+                        .price(Money.wons(10000))
+                        .build()
                 )
-                .build()
+            )
         );
         given(queryRepository.findAllByStoreId(anyLong())).willReturn(menus);
     }

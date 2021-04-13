@@ -40,6 +40,21 @@ class AdvertisementBidControllerTest {
     AdvertisementBidNoticeService service;
 
     @Test
+    void 입찰공고_목록_조회에_성공한다() throws Exception {
+        // given
+
+        // when
+        ResultActions result = mockMvc.perform(
+            get(NOTICE_BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        result.andExpect(status().isOk());
+    }
+
+    @Test
     void 벨리데이션_성공시_입찰공고_등록에_성공한다() throws Exception {
         // given
         입찰공고_등록에_성공한다();
