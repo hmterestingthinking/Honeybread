@@ -32,6 +32,7 @@ public class StoreDeliveryPriceService {
         storeDeliveryPrice.update(modifyEntity);
     }
 
+    @Transactional
     public void delete(final Long id) {
         repository.delete(findById(id));
     }
