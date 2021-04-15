@@ -30,7 +30,6 @@ public class AdvertisementBidController {
     private final AdvertisementBidNoticeService noticeService;
     private final AdvertisementBidNoticeQueryService noticeQueryService;
 
-    // 입찰 공고 목록
     @ApiOperation(
         value = "입찰 공고 목록",
         tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
@@ -45,7 +44,6 @@ public class AdvertisementBidController {
         return ResponseEntity.ok(response);
     }
 
-    // 입찰 공고 상세
     @ApiOperation(
         value = "입찰공고 조회",
         tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
@@ -89,7 +87,6 @@ public class AdvertisementBidController {
         return ResponseEntity.ok().build();
     }
 
-    // 입찰 공고 삭제
     @ApiOperation(
         value = "입찰 공고 삭제",
         tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
