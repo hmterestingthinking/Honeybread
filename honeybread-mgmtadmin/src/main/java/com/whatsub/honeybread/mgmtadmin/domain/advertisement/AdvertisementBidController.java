@@ -1,8 +1,10 @@
 package com.whatsub.honeybread.mgmtadmin.domain.advertisement;
 
 import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
+import com.whatsub.honeybread.core.domain.advertisement.dto.AdvertisementBidNoticeSearch;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementBidNoticeRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementBidNoticeResponse;
 import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,14 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -35,14 +30,19 @@ public class AdvertisementBidController {
     private final AdvertisementBidNoticeService noticeService;
     private final AdvertisementBidNoticeQueryService noticeQueryService;
 
-    // 상태, 기간검색, 타입 검색필요
     // 입찰 공고 목록
-    public ResponseEntity<Page> getBidNotices(
+    @ApiOperation(
+        value = "입찰 공고 목록",
+        tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
+    )
+    @GetMapping(NOTICE_MAPPING)
+    public ResponseEntity<Page<AdvertisementBidNoticeResponse>> getBidNotices(
         @PageableDefault(size = 20, direction = Sort.Direction.DESC, sort = "createdAt")
-        Pageable pageable
+        Pageable pageable,
+        AdvertisementBidNoticeSearch search
     ) {
-
-        return null;
+        Page<AdvertisementBidNoticeResponse> response = noticeQueryService.findAll(pageable, search);
+        return ResponseEntity.ok(response);
     }
 
     // 입찰 공고 상세

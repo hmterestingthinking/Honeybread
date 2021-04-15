@@ -5,11 +5,13 @@ import com.whatsub.honeybread.core.domain.advertisement.AdvertisementType;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
 @Value
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class AdvertisementBidNoticeResponse {
     Long id;
     AdvertisementType type;

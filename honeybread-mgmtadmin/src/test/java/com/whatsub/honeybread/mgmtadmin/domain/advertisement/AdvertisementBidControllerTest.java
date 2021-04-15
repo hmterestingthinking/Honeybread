@@ -1,28 +1,38 @@
 package com.whatsub.honeybread.mgmtadmin.domain.advertisement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.whatsub.honeybread.core.domain.advertisement.AdvertisementBidNotice;
 import com.whatsub.honeybread.core.domain.advertisement.AdvertisementType;
+import com.whatsub.honeybread.core.domain.advertisement.dto.AdvertisementBidNoticeSearch;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementBidNoticeRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementBidNoticeResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -39,19 +49,30 @@ class AdvertisementBidControllerTest {
     @MockBean
     AdvertisementBidNoticeService service;
 
+    @MockBean
+    AdvertisementBidNoticeQueryService queryService;
+
     @Test
     void 입찰공고_목록_조회에_성공한다() throws Exception {
         // given
+        final int size = 10;
+        입찰공고_목록_조회시_성공한다(size);
 
         // when
-        ResultActions result = mockMvc.perform(
-            get(NOTICE_BASE_URL)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
+        ResultActions result = 입찰공고_목록_조회();
 
         // then
-        result.andExpect(status().isOk());
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$.content").isNotEmpty())
+            .andExpect(jsonPath("$.content.length()").value(size))
+            .andExpect(jsonPath("$.content[0].id").exists())
+            .andExpect(jsonPath("$.content[0].type").exists())
+            .andExpect(jsonPath("$.content[0].maximumStoreCounts").exists())
+            .andExpect(jsonPath("$.content[0].minimumBidPrice").exists())
+            .andExpect(jsonPath("$.content[0].bidPriceUnit").exists())
+            .andExpect(jsonPath("$.content[0].period").exists())
+            .andExpect(jsonPath("$.content[0].status").exists())
+        ;
     }
 
     @Test
@@ -230,6 +251,12 @@ class AdvertisementBidControllerTest {
     /**
      * Given
      */
+    private void 입찰공고_목록_조회시_성공한다(int size) {
+        List<AdvertisementBidNoticeResponse> response = 입찰공고_목록_생성(size);
+        given(queryService.findAll(any(Pageable.class), any(AdvertisementBidNoticeSearch.class)))
+            .willReturn(new PageImpl(response, PageRequest.of(0, size), response.size()));
+    }
+
     private void 입찰공고_등록에_성공한다() {
         given(service.create(any(AdvertisementBidNoticeRequest.class))).willReturn(1L);
     }
@@ -281,6 +308,14 @@ class AdvertisementBidControllerTest {
     /**
      * When
      */
+    private ResultActions 입찰공고_목록_조회() throws Exception {
+        return mockMvc.perform(
+            get(NOTICE_BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+    }
+
     private ResultActions 입찰공고_등록() throws Exception {
         return mockMvc.perform(
             post(NOTICE_BASE_URL)
@@ -381,5 +416,24 @@ class AdvertisementBidControllerTest {
             .bidPriceUnit(입찰_단위)
             .maximumStoreCounts(최대_낙찰_가능_스토어_수)
             .build();
+    }
+
+    private List<AdvertisementBidNoticeResponse> 입찰공고_목록_생성(int size) {
+        return LongStream.range(0, size)
+            .mapToObj(id -> AdvertisementBidNoticeResponse.builder()
+                .id(id)
+                .type(AdvertisementType.OPEN_LIST)
+                .maximumStoreCounts(50)
+                .minimumBidPrice(Money.wons(100000))
+                .bidPriceUnit(Money.wons(100000))
+                .period(
+                    TimePeriod.of(
+                        LocalDateTime.of(2021, 4, 16, 12, 0, 0),
+                        LocalDateTime.of(2021, 5, 16, 12, 0, 0)
+                    )
+                )
+                .status(AdvertisementBidNotice.Status.OPEN)
+                .build()
+            ).collect(Collectors.toList());
     }
 }
