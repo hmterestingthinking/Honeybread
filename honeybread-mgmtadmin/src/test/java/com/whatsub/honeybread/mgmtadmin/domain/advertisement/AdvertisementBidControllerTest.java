@@ -76,6 +76,38 @@ class AdvertisementBidControllerTest {
     }
 
     @Test
+    void 입찰공고_조회에_성공한다() throws Exception {
+        // given
+        입찰공고_조회시_성공한다();
+
+        // when
+        ResultActions result = 입찰공고_조회();
+
+        // then
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").exists())
+            .andExpect(jsonPath("$.type").exists())
+            .andExpect(jsonPath("$.maximumStoreCounts").exists())
+            .andExpect(jsonPath("$.minimumBidPrice").exists())
+            .andExpect(jsonPath("$.bidPriceUnit").exists())
+            .andExpect(jsonPath("$.period").exists())
+            .andExpect(jsonPath("$.status").exists())
+        ;
+    }
+
+    @Test
+    void 입찰공고가_존재하지_않는다면_조회에_실패한다() throws Exception {
+        // given
+        입찰공고_조회시_실패한다();
+
+        // when
+        ResultActions result = 입찰공고_조회();
+
+        // then
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
     void 벨리데이션_성공시_입찰공고_등록에_성공한다() throws Exception {
         // given
         입찰공고_등록에_성공한다();
@@ -253,8 +285,17 @@ class AdvertisementBidControllerTest {
      */
     private void 입찰공고_목록_조회시_성공한다(int size) {
         List<AdvertisementBidNoticeResponse> response = 입찰공고_목록_생성(size);
-        given(queryService.findAll(any(Pageable.class), any(AdvertisementBidNoticeSearch.class)))
+        given(queryService.getAdvertisementBidNotices(any(Pageable.class), any(AdvertisementBidNoticeSearch.class)))
             .willReturn(new PageImpl(response, PageRequest.of(0, size), response.size()));
+    }
+
+    private void 입찰공고_조회시_성공한다() {
+        given(queryService.getAdvertisementBidNotice(anyLong())).willReturn(입찰공고_생성(1));
+    }
+
+    private void 입찰공고_조회시_실패한다() {
+        given(queryService.getAdvertisementBidNotice(anyLong()))
+            .willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_NOT_FOUND));
     }
 
     private void 입찰공고_등록에_성공한다() {
@@ -311,6 +352,14 @@ class AdvertisementBidControllerTest {
     private ResultActions 입찰공고_목록_조회() throws Exception {
         return mockMvc.perform(
             get(NOTICE_BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+    }
+
+    private ResultActions 입찰공고_조회() throws Exception {
+        return mockMvc.perform(
+            get(NOTICE_BASE_URL + "/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
@@ -420,20 +469,24 @@ class AdvertisementBidControllerTest {
 
     private List<AdvertisementBidNoticeResponse> 입찰공고_목록_생성(int size) {
         return LongStream.range(0, size)
-            .mapToObj(id -> AdvertisementBidNoticeResponse.builder()
-                .id(id)
-                .type(AdvertisementType.OPEN_LIST)
-                .maximumStoreCounts(50)
-                .minimumBidPrice(Money.wons(100000))
-                .bidPriceUnit(Money.wons(100000))
-                .period(
-                    TimePeriod.of(
-                        LocalDateTime.of(2021, 4, 16, 12, 0, 0),
-                        LocalDateTime.of(2021, 5, 16, 12, 0, 0)
-                    )
+            .mapToObj(this::입찰공고_생성)
+            .collect(Collectors.toList());
+    }
+
+    private AdvertisementBidNoticeResponse 입찰공고_생성(long id) {
+        return AdvertisementBidNoticeResponse.builder()
+            .id(id)
+            .type(AdvertisementType.OPEN_LIST)
+            .maximumStoreCounts(50)
+            .minimumBidPrice(Money.wons(100000))
+            .bidPriceUnit(Money.wons(100000))
+            .period(
+                TimePeriod.of(
+                    LocalDateTime.of(2021, 4, 16, 12, 0, 0),
+                    LocalDateTime.of(2021, 5, 16, 12, 0, 0)
                 )
-                .status(AdvertisementBidNotice.Status.OPEN)
-                .build()
-            ).collect(Collectors.toList());
+            )
+            .status(AdvertisementBidNotice.Status.OPEN)
+            .build();
     }
 }

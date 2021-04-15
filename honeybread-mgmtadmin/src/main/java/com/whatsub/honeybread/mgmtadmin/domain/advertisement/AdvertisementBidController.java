@@ -41,11 +41,20 @@ public class AdvertisementBidController {
         Pageable pageable,
         AdvertisementBidNoticeSearch search
     ) {
-        Page<AdvertisementBidNoticeResponse> response = noticeQueryService.findAll(pageable, search);
+        Page<AdvertisementBidNoticeResponse> response = noticeQueryService.getAdvertisementBidNotices(pageable, search);
         return ResponseEntity.ok(response);
     }
 
     // 입찰 공고 상세
+    @ApiOperation(
+        value = "입찰공고 조회",
+        tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
+    )
+    @GetMapping(NOTICE_MAPPING + "/{id}")
+    public ResponseEntity<AdvertisementBidNoticeResponse> getBidNotice(@PathVariable Long id) {
+        AdvertisementBidNoticeResponse response = noticeQueryService.getAdvertisementBidNotice(id);
+        return ResponseEntity.ok(response);
+    }
 
     @ApiOperation(
         value = "입찰 공고 등록",
