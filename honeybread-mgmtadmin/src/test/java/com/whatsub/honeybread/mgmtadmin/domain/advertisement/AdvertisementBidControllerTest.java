@@ -40,8 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AdvertisementBidController.class)
 @RequiredArgsConstructor
 class AdvertisementBidControllerTest {
-    static final String BASE_URL = "/advertisements/bid";
-    static final String NOTICE_BASE_URL = BASE_URL + "/notices";
+    static final String BASE_URL = "/advertisements/bid-notices";
 
     final MockMvc mockMvc;
     final ObjectMapper mapper;
@@ -137,7 +136,7 @@ class AdvertisementBidControllerTest {
     void 잘못된_요청시_입찰공고_등록에_실패한다() throws Exception {
         // when
         ResultActions result = mockMvc.perform(
-            post(NOTICE_BASE_URL)
+            post(BASE_URL)
                 .content(mapper.writeValueAsString(잘못된_공고_요청()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -178,7 +177,7 @@ class AdvertisementBidControllerTest {
     void 잘못된_요청시_입찰공고_수정에_실패한다() throws Exception {
         // when
         ResultActions result = mockMvc.perform(
-            put(NOTICE_BASE_URL + "/1")
+            put(BASE_URL + "/1")
                 .content(mapper.writeValueAsString(잘못된_공고_요청()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -351,7 +350,7 @@ class AdvertisementBidControllerTest {
      */
     private ResultActions 입찰공고_목록_조회() throws Exception {
         return mockMvc.perform(
-            get(NOTICE_BASE_URL)
+            get(BASE_URL)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
@@ -359,7 +358,7 @@ class AdvertisementBidControllerTest {
 
     private ResultActions 입찰공고_조회() throws Exception {
         return mockMvc.perform(
-            get(NOTICE_BASE_URL + "/1")
+            get(BASE_URL + "/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
@@ -367,7 +366,7 @@ class AdvertisementBidControllerTest {
 
     private ResultActions 입찰공고_등록() throws Exception {
         return mockMvc.perform(
-            post(NOTICE_BASE_URL)
+            post(BASE_URL)
                 .content(mapper.writeValueAsString(공고_요청()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -376,7 +375,7 @@ class AdvertisementBidControllerTest {
 
     private ResultActions 입찰공고_수정() throws Exception {
         return mockMvc.perform(
-            put(NOTICE_BASE_URL + "/1")
+            put(BASE_URL + "/1")
                 .content(mapper.writeValueAsString(공고_요청()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -385,7 +384,7 @@ class AdvertisementBidControllerTest {
 
     private ResultActions 입찰공고_삭제() throws Exception {
         return mockMvc.perform(
-            delete(NOTICE_BASE_URL + "/1")
+            delete(BASE_URL + "/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
@@ -393,7 +392,7 @@ class AdvertisementBidControllerTest {
 
     private ResultActions 입찰공고_종료() throws Exception {
         ResultActions result = mockMvc.perform(
-            patch(NOTICE_BASE_URL + "/1")
+            patch(BASE_URL + "/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
