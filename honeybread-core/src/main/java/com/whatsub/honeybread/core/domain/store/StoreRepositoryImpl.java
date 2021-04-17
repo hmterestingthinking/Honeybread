@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import static com.whatsub.honeybread.core.domain.store.QStore.store;
+import static com.whatsub.honeybread.core.domain.store.QStoreCategory.storeCategory;
 
 public class StoreRepositoryImpl extends QuerydslRepositorySupport implements StoreRepositoryCustom {
 
@@ -20,6 +21,7 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements St
         return applyPagination(pageable,
                 query -> query
                         .from(store)
+                        .leftJoin(store.categories, storeCategory).fetchJoin()
                         .where(
                                 likeName(search.getName()),
                                 equalSellerId(search.getSellerId()),
