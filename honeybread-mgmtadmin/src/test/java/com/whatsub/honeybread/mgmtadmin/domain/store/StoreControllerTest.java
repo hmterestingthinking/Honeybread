@@ -6,24 +6,38 @@ import com.whatsub.honeybread.core.domain.store.BankType;
 import com.whatsub.honeybread.core.domain.store.OperationStatus;
 import com.whatsub.honeybread.core.domain.store.PayType;
 import com.whatsub.honeybread.core.domain.store.StoreStatus;
+import com.whatsub.honeybread.core.domain.store.dto.StoreSearch;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.store.dto.AddressRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.store.dto.AddressResponse;
 import com.whatsub.honeybread.mgmtadmin.domain.store.dto.BankAccountRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.store.dto.BankAccountResponse;
 import com.whatsub.honeybread.mgmtadmin.domain.store.dto.BusinessHoursRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.store.dto.BusinessHoursResponse;
 import com.whatsub.honeybread.mgmtadmin.domain.store.dto.BusinessLicenseRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.store.dto.BusinessLicenseResponse;
 import com.whatsub.honeybread.mgmtadmin.domain.store.dto.StoreAnnouncementRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.store.dto.StoreAnnouncementResponse;
 import com.whatsub.honeybread.mgmtadmin.domain.store.dto.StoreBasicRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.store.dto.StoreBasicResponse;
 import com.whatsub.honeybread.mgmtadmin.domain.store.dto.StoreCreateRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.store.dto.StoreOperationRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.store.dto.StoreOperationResponse;
+import com.whatsub.honeybread.mgmtadmin.domain.store.dto.StoreResponse;
 import com.whatsub.honeybread.mgmtadmin.domain.store.dto.StoreUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,17 +45,17 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -57,6 +71,8 @@ public class StoreControllerTest {
 
     @MockBean
     StoreService service;
+    @MockBean
+    StoreQueryService queryService;
 
     @MockBean
     StoreCreateRequest 스토어_등록요청;
@@ -101,6 +117,158 @@ public class StoreControllerTest {
     /**
      * 테스트
      */
+
+    @Test
+    void 스토어_복수_조회() throws Exception {
+        // given
+        int 사이즈 = 10;
+        List<StoreResponse> 스토어목록_응답 = 다음과같은_아이디의_스토어_목록_응답(사이즈);
+        given(queryService.getStores(any(Pageable.class), any(StoreSearch.class)))
+                .willReturn(new PageImpl(스토어목록_응답, PageRequest.of(0, 사이즈), 사이즈));
+
+        // when
+        ResultActions result = mockMvc.perform(get(BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andExpect(jsonPath("$.content.length()").value(사이즈));
+        for (int i = 0; i < 사이즈; i++) {
+            StoreResponse 스토어 = 스토어목록_응답.get(i);
+            String 스토어_패쓰 = "$.content[" + i + "]";
+            result
+                    .andExpect(jsonPath(스토어_패쓰 + ".storeId")
+                            .value(스토어.getStoreId()))
+                    .andExpect(jsonPath(스토어_패쓰+".uuid")
+                            .value(스토어.getUuid()))
+                    .andExpect(jsonPath(스토어_패쓰+".sellerId")
+                            .value(스토어.getSellerId()))
+                    .andExpect(jsonPath(스토어_패쓰+".operation.status")
+                            .value(스토어.getOperation().getStatus()))
+                    .andExpect(jsonPath(스토어_패쓰+".operation.period")
+                            .value(스토어.getOperation().getPeriod()))
+                    .andExpect(jsonPath(스토어_패쓰+".status")
+                            .value(스토어.getStatus().toString()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.name")
+                            .value(스토어.getBasic().getName()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.tel")
+                            .value(스토어.getBasic().getTel()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.imageUrl")
+                            .value(스토어.getBasic().getImageUrl()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.address.detailAddress")
+                            .value(스토어.getBasic().getAddress().getDetailAddress()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.storeAnnouncement.introduce")
+                            .value(스토어.getBasic().getStoreAnnouncement().getIntroduce()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.storeAnnouncement.information")
+                            .value(스토어.getBasic().getStoreAnnouncement().getInformation()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.storeAnnouncement.originCountry")
+                            .value(스토어.getBasic().getStoreAnnouncement().getOriginCountry()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.operationTime.businessHour")
+                            .value(스토어.getBasic().getOperationTime().getBusinessHour()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.operationTime.holiday")
+                            .value(스토어.getBasic().getOperationTime().getHoliday()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.operationTime.breakTime")
+                            .value(스토어.getBasic().getOperationTime().getBreakTime()))
+                    .andExpect(jsonPath(스토어_패쓰+".basic.businessLicense.businessLicenseNumber")
+                            .value(스토어.getBasic().getBusinessLicense().getBusinessLicenseNumber()))
+                    .andExpect(jsonPath(스토어_패쓰+".bankAccount.bankType")
+                            .value(스토어.getBankAccount().getBankType()))
+                    .andExpect(jsonPath(스토어_패쓰+".bankAccount.accountNumber")
+                            .value(스토어.getBankAccount().getAccountNumber()))
+                    .andExpect(jsonPath(스토어_패쓰+".categoryIds.size()")
+                            .value(스토어.getCategoryIds().size()))
+                    .andExpect(jsonPath(스토어_패쓰+".payMethods.size()")
+                            .value(스토어.getPayMethods().size()))
+                    .andExpect(jsonPath(스토어_패쓰+".createdAt")
+                            .value(스토어.getCreatedAt()))
+                    .andExpect(jsonPath(스토어_패쓰+".lastModifiedAt")
+                            .value(스토어.getLastModifiedAt()));
+        }
+    }
+
+    @Test
+    void 스토어_단건_조회_성공() throws Exception {
+        // given
+        long 스토어아이디 = 1L;
+        StoreResponse 스토어_응답 = 다음과같은_아이디의_스토어_응답(스토어아이디);
+        given(queryService.getStoreByStoreId(스토어아이디)).willReturn(스토어_응답);
+
+        // when
+        ResultActions result = mockMvc.perform(get(BASE_URL + "/" + 스토어아이디)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.storeId")
+                        .value(스토어_응답.getStoreId()))
+                .andExpect(jsonPath("$.uuid")
+                        .value(스토어_응답.getUuid()))
+                .andExpect(jsonPath("$.sellerId")
+                        .value(스토어_응답.getSellerId()))
+                .andExpect(jsonPath("$.operation.status")
+                        .value(스토어_응답.getOperation().getStatus()))
+                .andExpect(jsonPath("$.operation.period")
+                        .value(스토어_응답.getOperation().getPeriod()))
+                .andExpect(jsonPath("$.status")
+                        .value(스토어_응답.getStatus().toString()))
+                .andExpect(jsonPath("$.basic.name")
+                        .value(스토어_응답.getBasic().getName()))
+                .andExpect(jsonPath("$.basic.tel")
+                        .value(스토어_응답.getBasic().getTel()))
+                .andExpect(jsonPath("$.basic.imageUrl")
+                        .value(스토어_응답.getBasic().getImageUrl()))
+                .andExpect(jsonPath("$.basic.address.detailAddress")
+                        .value(스토어_응답.getBasic().getAddress().getDetailAddress()))
+                .andExpect(jsonPath("$.basic.storeAnnouncement.introduce")
+                        .value(스토어_응답.getBasic().getStoreAnnouncement().getIntroduce()))
+                .andExpect(jsonPath("$.basic.storeAnnouncement.information")
+                        .value(스토어_응답.getBasic().getStoreAnnouncement().getInformation()))
+                .andExpect(jsonPath("$.basic.storeAnnouncement.originCountry")
+                        .value(스토어_응답.getBasic().getStoreAnnouncement().getOriginCountry()))
+                .andExpect(jsonPath("$.basic.operationTime.businessHour")
+                        .value(스토어_응답.getBasic().getOperationTime().getBusinessHour()))
+                .andExpect(jsonPath("$.basic.operationTime.holiday")
+                        .value(스토어_응답.getBasic().getOperationTime().getHoliday()))
+                .andExpect(jsonPath("$.basic.operationTime.breakTime")
+                        .value(스토어_응답.getBasic().getOperationTime().getBreakTime()))
+                .andExpect(jsonPath("$.basic.businessLicense.businessLicenseNumber")
+                        .value(스토어_응답.getBasic().getBusinessLicense().getBusinessLicenseNumber()))
+                .andExpect(jsonPath("$.bankAccount.bankType")
+                        .value(스토어_응답.getBankAccount().getBankType()))
+                .andExpect(jsonPath("$.bankAccount.accountNumber")
+                        .value(스토어_응답.getBankAccount().getAccountNumber()))
+                .andExpect(jsonPath("$.categoryIds.size()")
+                        .value(스토어_응답.getCategoryIds().size()))
+                .andExpect(jsonPath("$.payMethods.size()")
+                        .value(스토어_응답.getPayMethods().size()))
+                .andExpect(jsonPath("$.createdAt")
+                        .value(스토어_응답.getCreatedAt()))
+                .andExpect(jsonPath("$.lastModifiedAt")
+                        .value(스토어_응답.getLastModifiedAt()));
+    }
+
+    @Test
+    void 스토어가_존재하지않아_단건_조회_실패() throws Exception {
+        // given
+        long 스토어아이디 = 1L;
+        doThrow(new HoneyBreadException(ErrorCode.STORE_NOT_FOUND))
+                .when(queryService).getStoreByStoreId(스토어아이디);
+
+        // when
+        ResultActions result = mockMvc.perform(get(BASE_URL + "/" + 스토어아이디)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+
+        // then
+        then(queryService).should().getStoreByStoreId(스토어아이디);
+        result.andExpect(status().isNotFound());
+    }
 
     @Test
     void 셀러아이디를_입력하지_않아_등록_실패() throws Exception {
@@ -1503,6 +1671,33 @@ public class StoreControllerTest {
     /**
      * given
      */
+
+    private StoreResponse 다음과같은_아이디의_스토어_응답(long 스토어아이디) {
+        StoreResponse 스토어 = mock(StoreResponse.class);
+        given(스토어.getStoreId()).willReturn(스토어아이디);
+        given(스토어.getSellerId()).willReturn(1L);
+        given(스토어.getPayMethods()).willReturn(Lists.emptyList());
+        given(스토어.getBasic()).willReturn(mock(StoreBasicResponse.class));
+        given(스토어.getBasic().getName()).willReturn(Strings.EMPTY);
+        given(스토어.getBasic().getTel()).willReturn(Strings.EMPTY);
+        given(스토어.getBasic().getImageUrl()).willReturn(Strings.EMPTY);
+        given(스토어.getBasic().getAddress()).willReturn(mock(AddressResponse.class));
+        given(스토어.getBasic().getStoreAnnouncement()).willReturn(mock(StoreAnnouncementResponse.class));
+        given(스토어.getBasic().getOperationTime()).willReturn(mock(BusinessHoursResponse.class));
+        given(스토어.getBasic().getBusinessLicense()).willReturn(mock(BusinessLicenseResponse.class));
+        given(스토어.getBankAccount()).willReturn(mock(BankAccountResponse.class));
+        given(스토어.getStatus()).willReturn(StoreStatus.ACTIVATED);
+        given(스토어.getCategoryIds()).willReturn(Lists.emptyList());
+        given(스토어.getOperation()).willReturn(mock(StoreOperationResponse.class));
+        return 스토어;
+    }
+
+    private List<StoreResponse> 다음과같은_아이디의_스토어_목록_응답(int size) {
+        return IntStream.range(0, size)
+                .boxed()
+                .map(this::다음과같은_아이디의_스토어_응답)
+                .collect(Collectors.toList());
+    }
 
     private void 다음과같은_기본정보로_등록을_요청했다(StoreBasicRequest 기본정보_요청) {
         given(스토어_등록요청.getBasic()).willReturn(기본정보_요청);
