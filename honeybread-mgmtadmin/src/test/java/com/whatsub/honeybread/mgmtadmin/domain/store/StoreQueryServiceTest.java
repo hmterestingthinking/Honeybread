@@ -33,7 +33,6 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
 
@@ -53,24 +52,25 @@ public class StoreQueryServiceTest {
         // given
         long 스토어아이디 = 1L;
         아이디가_다음과같은_스토어가_조회된다(스토어아이디);
+
         // when
         StoreResponse 응답 = queryService.getStoreByStoreId(스토어아이디);
 
         // then
-        then(storeRepository).should().findById(스토어아이디);
+        스토어아이디로_스토어를_조회했다(스토어아이디);
         assertEquals(응답.getStoreId(), 스토어아이디);
     }
 
     @Test
     void 스토어가_조회되지_않으면_에러가_발생한다() {
         // given
-        Long 스토어아이디 = anyLong();
+        long 스토어아이디 = 1L;
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, () -> queryService.getStoreByStoreId(스토어아이디));
 
         // then
-        then(storeRepository).should().findById(스토어아이디);
+        스토어아이디로_스토어를_조회했다(스토어아이디);
         assertEquals(exception.getErrorCode(), ErrorCode.STORE_NOT_FOUND);
     }
 
@@ -84,12 +84,14 @@ public class StoreQueryServiceTest {
         Page<StoreResponse> response = queryService.getStores(mock(Pageable.class), mock(StoreSearch.class));
 
         // then
-        then(storeRepository).should().getStores(any(Pageable.class), any(StoreSearch.class));
-        then(response.getTotalElements()).equals(size);
-        then(response.getContent().size()).equals(size);
+        스토어_목록을_조회했다();
         assertEquals(response.getTotalElements(), size);
         assertEquals(response.getContent().size(), size);
     }
+
+    /**
+     * given
+     */
 
     private void size만큼_스토어들이_조회된다(int size) {
         final List<Store> 스토어들 = IntStream.range(0, size).boxed()
@@ -124,6 +126,18 @@ public class StoreQueryServiceTest {
         given(스토어.getCategories()).willReturn(Lists.emptyList());
         given(스토어.getOperation()).willReturn(StoreOperation.createClosedOperation());
         return 스토어;
+    }
+
+    /**
+     * then
+     */
+
+    private void 스토어아이디로_스토어를_조회했다(long 스토어아이디) {
+        then(storeRepository).should().findById(스토어아이디);
+    }
+
+    private void 스토어_목록을_조회했다() {
+        then(storeRepository).should().getStores(any(Pageable.class), any(StoreSearch.class));
     }
 
 }
