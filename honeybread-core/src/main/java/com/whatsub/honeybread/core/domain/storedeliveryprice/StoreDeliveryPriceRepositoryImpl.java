@@ -20,11 +20,11 @@ public class StoreDeliveryPriceRepositoryImpl extends QuerydslRepositorySupport 
     @Override
     public Map<Money, List<StoreDeliveryPrice>> getStoreDeliveryPrices(final Long storeId) {
         return from(storeDeliveryPrice)
-            .where(equalsStoreId(storeId))
+            .where(eqStoreId(storeId))
             .transform(groupBy(storeDeliveryPrice.price).as(list(storeDeliveryPrice)));
     }
 
-    private Predicate equalsStoreId(final Long storeId) {
+    private Predicate eqStoreId(final Long storeId) {
         return storeDeliveryPrice.storeId.eq(storeId);
     }
 
