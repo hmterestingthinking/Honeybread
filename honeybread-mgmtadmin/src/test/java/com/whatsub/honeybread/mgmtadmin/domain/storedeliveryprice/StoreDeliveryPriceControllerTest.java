@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -93,6 +94,30 @@ class StoreDeliveryPriceControllerTest {
         주소별_배달금액이_수정되지않아야함();
         결과응답이_예상과_같아야함(HttpStatus.BAD_REQUEST, resultActions);
         주소별_배달금액_수정_실패_에러_검증(resultActions);
+    }
+
+    @Test
+    void 주소별_배달금액_삭제() throws Exception {
+        //given
+        final Long storeId = 1L;
+
+        //when
+        final ResultActions resultActions = 주소별_배달금액_삭제(storeId);
+
+        //then
+        주소별_배달금액이_삭제되어야함();
+        결과응답이_예상과_같아야함(HttpStatus.NO_CONTENT, resultActions);
+    }
+
+    private void 주소별_배달금액이_삭제되어야함() {
+        then(service).should().delete(anyLong());
+    }
+
+    private ResultActions 주소별_배달금액_삭제(final Long storeId) throws Exception {
+        return mockMvc.perform(delete(BASE_URL + "/" + storeId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+        ).andDo(print());
     }
 
     private void 주소별_배달금액_수정_실패_에러_검증(final ResultActions resultActions) throws Exception {
