@@ -25,12 +25,13 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductValidationProperties productValidationProperties;
 
     @Transactional
     public Long create(final StoreCreateRequest storeCreateRequest) {
         checkSellerIdExistence(storeCreateRequest.getSellerId());
         checkStoreNameExistence(storeCreateRequest.getBasic().getName());
-        checkCategoryIdsExistence(storeCreateRequest.getCategoryIds());
+        checkCategoryIds(storeCreateRequest.getCategoryIds());
 
         Store saved = storeRepository.save(storeCreateRequest.toEntity());
         saved.updateUuid(Sha256Utils.generate(saved.getId(), saved.getBasic().getName()));
@@ -41,7 +42,7 @@ public class StoreService {
     public void update(final long storeId, final StoreUpdateRequest storeUpdateRequest) {
         Store savedStore = getSavedStore(storeId);
         checkStoreNameExistenceExcludeSelf(savedStore, storeUpdateRequest.getBasic().getName());
-        checkCategoryIdsExistence(storeUpdateRequest.getCategoryIds());
+        checkCategoryIds(storeUpdateRequest.getCategoryIds());
 
         savedStore.update(storeUpdateRequest.toEntity());
     }
@@ -69,7 +70,11 @@ public class StoreService {
         }
     }
 
-    private void checkCategoryIdsExistence(final Set<Long> categoryIds) {
+    private void checkCategoryIds(final Set<Long> categoryIds) {
+        if (categoryIds.size() > productValidationProperties.getMaxCategoryCnt()) {
+            throw new HoneyBreadException(ErrorCode.EXCEED_MAX_STORE_CATEGORY_CNT);
+        }
+
         Set<Long> savedCategoryIdSet = categoryRepository.findAllById(categoryIds).stream()
                 .map(BaseEntity::getId).collect(Collectors.toSet());
         if (!savedCategoryIdSet.containsAll(categoryIds)) {

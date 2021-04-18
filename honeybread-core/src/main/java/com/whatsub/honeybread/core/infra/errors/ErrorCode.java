@@ -23,7 +23,8 @@ public enum ErrorCode {
     USER_STORE_FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND, "-21001", "User Store Favorite Not Found"),
 
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "-22000", "Store Not Found"),
-    DUPLICATE_STORE_NAME(HttpStatus.CONFLICT, "-22001", "Duplicate Store Name")
+    DUPLICATE_STORE_NAME(HttpStatus.CONFLICT, "-22001", "Duplicate Store Name"),
+    EXCEED_MAX_STORE_CATEGORY_CNT(HttpStatus.BAD_REQUEST, "-22002", "Exceed Max Category Count")
     ;
     private final HttpStatus status;
     private final String code;

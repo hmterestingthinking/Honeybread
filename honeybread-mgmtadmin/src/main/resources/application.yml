@@ -1,0 +1,3 @@
+validation:
+  product:
+    max_category_cnt: 5

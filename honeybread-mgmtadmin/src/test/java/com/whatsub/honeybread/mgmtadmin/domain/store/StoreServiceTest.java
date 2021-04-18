@@ -21,6 +21,8 @@ import org.springframework.test.context.TestConstructor;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
@@ -45,6 +47,9 @@ public class StoreServiceTest {
     @MockBean
     CategoryRepository categoryRepository;
 
+    @MockBean
+    ProductValidationProperties productValidationProperties;
+
     StoreCreateRequest 스토어_등록요청;
 
     Long 스토어_아이디 = 1000L;
@@ -59,6 +64,8 @@ public class StoreServiceTest {
 
     String 저장되어있는_다른_스토어명 = "다른 스토어명";
 
+    int 카테고리_아이디_등록_최대개수 = 5;
+    Set<Long> 카테고리_아이디_목록_최대개수_초과_요청;
     Set<Long> 카테고리_아이디_목록_비정상_요청;
     Set<Long> 카테고리_아이디_목록_정상_요청;
     List<Category> 카테고리_아이디_목록_비정상_요청에_대한_조회결과;
@@ -89,6 +96,8 @@ public class StoreServiceTest {
 
     @BeforeEach
     void 카테고리_초기화() {
+        given(productValidationProperties.getMaxCategoryCnt()).willReturn(카테고리_아이디_등록_최대개수);
+
         long 저장되어있는_카테고리_1_아이디 = 1L;
         long 저장되어있는_카테고리_2_아이디 = 2L;
         long 저장되어있지_않은_카테고리_아이디 = 999999L;
@@ -98,6 +107,7 @@ public class StoreServiceTest {
         given(저장되어있는_카테고리_1.getId()).willReturn(저장되어있는_카테고리_1_아이디);
         given(저장되어있는_카테고리_2.getId()).willReturn(저장되어있는_카테고리_2_아이디);
 
+        카테고리_아이디_목록_최대개수_초과_요청 = LongStream.rangeClosed(1, 카테고리_아이디_등록_최대개수 + 1).boxed().collect(Collectors.toSet());
         카테고리_아이디_목록_비정상_요청 = Set.of(저장되어있는_카테고리_1_아이디, 저장되어있지_않은_카테고리_아이디);
         카테고리_아이디_목록_정상_요청 = Set.of(저장되어있는_카테고리_1_아이디, 저장되어있는_카테고리_2_아이디);
         카테고리_아이디_목록_비정상_요청에_대한_조회결과 = List.of(저장되어있는_카테고리_1);
@@ -130,6 +140,23 @@ public class StoreServiceTest {
         존재하는_셀러인지_검사를_수행했다();
         스토어명이_중복되는지_검사를_수행했다();
         then(exception.getErrorCode()).equals(ErrorCode.DUPLICATE_STORE_NAME);
+    }
+
+    @Test
+    void 카테고리_ID_개수가_5개를_초과하여_등록_실패() {
+        // given
+        존재하는_셀러다();
+        중복되지않은_스토어명이다();
+        최대개수_초과하는_카테고리목록을_등록요청을_한다();
+
+        // when
+        HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::스토어를_등록한다);
+
+        // then
+        존재하는_셀러인지_검사를_수행했다();
+        스토어명이_중복되는지_검사를_수행했다();
+        카테고리아이디로_카테고리목록을_찾는로직을_수행하지_않았다();
+        then(exception.getErrorCode()).equals(ErrorCode.EXCEED_MAX_STORE_CATEGORY_CNT);
     }
 
     @Test
@@ -221,6 +248,22 @@ public class StoreServiceTest {
         // then
         스토어가_존재하는지_검사를_수행했다();
         이름으로_스토어_조회를_수행했다();
+    }
+
+    @Test
+    void 카테고리_ID_개수가_5개를_초과하여_수정_실패() {
+        // given
+        저장된_스토어가_조회된다();
+        최대개수_초과하는_카테고리목록을_수정요청을_한다();
+
+        // when
+        HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::수정한다);
+
+        // then
+        스토어가_존재하는지_검사를_수행했다();
+        이름으로_스토어_조회를_수행하지_않았다();
+        카테고리아이디로_카테고리목록을_찾는로직을_수행하지_않았다();
+        수정했더니_이런_에러가_떨어졌다(exception, ErrorCode.EXCEED_MAX_STORE_CATEGORY_CNT);
     }
 
     @Test
@@ -321,6 +364,14 @@ public class StoreServiceTest {
                 .willReturn(카테고리_아이디_목록_비정상_요청에_대한_조회결과);
     }
 
+    private void 최대개수_초과하는_카테고리목록을_등록요청을_한다() {
+        given(스토어_등록요청.getCategoryIds()).willReturn(카테고리_아이디_목록_최대개수_초과_요청);
+    }
+
+    private void 최대개수_초과하는_카테고리목록을_수정요청을_한다() {
+        given(스토어_수정요청.getCategoryIds()).willReturn(카테고리_아이디_목록_최대개수_초과_요청);
+    }
+
     private void 모두_존재하는_카테고리아이디로_수정요청을_한다() {
         given(스토어_수정요청.getCategoryIds())
                 .willReturn(카테고리_아이디_목록_정상_요청);
@@ -370,6 +421,10 @@ public class StoreServiceTest {
 
     private void 카테고리아이디로_카테고리목록을_찾는로직을_수행했다() {
         then(categoryRepository).should().findAllById(anyCollection());
+    }
+
+    private void 카테고리아이디로_카테고리목록을_찾는로직을_수행하지_않았다() {
+        then(categoryRepository).should(never()).findAllById(anyCollection());
     }
 
     private void 수정했더니_이런_에러가_떨어졌다(HoneyBreadException exception, ErrorCode storeNotFound) {
