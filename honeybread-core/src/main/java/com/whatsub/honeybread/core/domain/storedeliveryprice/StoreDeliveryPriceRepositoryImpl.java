@@ -24,7 +24,7 @@ public class StoreDeliveryPriceRepositoryImpl extends QuerydslRepositorySupport 
             .transform(groupBy(storeDeliveryPrice.price).as(list(storeDeliveryPrice)));
     }
 
-    private Predicate eqStoreId(final Long storeId) {
+    private Predicate eqStoreId(final long storeId) {
         return storeDeliveryPrice.storeId.eq(storeId);
     }
 

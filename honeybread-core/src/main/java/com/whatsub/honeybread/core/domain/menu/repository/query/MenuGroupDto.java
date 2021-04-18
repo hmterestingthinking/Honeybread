@@ -7,6 +7,7 @@ import lombok.Value;
 import java.util.List;
 
 @Value
+@Builder
 public class MenuGroupDto {
     long id;
     String name;
