@@ -1,10 +1,14 @@
 package com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice;
 
 
+import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceModifyRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceResponse;
+import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +29,16 @@ import java.util.Map;
 @RestController
 @RequestMapping("stores/delivery-prices")
 @RequiredArgsConstructor
+@Api(tags = HoneyBreadSwaggerTags.ALL)
 public class StoreDeliveryPriceController {
 
     private final StoreDeliveryPriceService service;
     private final StoreDeliveryPriceQueryService queryService;
 
+    @ApiOperation(
+        value = "주소별 배달금액 생성",
+        tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
+    )
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody StoreDeliveryPriceRequest request, BindingResult result) {
         if(result.hasErrors()) {
@@ -39,6 +48,10 @@ public class StoreDeliveryPriceController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @ApiOperation(
+        value = "주소별 배달금액 수정",
+        tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
+    )
     @PutMapping("{storeId}")
     public ResponseEntity<Void> update(@PathVariable("storeId") Long storeId,
                                        @Valid @RequestBody StoreDeliveryPriceModifyRequest request,
@@ -50,12 +63,20 @@ public class StoreDeliveryPriceController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation(
+        value = "주소별 배달금액 삭제",
+        tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
+    )
     @DeleteMapping("{storeId}")
     public ResponseEntity<Void> delete(@PathVariable("storeId") Long storeId) {
         service.delete(storeId);
         return ResponseEntity.noContent().build();
     }
 
+    @ApiOperation(
+        value = "주소별 배달금액 목록 조회",
+        tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
+    )
     @GetMapping("{storeId}")
     public ResponseEntity<Map<Integer, List<StoreDeliveryPriceResponse>>> get(@PathVariable("storeId") Long storeId) {
         final Map<Integer, List<StoreDeliveryPriceResponse>> storeDeliveryPrices
