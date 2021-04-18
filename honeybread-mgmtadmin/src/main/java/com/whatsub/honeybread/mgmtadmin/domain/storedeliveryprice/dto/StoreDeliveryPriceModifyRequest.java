@@ -18,7 +18,7 @@ public class StoreDeliveryPriceModifyRequest {
     Money price;
 
     @JsonCreator
-    public StoreDeliveryPriceModifyRequest(Money price) {
+    public StoreDeliveryPriceModifyRequest(final Money price) {
         this.price = price;
     }
 

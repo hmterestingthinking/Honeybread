@@ -40,7 +40,7 @@ public class StoreDeliveryPriceController {
         tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
     )
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody StoreDeliveryPriceRequest request, BindingResult result) {
+    public ResponseEntity<Void> create(final @Valid @RequestBody StoreDeliveryPriceRequest request, BindingResult result) {
         if(result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -53,9 +53,9 @@ public class StoreDeliveryPriceController {
         tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
     )
     @PutMapping("{storeId}")
-    public ResponseEntity<Void> update(@PathVariable("storeId") Long storeId,
-                                       @Valid @RequestBody StoreDeliveryPriceModifyRequest request,
-                                       BindingResult result) {
+    public ResponseEntity<Void> update(final @PathVariable("storeId") Long storeId,
+                                       final @Valid @RequestBody StoreDeliveryPriceModifyRequest request,
+                                       final BindingResult result) {
         if(result.hasErrors()) {
             throw new ValidationException(result);
         }
@@ -68,7 +68,7 @@ public class StoreDeliveryPriceController {
         tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
     )
     @DeleteMapping("{storeId}")
-    public ResponseEntity<Void> delete(@PathVariable("storeId") Long storeId) {
+    public ResponseEntity<Void> delete(final @PathVariable("storeId") Long storeId) {
         service.delete(storeId);
         return ResponseEntity.noContent().build();
     }
@@ -78,7 +78,7 @@ public class StoreDeliveryPriceController {
         tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
     )
     @GetMapping("{storeId}")
-    public ResponseEntity<Map<Integer, List<StoreDeliveryPriceResponse>>> get(@PathVariable("storeId") Long storeId) {
+    public ResponseEntity<Map<Integer, List<StoreDeliveryPriceResponse>>> get(final @PathVariable("storeId") Long storeId) {
         final Map<Integer, List<StoreDeliveryPriceResponse>> storeDeliveryPrices
             = queryService.getStoreDeliveryPrices(storeId);
         return ResponseEntity.ok().body(storeDeliveryPrices);
