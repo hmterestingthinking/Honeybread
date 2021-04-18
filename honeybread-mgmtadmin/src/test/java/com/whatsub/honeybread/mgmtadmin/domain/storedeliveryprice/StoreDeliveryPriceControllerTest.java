@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceModifyRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,12 +15,20 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,6 +48,9 @@ class StoreDeliveryPriceControllerTest {
 
     @MockBean
     StoreDeliveryPriceService service;
+
+    @MockBean
+    StoreDeliveryPriceQueryService queryService;
 
     @Test
     void 주소별_배달금액_생성() throws Exception {
@@ -107,6 +119,43 @@ class StoreDeliveryPriceControllerTest {
         //then
         주소별_배달금액이_삭제되어야함();
         결과응답이_예상과_같아야함(HttpStatus.NO_CONTENT, resultActions);
+    }
+
+    @Test
+    void 주소별_배달금액_StoreId로_검색() throws Exception {
+        //given
+        final Long storeId = 1L;
+        주소별_배달금액_조회목록_생성();
+
+        //when
+        final ResultActions resultActions = 주소별_배달금액_StoreId로_검색(storeId);
+
+        //then
+        주소별_배달금액이_검색되어야함();
+        결과응답이_예상과_같아야함(HttpStatus.OK, resultActions);
+        주소별_배달금액_검색_결과_검증(resultActions);
+    }
+
+    private void 주소별_배달금액_검색_결과_검증(final ResultActions resultActions) throws Exception {
+        resultActions.andExpect(jsonPath("$.1000", hasSize(1)));
+    }
+
+    private void 주소별_배달금액_조회목록_생성() {
+        Map<Integer, List<StoreDeliveryPriceResponse>> map = new HashMap<>();
+        map.put(1000, List.of(new StoreDeliveryPriceResponse(1L, "", Money.wons(1000))));
+        given(queryService.getStoreDeliveryPrices(anyLong()))
+            .willReturn(map);
+    }
+
+    private void 주소별_배달금액이_검색되어야함() {
+        then(queryService).should().getStoreDeliveryPrices(anyLong());
+    }
+
+    private ResultActions 주소별_배달금액_StoreId로_검색(final Long storeId) throws Exception {
+        return mockMvc.perform(get(BASE_URL + "/" + storeId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+        ).andDo(print());
     }
 
     private void 주소별_배달금액이_삭제되어야함() {
