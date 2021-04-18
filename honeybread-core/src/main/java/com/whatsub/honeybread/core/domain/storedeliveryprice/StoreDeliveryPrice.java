@@ -15,9 +15,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "`store-delivery-price`")
+@Table(name = "store_delivery_price")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = true)
 public class StoreDeliveryPrice extends BaseEntity {
 
@@ -32,7 +32,7 @@ public class StoreDeliveryPrice extends BaseEntity {
     private Money price;
 
     @Builder
-    public StoreDeliveryPrice(final Long storeId, final String searchableDeliveryAddress, final Money price) {
+    private StoreDeliveryPrice(final Long storeId, final String searchableDeliveryAddress, final Money price) {
         this.storeId = storeId;
         this.searchableDeliveryAddress = searchableDeliveryAddress;
         this.price = price;
