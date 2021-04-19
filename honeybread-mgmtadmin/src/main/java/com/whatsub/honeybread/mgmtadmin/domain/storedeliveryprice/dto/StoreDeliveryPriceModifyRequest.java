@@ -17,11 +17,6 @@ public class StoreDeliveryPriceModifyRequest {
     @ApiModelProperty(value = "배달비", example = "1000")
     Money price;
 
-    @JsonCreator
-    public StoreDeliveryPriceModifyRequest(final Money price) {
-        this.price = price;
-    }
-
     public StoreDeliveryPrice toEntity() {
         return StoreDeliveryPrice.builder()
             .price(this.price)
