@@ -1,16 +1,13 @@
 package com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice;
 
+import com.whatsub.honeybread.core.domain.storedeliveryprice.StoreDeliveryPrice;
 import com.whatsub.honeybread.core.domain.storedeliveryprice.StoreDeliveryPriceRepository;
-import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceResponse;
+import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceGroupResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -19,12 +16,9 @@ public class StoreDeliveryPriceQueryService {
 
     private final StoreDeliveryPriceRepository repository;
 
-    public Map<Integer, List<StoreDeliveryPriceResponse>> getStoreDeliveryPrices(final Long storeId) {
-        return repository.getStoreDeliveryPrices(storeId).entrySet().stream()
-            .collect(Collectors.toMap(
-                e -> e.getKey().getValue().intValue(),
-                e -> e.getValue().stream().map(StoreDeliveryPriceResponse::of).collect(toList())
-            ));
+    public StoreDeliveryPriceGroupResponse getStoreDeliveryPrices(final Long storeId) {
+        final List<StoreDeliveryPrice> storeDeliveryPrices = repository.getStoreDeliveryPrices(storeId);
+        return StoreDeliveryPriceGroupResponse.of(storeDeliveryPrices);
     }
 
 }

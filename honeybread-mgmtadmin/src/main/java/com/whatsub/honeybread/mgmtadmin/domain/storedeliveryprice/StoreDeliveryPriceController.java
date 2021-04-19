@@ -3,9 +3,9 @@ package com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice;
 
 import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
+import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceGroupResponse;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceModifyRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceRequest;
-import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceResponse;
 import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("stores/delivery-prices")
@@ -78,8 +76,8 @@ public class StoreDeliveryPriceController {
         tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
     )
     @GetMapping("{storeId}")
-    public ResponseEntity<Map<Integer, List<StoreDeliveryPriceResponse>>> get(final @PathVariable("storeId") Long storeId) {
-        final Map<Integer, List<StoreDeliveryPriceResponse>> storeDeliveryPrices
+    public ResponseEntity<StoreDeliveryPriceGroupResponse> get(final @PathVariable("storeId") Long storeId) {
+        final StoreDeliveryPriceGroupResponse storeDeliveryPrices
             = queryService.getStoreDeliveryPrices(storeId);
         return ResponseEntity.ok().body(storeDeliveryPrices);
     }

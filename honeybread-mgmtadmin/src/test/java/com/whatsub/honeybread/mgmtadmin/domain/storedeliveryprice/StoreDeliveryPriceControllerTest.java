@@ -2,9 +2,10 @@ package com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsub.honeybread.core.domain.model.Money;
+import com.whatsub.honeybread.core.domain.storedeliveryprice.StoreDeliveryPrice;
+import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceGroupResponse;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceModifyRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceRequest;
-import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,15 +16,11 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
@@ -125,7 +122,8 @@ class StoreDeliveryPriceControllerTest {
     void 주소별_배달금액_StoreId로_검색() throws Exception {
         //given
         final Long storeId = 1L;
-        주소별_배달금액_조회목록_생성();
+        final int price = 1000;
+        주소별_배달금액_조회목록_생성(price);
 
         //when
         final ResultActions resultActions = 주소별_배달금액_StoreId로_검색(storeId);
@@ -137,14 +135,15 @@ class StoreDeliveryPriceControllerTest {
     }
 
     private void 주소별_배달금액_검색_결과_검증(final ResultActions resultActions) throws Exception {
-        resultActions.andExpect(jsonPath("$.1000", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.groupByPrice.1000", hasSize(1)));
     }
 
-    private void 주소별_배달금액_조회목록_생성() {
-        Map<Integer, List<StoreDeliveryPriceResponse>> map = new HashMap<>();
-        map.put(1000, List.of(new StoreDeliveryPriceResponse(1L, "", Money.wons(1000))));
+    private void 주소별_배달금액_조회목록_생성(final int price) {
+        final List<StoreDeliveryPrice> list = List.of(StoreDeliveryPrice.builder().price(Money.wons(price)).build());
+        final StoreDeliveryPriceGroupResponse storeDeliveryPriceGroupResponse
+            = StoreDeliveryPriceGroupResponse.of(list);
         given(queryService.getStoreDeliveryPrices(anyLong()))
-            .willReturn(map);
+            .willReturn(storeDeliveryPriceGroupResponse);
     }
 
     private void 주소별_배달금액이_검색되어야함() {

@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -44,13 +43,10 @@ class StoreDeliveryPriceRepositoryTest {
         repository.saveAll(addressPrice);
 
         //when
-        final Map<Money, List<StoreDeliveryPrice>> storeDeliveryPrices = repository.getStoreDeliveryPrices(storeId);
+        final List<StoreDeliveryPrice> storeDeliveryPrices = repository.getStoreDeliveryPrices(storeId);
 
         //then
-        assertEquals(3, storeDeliveryPrices.size());
-        assertEquals(4, storeDeliveryPrices.get(Money.wons(1000)).size());
-        assertEquals(3, storeDeliveryPrices.get(Money.wons(2000)).size());
-        assertEquals(3, storeDeliveryPrices.get(Money.wons(3000)).size());
+        assertEquals(10, storeDeliveryPrices.size());
     }
 
     private StoreDeliveryPrice 주소별_배달금액_생성(final Long storeId, final String address, final Money price) {
