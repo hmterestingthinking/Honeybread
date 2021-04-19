@@ -76,7 +76,7 @@ public class StoreDeliveryPriceController {
         tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
     )
     @GetMapping("{storeId}")
-    public ResponseEntity<StoreDeliveryPriceGroupResponse> get(final @PathVariable("storeId") Long storeId) {
+    public ResponseEntity<StoreDeliveryPriceGroupResponse> getStoreDeliveryPriceGroup(final @PathVariable("storeId") Long storeId) {
         final StoreDeliveryPriceGroupResponse storeDeliveryPrices
             = queryService.getStoreDeliveryPrices(storeId);
         return ResponseEntity.ok().body(storeDeliveryPrices);
