@@ -14,7 +14,7 @@ public class StoreDeliveryPriceRepositoryImpl extends QuerydslRepositorySupport 
     }
 
     @Override
-    public List<StoreDeliveryPrice> getStoreDeliveryPrices(final Long storeId) {
+    public List<StoreDeliveryPrice> getStoreDeliveryPrices(final long storeId) {
         return from(storeDeliveryPrice)
             .where(eqStoreId(storeId))
             .fetch();
