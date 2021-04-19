@@ -5,9 +5,8 @@ import lombok.Value;
 import java.util.List;
 
 @Value
-public class StoreDeliveryPriceGroupResponse {
+public class StoreDeliveryPriceGroupView {
 
-    int price;
-    List<StoreDeliveryPriceResponse> locations;
+    List<StoreDeliveryPriceGroupResponse> groupByPrice;
 
 }

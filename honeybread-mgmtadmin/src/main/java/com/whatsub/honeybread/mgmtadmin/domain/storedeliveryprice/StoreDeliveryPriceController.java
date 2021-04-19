@@ -3,7 +3,7 @@ package com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice;
 
 import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
-import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceGroupResponse;
+import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceGroupView;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceModifyRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceRequest;
 import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
@@ -76,9 +76,8 @@ public class StoreDeliveryPriceController {
         tags = MgmtAdminSwaggerTags.STORE_DELIVERY_PRICE
     )
     @GetMapping("{storeId}")
-    public ResponseEntity<StoreDeliveryPriceGroupResponse> getStoreDeliveryPriceGroup(final @PathVariable("storeId") Long storeId) {
-        final StoreDeliveryPriceGroupResponse storeDeliveryPrices
-            = queryService.getStoreDeliveryPrices(storeId);
-        return ResponseEntity.ok().body(storeDeliveryPrices);
+    public ResponseEntity<StoreDeliveryPriceGroupView> getStoreDeliveryPriceGroup(final @PathVariable("storeId") Long storeId) {
+        final StoreDeliveryPriceGroupView priceGroupView = queryService.getStoreDeliveryPrices(storeId);
+        return ResponseEntity.ok().body(priceGroupView);
     }
 }

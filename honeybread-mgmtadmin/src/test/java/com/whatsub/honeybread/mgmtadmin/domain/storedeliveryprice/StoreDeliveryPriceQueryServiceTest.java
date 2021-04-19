@@ -3,7 +3,7 @@ package com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.storedeliveryprice.StoreDeliveryPrice;
 import com.whatsub.honeybread.core.domain.storedeliveryprice.StoreDeliveryPriceRepository;
-import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceGroupResponse;
+import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceGroupView;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -39,13 +38,13 @@ class StoreDeliveryPriceQueryServiceTest {
         모든_주소별_배달금액을_Id로_검색(list);
 
         //when
-        final StoreDeliveryPriceGroupResponse storeDeliveryPriceGroupResponse
+        final StoreDeliveryPriceGroupView priceGroupView
             = service.getStoreDeliveryPrices(anyLong());
 
         //then
         모든_주소별_배달금액이_검색되어야함();
-        assertTrue(storeDeliveryPriceGroupResponse.getGroupByPrice().containsKey(price));
-        assertEquals(size, storeDeliveryPriceGroupResponse.getGroupByPrice().get(price).size());
+        assertEquals(price, priceGroupView.getGroupByPrice().get(0).getPrice());
+        assertEquals(size, priceGroupView.getGroupByPrice().get(0).getLocations().size());
     }
 
     private void 모든_주소별_배달금액이_검색되어야함() {

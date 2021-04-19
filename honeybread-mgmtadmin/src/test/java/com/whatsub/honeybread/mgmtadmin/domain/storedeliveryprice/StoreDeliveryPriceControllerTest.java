@@ -2,10 +2,11 @@ package com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsub.honeybread.core.domain.model.Money;
-import com.whatsub.honeybread.core.domain.storedeliveryprice.StoreDeliveryPrice;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceGroupResponse;
+import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceGroupView;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceModifyRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.storedeliveryprice.dto.StoreDeliveryPriceResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -135,15 +136,16 @@ class StoreDeliveryPriceControllerTest {
     }
 
     private void 주소별_배달금액_검색_결과_검증(final ResultActions resultActions) throws Exception {
-        resultActions.andExpect(jsonPath("$.groupByPrice.1000", hasSize(1)));
+        resultActions.andExpect(jsonPath("$.groupByPrice", hasSize(1)));
     }
 
     private void 주소별_배달금액_조회목록_생성(final int price) {
-        final List<StoreDeliveryPrice> list = List.of(StoreDeliveryPrice.builder().price(Money.wons(price)).build());
-        final StoreDeliveryPriceGroupResponse storeDeliveryPriceGroupResponse
-            = StoreDeliveryPriceGroupResponse.of(list);
+        final List<StoreDeliveryPriceResponse> responseList
+            = List.of(new StoreDeliveryPriceResponse(1L, "", Money.wons(price)));
+        final List<StoreDeliveryPriceGroupResponse> storeDeliveryPriceGroupResponse
+            = List.of(new StoreDeliveryPriceGroupResponse(1000, responseList));
         given(queryService.getStoreDeliveryPrices(anyLong()))
-            .willReturn(storeDeliveryPriceGroupResponse);
+            .willReturn(new StoreDeliveryPriceGroupView(storeDeliveryPriceGroupResponse));
     }
 
     private void 주소별_배달금액이_검색되어야함() {
