@@ -36,13 +36,16 @@ class OrderPriceDeliveryTipServiceTest {
     @Mock
     OrderPriceDeliveryTip mockEntity;
 
+    final Long storeId = 1L;
+
     @Test
     void 주문가격별_배달팁_생성() {
         //given
         final OrderPriceDeliveryTipRequest request = 주문가격별_배달팁_요청_생성();
         주문가격별_배달팁이_중복되지_않음();
         //when
-        service.create(request);
+
+        service.create(storeId, request);
         
         //then
         주문가격별_배달팁이_생성되어야함();
@@ -56,7 +59,7 @@ class OrderPriceDeliveryTipServiceTest {
         주문가격별_배달팁이_중복됨();
 
         //when
-        final HoneyBreadException actual = assertThrows(HoneyBreadException.class, () -> service.create(request));
+        final HoneyBreadException actual = assertThrows(HoneyBreadException.class, () -> service.create(storeId, request));
 
         //then
         주문가격별_배달팁이_생성되지않아야함();
@@ -96,7 +99,7 @@ class OrderPriceDeliveryTipServiceTest {
      */
 
     private OrderPriceDeliveryTipRequest 주문가격별_배달팁_요청_생성(){
-        return new OrderPriceDeliveryTipRequest(1L, Money.wons(10000), Money.wons(15000), Money.wons(1000));
+        return new OrderPriceDeliveryTipRequest(Money.wons(10000), Money.wons(15000), Money.wons(1000));
     }
 
     private void 주문가격별_배달팁이_Id로_검색되지_않음() {

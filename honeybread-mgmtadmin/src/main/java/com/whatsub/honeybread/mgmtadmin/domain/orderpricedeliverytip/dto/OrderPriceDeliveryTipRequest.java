@@ -7,8 +7,6 @@ import lombok.Value;
 @Value
 public class OrderPriceDeliveryTipRequest {
 
-    private Long storeId;
-
     private Money fromPrice;
 
     private Money toPrice;
@@ -17,7 +15,6 @@ public class OrderPriceDeliveryTipRequest {
 
     public OrderPriceDeliveryTip toEntity() {
         return OrderPriceDeliveryTip.builder()
-            .storeId(this.storeId)
             .fromPrice(this.fromPrice)
             .toPrice(this.toPrice)
             .tip(this.tip)

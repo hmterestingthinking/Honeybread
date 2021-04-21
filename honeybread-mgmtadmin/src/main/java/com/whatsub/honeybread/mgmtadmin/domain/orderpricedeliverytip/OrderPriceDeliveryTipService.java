@@ -17,8 +17,8 @@ public class OrderPriceDeliveryTipService {
     private final OrderPriceDeliveryTipRepository repository;
 
     @Transactional
-    public void create(final OrderPriceDeliveryTipRequest request) {
-        if(repository.existsByStoreIdAndFromPriceAndToPrice(request.getStoreId(),
+    public void create(final long storeId, final OrderPriceDeliveryTipRequest request) {
+        if(repository.existsByStoreIdAndFromPriceAndToPrice(storeId,
                                                             request.getFromPrice(),
                                                             request.getToPrice())) {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_ORDER_PRICE_DELIVERY_TIP);
