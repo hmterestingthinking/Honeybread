@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,7 +34,7 @@ class OrderPriceDeliveryTipServiceTest {
     OrderPriceDeliveryTipRepository repository;
 
     @Mock
-    OrderPriceDeliveryTip orderPriceDeliveryTip;
+    OrderPriceDeliveryTip mockEntity;
 
     @Test
     void 주문가격별_배달팁_생성() {
@@ -62,7 +64,55 @@ class OrderPriceDeliveryTipServiceTest {
         반환된_에러가_예상과_같은지확인(ErrorCode.DUPLICATE_ORDER_PRICE_DELIVERY_TIP, actual);
     }
 
-    private void 반환된_에러가_예상과_같은지확인(final ErrorCode duplicateOrderPriceDeliveryTip, final HoneyBreadException actual) {
+    @Test
+    void 주문가격별_배달팁_삭제() {
+        //given
+        주문가격별_배달팁이_Id로_검색됨();
+
+        //when
+        service.delete(anyLong());
+
+        //then
+        주문가격별_배달팁이_삭제되어야함();
+        주문가격별_배달팁이_Id로_검색되어야함();
+    }
+
+    @Test
+    void 주문가격별_배달팁_삭제_실패() {
+        //given
+        주문가격별_배달팁이_Id로_검색되지_않음();
+
+        //when
+        final HoneyBreadException actual = assertThrows(HoneyBreadException.class, () -> service.delete(anyLong()));
+
+        //then
+        주문가격별_배달팁이_삭제되지_않아야함();
+        주문가격별_배달팁이_Id로_검색되어야함();
+        반환된_에러가_예상과_같은지확인(ErrorCode.ORDER_PRICE_DELIVERY_TIP_NOT_FOUND, actual);
+    }
+
+    private void 주문가격별_배달팁이_Id로_검색되어야함() {
+        then(repository).should().findById(anyLong());
+    }
+
+    private void 주문가격별_배달팁이_삭제되지_않아야함() {
+        then(repository).should(never()).delete(any(OrderPriceDeliveryTip.class));
+    }
+
+    private void 주문가격별_배달팁이_Id로_검색되지_않음() {
+        given(repository.findById(anyLong())).willReturn(Optional.empty());
+    }
+
+    private void 주문가격별_배달팁이_삭제되어야함() {
+        then(repository).should().delete(any(OrderPriceDeliveryTip.class));
+    }
+
+    private void 주문가격별_배달팁이_Id로_검색됨() {
+        given(repository.findById(anyLong())).willReturn(Optional.of(mockEntity));
+    }
+
+    private void 반환된_에러가_예상과_같은지확인(final ErrorCode duplicateOrderPriceDeliveryTip,
+                                   final HoneyBreadException actual) {
         assertEquals(duplicateOrderPriceDeliveryTip, actual.getErrorCode());
     }
 
