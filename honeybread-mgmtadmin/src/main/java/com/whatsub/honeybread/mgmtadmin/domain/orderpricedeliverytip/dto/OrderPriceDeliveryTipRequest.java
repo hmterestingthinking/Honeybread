@@ -9,17 +9,17 @@ public class OrderPriceDeliveryTipRequest {
 
     private Long storeId;
 
-    private Money from;
+    private Money fromPrice;
 
-    private Money to;
+    private Money toPrice;
 
     private Money tip;
 
     public OrderPriceDeliveryTip toEntity() {
         return OrderPriceDeliveryTip.builder()
             .storeId(this.storeId)
-            .from(this.from)
-            .to(this.to)
+            .fromPrice(this.fromPrice)
+            .toPrice(this.toPrice)
             .tip(this.tip)
             .build();
     }

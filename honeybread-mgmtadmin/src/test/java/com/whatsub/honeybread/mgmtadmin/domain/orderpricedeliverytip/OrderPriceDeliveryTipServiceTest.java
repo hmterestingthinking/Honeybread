@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.then;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -41,7 +42,7 @@ class OrderPriceDeliveryTipServiceTest {
     }
 
     private void 주문가격별_배달팁_From_To가_존재하는지_확인되어야함() {
-        then(repository).should().existsByFromAndTo(any(Money.class), any(Money.class));
+        then(repository).should().existsByStoreIdAndFromPriceAndToPrice(anyLong(), any(Money.class), any(Money.class));
     }
 
     private void 주문가격별_배달팁이_생성되어야함() {
