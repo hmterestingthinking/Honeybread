@@ -26,6 +26,7 @@ public enum ErrorCode {
     MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "-30001", "Menu NotFound"),
     MENU_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "-31001", "Menu Group NotFound"),
 
+    DUPLICATE_ORDER_PRICE_DELIVERY_TIP(HttpStatus.CONFLICT, "-40000", "Duplicate Order Price Delivery Tip")
     ;
     private final HttpStatus status;
     private final String code;
