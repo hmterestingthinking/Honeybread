@@ -6,7 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @RequiredArgsConstructor
@@ -29,6 +35,30 @@ class OrderPriceDeliveryTipRepositoryTest {
 
         //then
         assertTrue(result);
+    }
+
+    @Test
+    void 주문가격별_배달팁을_StoreId로_검색() {
+        //given
+        final int size = 5;
+        final List<OrderPriceDeliveryTip> orderPriceDeliveryTipList = 주문가격별_배달팁을_사이즈만큼_생성(5);
+
+        //when
+        repository.saveAll(orderPriceDeliveryTipList);
+
+        //then
+        assertEquals(size, repository.findByStoreId(anyLong()).size());
+    }
+
+    private List<OrderPriceDeliveryTip> 주문가격별_배달팁을_사이즈만큼_생성(final int size) {
+        return IntStream.range(0, size)
+                .mapToObj(ignore -> OrderPriceDeliveryTip.builder()
+                        .storeId(anyLong())
+                        .toPrice(Money.ZERO)
+                        .fromPrice(Money.ZERO)
+                        .tip(Money.ZERO)
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private OrderPriceDeliveryTip 주문가격별_배달팁_생성(final Long storeId, final Money fromPrice, final Money toPrice) {
