@@ -91,29 +91,20 @@ class OrderPriceDeliveryTipServiceTest {
         반환된_에러가_예상과_같은지확인(ErrorCode.ORDER_PRICE_DELIVERY_TIP_NOT_FOUND, actual);
     }
 
-    private void 주문가격별_배달팁이_Id로_검색되어야함() {
-        then(repository).should().findById(anyLong());
-    }
+    /**
+     * given
+     */
 
-    private void 주문가격별_배달팁이_삭제되지_않아야함() {
-        then(repository).should(never()).delete(any(OrderPriceDeliveryTip.class));
+    private OrderPriceDeliveryTipRequest 주문가격별_배달팁_요청_생성(){
+        return new OrderPriceDeliveryTipRequest(1L, Money.wons(10000), Money.wons(15000), Money.wons(1000));
     }
 
     private void 주문가격별_배달팁이_Id로_검색되지_않음() {
         given(repository.findById(anyLong())).willReturn(Optional.empty());
     }
 
-    private void 주문가격별_배달팁이_삭제되어야함() {
-        then(repository).should().delete(any(OrderPriceDeliveryTip.class));
-    }
-
     private void 주문가격별_배달팁이_Id로_검색됨() {
         given(repository.findById(anyLong())).willReturn(Optional.of(mockEntity));
-    }
-
-    private void 반환된_에러가_예상과_같은지확인(final ErrorCode duplicateOrderPriceDeliveryTip,
-                                   final HoneyBreadException actual) {
-        assertEquals(duplicateOrderPriceDeliveryTip, actual.getErrorCode());
     }
 
     private void 주문가격별_배달팁이_중복되지_않음() {
@@ -126,6 +117,28 @@ class OrderPriceDeliveryTipServiceTest {
                 .willReturn(true);
     }
 
+
+    /**
+     * then
+     */
+
+    private void 주문가격별_배달팁이_Id로_검색되어야함() {
+        then(repository).should().findById(anyLong());
+    }
+
+    private void 주문가격별_배달팁이_삭제되지_않아야함() {
+        then(repository).should(never()).delete(any(OrderPriceDeliveryTip.class));
+    }
+
+    private void 주문가격별_배달팁이_삭제되어야함() {
+        then(repository).should().delete(any(OrderPriceDeliveryTip.class));
+    }
+
+    private void 반환된_에러가_예상과_같은지확인(final ErrorCode duplicateOrderPriceDeliveryTip,
+                                   final HoneyBreadException actual) {
+        assertEquals(duplicateOrderPriceDeliveryTip, actual.getErrorCode());
+    }
+
     private void 주문가격별_배달팁이_중복되는지_확인되어야함() {
         then(repository).should().existsByStoreIdAndFromPriceAndToPrice(anyLong(), any(Money.class), any(Money.class));
     }
@@ -136,10 +149,6 @@ class OrderPriceDeliveryTipServiceTest {
 
     private void 주문가격별_배달팁이_생성되지않아야함() {
         then(repository).should(never()).save(any(OrderPriceDeliveryTip.class));
-    }
-
-    private OrderPriceDeliveryTipRequest 주문가격별_배달팁_요청_생성(){
-        return new OrderPriceDeliveryTipRequest(1L, Money.wons(10000), Money.wons(15000), Money.wons(1000));
     }
 
 }
