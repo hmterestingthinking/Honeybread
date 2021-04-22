@@ -18,13 +18,13 @@ public class OrderPriceDeliveryTipService {
     private final OrderPriceDeliveryTipValidator validator;
 
     @Transactional
-    public void create(final long storeId, final OrderPriceDeliveryTipRequest request) {
+    public void create(final Long storeId, final OrderPriceDeliveryTipRequest request) {
         if(repository.existsByStoreIdAndFromPriceAndToPrice(storeId,
                                                             request.getFromPrice(),
                                                             request.getToPrice())) {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_ORDER_PRICE_DELIVERY_TIP);
         }
-        final OrderPriceDeliveryTip entity = request.toEntity();
+        final OrderPriceDeliveryTip entity = request.toEntity(storeId);
         validator.validate(entity);
         repository.save(entity);
     }

@@ -20,8 +20,9 @@ public class OrderPriceDeliveryTipRequest {
     @NotNull(message = "배달팁은 Null 일 수 없습니다.")
     private Money tip;
 
-    public OrderPriceDeliveryTip toEntity() {
+    public OrderPriceDeliveryTip toEntity(final Long storeId) {
             return OrderPriceDeliveryTip.builder()
+                .storeId(storeId)
                 .fromPrice(this.fromPrice)
                 .toPrice(this.toPrice)
             .tip(this.tip)
