@@ -25,6 +25,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -87,6 +88,30 @@ class OrderPriceDeliveryTipControllerTest {
         결과응답이_예상과_같아야함(HttpStatus.BAD_REQUEST, resultActions);
         주문금액별_배달비가_생성되지않아야함();
         주문금액별_배달비가_생성_유효성검사_검증(resultActions);
+    }
+
+    @Test
+    void 주문금액별_배달비_삭제() throws Exception {
+        //given
+        final Long id = anyLong();
+
+        //when
+        final ResultActions resultActions = 주문금액별_배달비_삭제(id);
+
+        //then
+        결과응답이_예상과_같아야함(HttpStatus.NO_CONTENT, resultActions);
+        주문금액별_배달비가_삭제되어야함();
+    }
+
+    private void 주문금액별_배달비가_삭제되어야함() {
+        then(service).should().delete(anyLong());
+    }
+
+    private ResultActions 주문금액별_배달비_삭제(final Long id) throws Exception {
+        return mockMvc.perform(delete(BASE_URL + "/" + id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(print());
     }
 
     private void 주문금액별_배달비가_생성_유효성검사_검증(final ResultActions resultActions) throws Exception {
