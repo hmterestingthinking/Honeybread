@@ -3,10 +3,13 @@ package com.whatsub.honeybread.core.domain.orderpricedeliverytip;
 import com.whatsub.honeybread.core.domain.model.Money;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -48,6 +51,25 @@ class OrderPriceDeliveryTipRepositoryTest {
 
         //then
         assertEquals(size, repository.findByStoreId(anyLong()).size());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"10000, 10000, 15000", "10000, 10000, 0"})
+    void 최종주문가격에_해당하는_주문가격별_배달팁_검색(final Long orderPrice,
+                                   final Long fromPrice,
+                                   final Long toPrice) {
+        //given
+        final long storeId = 1L;
+        final OrderPriceDeliveryTip orderPriceDeliveryTip =
+            주문가격별_배달팁_생성(storeId, Money.wons(fromPrice), toPrice == 0 ? null : Money.wons(toPrice));
+        repository.save(orderPriceDeliveryTip);
+
+        //when
+        final Optional<OrderPriceDeliveryTip> findTip = repository.getTipByIncludePrice(storeId, Money.wons(orderPrice));
+
+        //then
+        assertTrue(findTip.isPresent());
+        assertEquals(orderPriceDeliveryTip, findTip.get());
     }
 
     private List<OrderPriceDeliveryTip> 주문가격별_배달팁을_사이즈만큼_생성(final int size) {
