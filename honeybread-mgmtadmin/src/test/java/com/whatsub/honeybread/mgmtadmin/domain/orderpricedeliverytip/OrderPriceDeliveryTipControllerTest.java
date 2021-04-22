@@ -123,7 +123,7 @@ class OrderPriceDeliveryTipControllerTest {
     }
 
     private void 주문금액별_배달비가_생성_유효성검사_검증(final ResultActions resultActions) throws Exception {
-        resultActions.andExpect(jsonPath("$.errors", hasSize(3)));
+        resultActions.andExpect(jsonPath("$.errors", hasSize(2)));
     }
 
     private void 주문금액별_배달비가_생성되어야함() {

@@ -2,7 +2,11 @@ package com.whatsub.honeybread.core.domain.orderpricedeliverytip;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
 import com.whatsub.honeybread.core.domain.model.Money;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +25,6 @@ public class OrderPriceDeliveryTip extends BaseEntity {
     @Column(nullable = false)
     private Money fromPrice;
 
-    @Column(nullable = false)
     private Money toPrice;
 
     @Column(nullable = false)

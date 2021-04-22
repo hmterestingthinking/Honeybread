@@ -14,7 +14,6 @@ public class OrderPriceDeliveryTipRequest {
     @NotNull(message = "~가격 부터(fromPrice)는 Null 일 수 없습니다.")
     private Money fromPrice;
 
-    @NotNull(message = "~가격 까지(toPrice)는 Null 일 수 없습니다.")
     private Money toPrice;
 
     @NotNull(message = "배달팁은 Null 일 수 없습니다.")

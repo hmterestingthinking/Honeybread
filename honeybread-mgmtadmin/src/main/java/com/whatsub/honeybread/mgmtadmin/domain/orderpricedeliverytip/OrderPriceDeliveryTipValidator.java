@@ -18,7 +18,7 @@ public class OrderPriceDeliveryTipValidator {
     }
 
     private void validatePrices(final BeanPropertyBindingResult errors, final Money fromPrice, final Money toPrice) {
-        if(fromPrice.isGreaterThan(toPrice)) {
+        if(toPrice != null && fromPrice.isGreaterThan(toPrice)) {
             errors.reject("invalid.price.criteria", "fromPrice값은 toPrice값보다 작아야합니다.");
         }
     }
