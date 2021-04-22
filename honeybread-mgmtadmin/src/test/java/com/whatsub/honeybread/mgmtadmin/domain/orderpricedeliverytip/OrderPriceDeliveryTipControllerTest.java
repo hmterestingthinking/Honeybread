@@ -103,21 +103,9 @@ class OrderPriceDeliveryTipControllerTest {
         주문금액별_배달비가_삭제되어야함();
     }
 
-    private void 주문금액별_배달비가_삭제되어야함() {
-        then(service).should().delete(anyLong());
-    }
-
-    private ResultActions 주문금액별_배달비_삭제(final Long id) throws Exception {
-        return mockMvc.perform(delete(BASE_URL + "/" + id)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(print());
-    }
-
-    private void 주문금액별_배달비가_생성_유효성검사_검증(final ResultActions resultActions) throws Exception {
-        resultActions.andExpect(jsonPath("$.errors", hasSize(3)));
-    }
-
+    /**
+     * given
+     */
     private OrderPriceDeliveryTipRequest 주문금액별_배달비_생성_요청() {
         return new OrderPriceDeliveryTipRequest(Money.wons(10000), Money.wons(Integer.MAX_VALUE), Money.ZERO);
     }
@@ -126,12 +114,48 @@ class OrderPriceDeliveryTipControllerTest {
         return new OrderPriceDeliveryTipRequest(null, null, null);
     }
 
+
+    /**
+     * then
+     */
+    private void 주문금액별_배달비가_삭제되어야함() {
+        then(service).should().delete(anyLong());
+    }
+
+    private void 주문금액별_배달비가_생성_유효성검사_검증(final ResultActions resultActions) throws Exception {
+        resultActions.andExpect(jsonPath("$.errors", hasSize(3)));
+    }
+
     private void 주문금액별_배달비가_생성되어야함() {
         then(service).should().create(anyLong(), any(OrderPriceDeliveryTipRequest.class));
     }
 
     private void 주문금액별_배달비가_생성되지않아야함() {
         then(service).should(never()).create(anyLong(), any(OrderPriceDeliveryTipRequest.class));
+    }
+
+    public void 결과응답이_예상과_같아야함(final HttpStatus expect, final ResultActions resultActions) throws Exception {
+        resultActions.andExpect(status().is(expect.value()));
+    }
+
+    private void 주문금액별_배달비_전체_조회_검증(final ResultActions resultActions, final int size) throws Exception {
+        resultActions.andExpect(jsonPath("$", hasSize(size)));
+    }
+
+    private void 주문금액별_배달비가_StoreId로_조회되어야함() {
+        then(queryService).should().getAllByStoreId(anyLong());
+    }
+
+
+    /**
+     * request
+     */
+
+    private ResultActions 주문금액별_배달비_삭제(final Long id) throws Exception {
+        return mockMvc.perform(delete(BASE_URL + "/" + id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(print());
     }
 
     private ResultActions 주문금액별_배달비_생성(final OrderPriceDeliveryTipRequest request) throws Exception {
@@ -150,24 +174,11 @@ class OrderPriceDeliveryTipControllerTest {
                 .willReturn(list);
     }
 
-    public void 결과응답이_예상과_같아야함(final HttpStatus expect, final ResultActions resultActions) throws Exception {
-        resultActions.andExpect(status().is(expect.value()));
-    }
-
-    private void 주문금액별_배달비_전체_조회_검증(final ResultActions resultActions, final int size) throws Exception {
-        resultActions.andExpect(jsonPath("$", hasSize(size)));
-    }
-
-    private void 주문금액별_배달비가_StoreId로_조회되어야함() {
-        then(queryService).should().getAllByStoreId(anyLong());
-    }
-
     private ResultActions 주문금액별_배달비_전체_조회() throws Exception {
         return mockMvc.perform(get(BASE_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
         ).andDo(print());
     }
-
 
 }
