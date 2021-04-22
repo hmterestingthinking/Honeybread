@@ -2,10 +2,12 @@ package com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip.dto;
 
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDeliveryTip;
+import io.swagger.annotations.ApiModel;
 import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 
+@ApiModel("주문금액별 배달팁 등록 요청")
 @Value
 public class OrderPriceDeliveryTipRequest {
 

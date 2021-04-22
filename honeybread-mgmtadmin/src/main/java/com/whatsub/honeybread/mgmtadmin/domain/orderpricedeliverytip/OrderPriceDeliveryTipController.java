@@ -1,8 +1,12 @@
 package com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip;
 
+import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip.dto.OrderPriceDeliveryTipRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip.dto.OrderPriceDeliveryTipResponse;
+import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+@Api(tags = HoneyBreadSwaggerTags.ALL)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("stores/{storeId}/order-price-delivery-tips")
@@ -26,12 +31,20 @@ public class OrderPriceDeliveryTipController {
     private final OrderPriceDeliveryTipQueryService queryService;
     private final OrderPriceDeliveryTipService service;
 
+    @ApiOperation(
+        value = "주문금액별 배달팁 목록 조회",
+        tags = MgmtAdminSwaggerTags.ORDER_PRICE_DELIVERY_TIP
+    )
     @GetMapping
     public ResponseEntity<List<OrderPriceDeliveryTipResponse>> getAllByStoreId(@PathVariable Long storeId) {
         final List<OrderPriceDeliveryTipResponse> deliveryTipResponses = queryService.getAllByStoreId(storeId);
         return ResponseEntity.ok(deliveryTipResponses);
     }
 
+    @ApiOperation(
+        value = "주문금액별 배달팁 생성",
+        tags = MgmtAdminSwaggerTags.ORDER_PRICE_DELIVERY_TIP
+    )
     @PostMapping
     public ResponseEntity<Void> create(@PathVariable Long storeId,
                                        @Valid @RequestBody OrderPriceDeliveryTipRequest request,
@@ -43,6 +56,10 @@ public class OrderPriceDeliveryTipController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @ApiOperation(
+        value = "주문금액별 배달팁 삭제",
+        tags = MgmtAdminSwaggerTags.ORDER_PRICE_DELIVERY_TIP
+    )
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
