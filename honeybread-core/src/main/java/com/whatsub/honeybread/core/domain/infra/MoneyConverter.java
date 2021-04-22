@@ -9,6 +9,7 @@ import javax.persistence.Converter;
 public class MoneyConverter implements AttributeConverter<Money, Long> {
     @Override
     public Long convertToDatabaseColumn(Money money) {
+        if(money == null) return null;
         return money.getValue().longValue();
     }
 
