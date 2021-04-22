@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderPriceDeliveryTipService {
 
     private final OrderPriceDeliveryTipRepository repository;
+    private final OrderPriceDeliveryTipValidator validator;
 
     @Transactional
     public void create(final long storeId, final OrderPriceDeliveryTipRequest request) {
@@ -23,7 +24,9 @@ public class OrderPriceDeliveryTipService {
                                                             request.getToPrice())) {
             throw new HoneyBreadException(ErrorCode.DUPLICATE_ORDER_PRICE_DELIVERY_TIP);
         }
-        repository.save(request.toEntity());
+        final OrderPriceDeliveryTip entity = request.toEntity();
+        validator.validate(entity);
+        repository.save(entity);
     }
 
     @Transactional

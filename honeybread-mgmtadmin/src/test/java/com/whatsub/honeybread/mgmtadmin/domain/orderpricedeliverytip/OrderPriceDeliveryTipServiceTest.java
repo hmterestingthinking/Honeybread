@@ -33,6 +33,9 @@ class OrderPriceDeliveryTipServiceTest {
     @MockBean
     OrderPriceDeliveryTipRepository repository;
 
+    @MockBean
+    OrderPriceDeliveryTipValidator validator;
+
     @Mock
     OrderPriceDeliveryTip mockEntity;
 
@@ -50,6 +53,11 @@ class OrderPriceDeliveryTipServiceTest {
         //then
         주문가격별_배달팁이_생성되어야함();
         주문가격별_배달팁이_중복되는지_확인되어야함();
+        주문가격별_배달팁_유효성검사가_실행되어야함();
+    }
+
+    private void 주문가격별_배달팁_유효성검사가_실행되어야함() {
+        then(validator).should().validate(any(OrderPriceDeliveryTip.class));
     }
 
     @Test
