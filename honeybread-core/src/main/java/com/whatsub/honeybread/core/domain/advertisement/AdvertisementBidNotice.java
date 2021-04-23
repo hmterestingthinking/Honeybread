@@ -73,7 +73,6 @@ public class AdvertisementBidNotice extends BaseEntity {
         this.type = entity.getType();
         this.maximumStoreCounts = entity.getMaximumStoreCounts();
         this.minimumBidPrice = entity.getMinimumBidPrice();
-        this.minimumBidPrice = entity.getMinimumBidPrice();
         this.bidPriceUnit = entity.getBidPriceUnit();
         this.period = entity.getPeriod();
     }
