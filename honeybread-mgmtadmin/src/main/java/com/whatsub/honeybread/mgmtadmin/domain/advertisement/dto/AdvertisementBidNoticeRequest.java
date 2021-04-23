@@ -16,7 +16,9 @@ public class AdvertisementBidNoticeRequest {
     @NotNull(message = "공고 유형은 빈 값이 올 수 없습니다.")
     AdvertisementType type;
     int maximumStoreCounts;
+    @NotNull(message = "최소 입찰 금액은 빈 값이 올 수 없습니다.")
     Money minimumBidPrice;
+    @NotNull(message = "입찰 단위는 빈 값이 올 수 없습니다.")
     Money bidPriceUnit;
     @ValidTimePeriod
     TimePeriod period;
