@@ -119,6 +119,22 @@ class AdvertiseBidNoticeValidatorTest {
         assertThat(ex.getErrors().getErrorCount()).isEqualTo(2);
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {
+        10100, 10500, 11000, 15000, 19999, 111111
+    })
+    void 입찰_단위가_10_000_원_이_아니라면_실패(final int bidPriceUnit) throws Exception {
+        // given
+        입찰_단위_금액_설정(Money.wons(bidPriceUnit));
+
+        // when
+        ValidationException ex = assertThrows(ValidationException.class, () -> validator.validate(entity));
+
+        // then
+        then(entity).should(times(2)).getBidPriceUnit();
+        assertThat(ex.getErrors().getErrorCount()).isEqualTo(1);
+    }
+
     private void 광고_기간_설정(int adDays) {
         LocalDateTime from = LocalDateTime.of(2021, 4, 3, 12, 0, 0);
         LocalDateTime to = from.plusDays(adDays);
