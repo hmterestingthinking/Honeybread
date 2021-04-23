@@ -11,6 +11,8 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,6 +26,7 @@ import java.util.List;
 public class Advertisement extends BaseEntity {
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private AdvertisementType type;
 
     @Column(nullable = false)

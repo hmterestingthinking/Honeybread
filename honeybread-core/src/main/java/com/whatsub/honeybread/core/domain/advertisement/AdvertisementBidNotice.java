@@ -30,6 +30,7 @@ public class AdvertisementBidNotice extends BaseEntity {
     }
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private AdvertisementType type;
 
     @Column(nullable = false)
