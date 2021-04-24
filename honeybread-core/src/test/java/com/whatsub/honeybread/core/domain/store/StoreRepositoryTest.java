@@ -4,8 +4,6 @@ import com.whatsub.honeybread.core.domain.store.dto.StoreSearch;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -84,10 +82,10 @@ public class StoreRepositoryTest {
         assertEquals(store.get().getUuid(), uuid);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {1, 7, 111})
-    void 스토어_이름으로_스토어목록을_조회한다(int N) {
+    @Test
+    void 스토어_이름으로_스토어목록을_조회한다() {
         // given
+        final int N = 7;
         String 허니브레드 = "허니브레드";
         다음과같은_이름으로_시작하는_스토어를_N개_저장한다(허니브레드, N);
         다음과같은_이름으로_시작하는_스토어를_N개_저장한다(anyString(), 10);
@@ -104,10 +102,10 @@ public class StoreRepositoryTest {
         assertTrue(stores.getContent().stream().allMatch(store -> store.getBasic().getName().startsWith(허니브레드)));
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {1, 7, 111})
-    void 셀러아이디로_스토어목록을_조회한다(int N) {
+    @Test
+    void 셀러아이디로_스토어목록을_조회한다() {
         // given
+        final int N = 7;
         long 셀러아이디 = 777L;
         다음과같은_아이디인_판매자의_스토어를_N개를_저장한다(셀러아이디, N);
         다음과같은_아이디인_판매자의_스토어를_N개를_저장한다(anyLong(), 10);
@@ -124,10 +122,10 @@ public class StoreRepositoryTest {
         assertTrue(stores.getContent().stream().allMatch(store -> store.getSellerId().equals(셀러아이디)));
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {1, 7, 111})
-    void 상태로_스토어목록을_조회한다(int N) {
+    @Test
+    void 상태로_스토어목록을_조회한다() {
         // given
+        final int N = 7;
         StoreStatus 상태 = StoreStatus.ACTIVATED;
         다음과같은_상태의_스토어를_N개를_저장한다(상태, N);
         다음과같은_상태의_스토어를_N개를_저장한다(any(), 10);
@@ -144,10 +142,10 @@ public class StoreRepositoryTest {
         assertTrue(stores.getContent().stream().allMatch(store -> store.getStatus() == 상태));
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {1, 7, 111})
-    void 스토어명_셀러아이디_상태로_스토어목록을_조회한다(int N) {
+    @Test
+    void 스토어명_셀러아이디_상태로_스토어목록을_조회한다() {
         // given
+        final int N = 7;
         long 셀러아이디 = 777L;
         String 스토어명 = "허니브레드";
         StoreStatus 상태 = StoreStatus.ACTIVATED;
