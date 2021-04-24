@@ -92,8 +92,7 @@ public class StoreRepositoryTest {
         int 조회되어야하는_데이터_개수 = Math.min(N, 페이지_사이즈);
 
         // when
-        StoreSearch search = new StoreSearch();
-        search.setName(허니브레드);
+        StoreSearch search = new StoreSearch("허니브래드", null, null);
         Page<Store> stores = repository.getStores(pageRequest, search);
 
         // then
@@ -112,8 +111,7 @@ public class StoreRepositoryTest {
         int 조회되어야하는_데이터_개수 = Math.min(N, 페이지_사이즈);
 
         // when
-        StoreSearch search = new StoreSearch();
-        search.setSellerId(셀러아이디);
+        StoreSearch search = new StoreSearch(null, 셀러아이디, null);
         Page<Store> stores = repository.getStores(pageRequest, search);
 
         // then
@@ -132,8 +130,7 @@ public class StoreRepositoryTest {
         int 조회되어야하는_데이터_개수 = Math.min(N, 페이지_사이즈);
 
         // when
-        StoreSearch search = new StoreSearch();
-        search.setStatus(상태);
+        StoreSearch search = new StoreSearch(null, null, 상태);
         Page<Store> stores = repository.getStores(pageRequest, search);
 
         // then
@@ -156,10 +153,7 @@ public class StoreRepositoryTest {
         int 조회되어야하는_데이터_개수 = Math.min(N, 페이지_사이즈);
 
         // when
-        StoreSearch search = new StoreSearch();
-        search.setName(스토어명);
-        search.setSellerId(셀러아이디);
-        search.setStatus(상태);
+        StoreSearch search = new StoreSearch(스토어명, 셀러아이디, 상태);
         Page<Store> stores = repository.getStores(pageRequest, search);
 
         // then

@@ -1,15 +1,15 @@
 package com.whatsub.honeybread.core.domain.store.dto;
 
 import com.whatsub.honeybread.core.domain.store.StoreStatus;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class StoreSearch {
 
-    private String name;
+    String name;
 
-    private Long sellerId;
+    Long sellerId;
 
-    private StoreStatus status;
+    StoreStatus status;
 
 }
