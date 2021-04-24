@@ -24,7 +24,11 @@ public enum ErrorCode {
 
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "-22000", "Store Not Found"),
     DUPLICATE_STORE_NAME(HttpStatus.CONFLICT, "-22001", "Duplicate Store Name"),
-    EXCEED_MAX_STORE_CATEGORY_CNT(HttpStatus.BAD_REQUEST, "-22002", "Exceed Max Category Count")
+    EXCEED_MAX_STORE_CATEGORY_CNT(HttpStatus.BAD_REQUEST, "-22002", "Exceed Max Category Count"),
+
+    MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "-30001", "Menu NotFound"),
+    MENU_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "-31001", "Menu Group NotFound"),
+
     ;
     private final HttpStatus status;
     private final String code;
