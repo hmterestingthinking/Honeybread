@@ -1,6 +1,5 @@
 package com.whatsub.honeybread.mgmtadmin.domain.store.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.whatsub.honeybread.core.domain.store.PayType;
 import com.whatsub.honeybread.core.domain.store.Store;
 import com.whatsub.honeybread.core.domain.store.StoreCategory;
@@ -25,7 +24,6 @@ public class StoreUpdateRequest extends StoreCommandCommonRequest {
     @NotNull(message = "상태 정보는 필수 입력입니다.")
     StoreStatus status;
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public StoreUpdateRequest(final StoreOperationRequest operation,
                               final StoreStatus status,
                               final StoreBasicRequest basic,

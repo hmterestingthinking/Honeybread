@@ -1,6 +1,5 @@
 package com.whatsub.honeybread.mgmtadmin.domain.store.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.whatsub.honeybread.core.domain.store.StoreAnnouncement;
 import lombok.Value;
 import org.hibernate.validator.constraints.Length;
@@ -21,13 +20,6 @@ public class StoreAnnouncementRequest {
     @NotBlank(message = "원산지 정보는 빈 값이 올 수 없습니다.")
     @Length(min = 10, max = 500, message = "소개글은 10에서 500글자이어야 합니다.")
     String originCountry;
-
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public StoreAnnouncementRequest(final String introduce, final String information, final String originCountry) {
-        this.introduce = introduce;
-        this.information = information;
-        this.originCountry = originCountry;
-    }
 
     public StoreAnnouncement toStoreAnnouncement() {
         return new StoreAnnouncement(introduce, information, originCountry);

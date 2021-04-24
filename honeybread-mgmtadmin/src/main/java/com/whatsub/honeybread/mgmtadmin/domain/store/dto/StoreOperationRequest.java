@@ -1,6 +1,5 @@
 package com.whatsub.honeybread.mgmtadmin.domain.store.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
 import com.whatsub.honeybread.core.domain.store.OperationStatus;
 import com.whatsub.honeybread.core.domain.store.StoreOperation;
@@ -16,13 +15,6 @@ public class StoreOperationRequest {
 
     @NotNull(message = "운영시간 정보는 필수 입력입니다.")
     TimePeriod period;
-
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public StoreOperationRequest(final OperationStatus status,
-                                 final TimePeriod period) {
-        this.status = status;
-        this.period = period;
-    }
 
     public StoreOperation toStoreOperation() {
         return new StoreOperation(status, period);

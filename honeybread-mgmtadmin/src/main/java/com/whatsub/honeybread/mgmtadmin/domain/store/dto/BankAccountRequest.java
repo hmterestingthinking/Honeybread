@@ -1,6 +1,5 @@
 package com.whatsub.honeybread.mgmtadmin.domain.store.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.whatsub.honeybread.core.domain.store.BankAccount;
 import com.whatsub.honeybread.core.domain.store.BankType;
 import lombok.Value;
@@ -18,12 +17,6 @@ public class BankAccountRequest {
     @NotBlank(message = "계좌번호는 빈 값이 올 수 없습니다.")
     @Pattern(regexp = "^([[0-9]]{10,50})$", message = "계좌번호는 숫자와 -를 제외하고는 입력하실 수 없습니다.")
     String accountNumber;
-
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public BankAccountRequest(final BankType bankType, final String accountNumber) {
-        this.bankType = bankType;
-        this.accountNumber = accountNumber;
-    }
 
     public BankAccount toBankAccount() {
         return new BankAccount(bankType, accountNumber);

@@ -1,6 +1,5 @@
 package com.whatsub.honeybread.mgmtadmin.domain.store.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.whatsub.honeybread.core.domain.store.StoreBasic;
 import lombok.Value;
 import org.hibernate.validator.constraints.Length;
@@ -41,23 +40,6 @@ public class StoreBasicRequest {
     @Valid
     @NotNull(message = "사업자등록 정보는 필수 입력입니다.")
     BusinessLicenseRequest businessLicense;
-
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public StoreBasicRequest(final String name,
-                             final String tel,
-                             final String imageUrl,
-                             final AddressRequest address,
-                             final StoreAnnouncementRequest storeAnnouncement,
-                             final BusinessHoursRequest operationTime,
-                             final BusinessLicenseRequest businessLicense) {
-        this.name = name;
-        this.tel = tel;
-        this.imageUrl = imageUrl;
-        this.address = address;
-        this.storeAnnouncement = storeAnnouncement;
-        this.operationTime = operationTime;
-        this.businessLicense = businessLicense;
-    }
 
     public StoreBasic toStoreBasic() {
         return new StoreBasic(name,
