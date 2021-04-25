@@ -12,12 +12,14 @@ import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
@@ -47,52 +49,52 @@ class StoreValidatorTest {
     @MockBean
     ProductValidationProperties productValidationProperties;
 
-    Store 스토어;
+    @Mock
+    Store 저장할_스토어;
+    @Mock
     Store 저장된_스토어;
-    String 저장된_스토어명 = "스토어명";
-    String 저장되어있는_다른_스토어명 = "다른 스토어명";
 
-    int 카테고리_아이디_등록_최대개수 = 5;
+    int 스토어_카테고리_최대개수 = 5;
 
-    List<StoreCategory> 카테고리_정상_목록;
-    List<Category> 카테고리_정상_요청에_대한_조회결과;
-
-    List<StoreCategory> 카테고리_비정상_목록;
-    List<Category> 카테고리_비정상_요청에_대한_조회결과;
-
-    List<StoreCategory> 카테고리_최대개수_초과_목록;
+    List<StoreCategory> 모두_저장되어있는_카테고리_목록;
+    List<StoreCategory> 일부만_저장되어있는_카테고리_목록;
+    List<StoreCategory> 최대개수_초과하는_카테고리_목록;
 
     @BeforeEach
     void 스토어_초기화() {
-        스토어 = mock(Store.class);
-        given(스토어.getBasic()).willReturn(mock(StoreBasic.class));
-        given(스토어.getBasic().getName()).willReturn(저장된_스토어명);
+        given(저장할_스토어.getBasic()).willReturn(mock(StoreBasic.class));
+        given(저장할_스토어.getBasic().getName()).willReturn("테스트스토어");
 
-        저장된_스토어 = mock(Store.class);
         given(저장된_스토어.getBasic()).willReturn(mock(StoreBasic.class));
-        given(저장된_스토어.getBasic().getName()).willReturn(저장된_스토어명);
+        given(저장된_스토어.getBasic().getName()).willReturn("테스트스토어");
+    }
+
+    @BeforeEach
+    void 유효성_속성정보_초기화() {
+        given(productValidationProperties.getMaxCategoryCnt()).willReturn(스토어_카테고리_최대개수);
     }
 
     @BeforeEach
     void 카테고리_초기화() {
-        given(productValidationProperties.getMaxCategoryCnt()).willReturn(카테고리_아이디_등록_최대개수);
+        long 저장되어있는_카테고리ID = 1L;
+        long 저장되어있는_카테고리ID_2 = 2L;
+        long 저장되어있지_않은_카테고리ID = 999L;
+        Category 카테고리1 = mock(Category.class);
+        Category 카테고리2 = mock(Category.class);
+        given(카테고리1.getId()).willReturn(저장되어있는_카테고리ID);
+        given(카테고리2.getId()).willReturn(저장되어있는_카테고리ID_2);
 
-        long 저장되어있는_카테고리_1_아이디 = 1L;
-        long 저장되어있는_카테고리_2_아이디 = 2L;
-        long 저장되어있지_않은_카테고리_아이디 = 999999L;
+        Set<Long> 모두_저장되어있는_카테고리ID_목록 = Set.of(저장되어있는_카테고리ID, 저장되어있는_카테고리ID_2);
+        모두_저장되어있는_카테고리_목록 = 모두_저장되어있는_카테고리ID_목록.stream().map(StoreCategory::new).collect(Collectors.toList());
+        given(categoryRepository.findAllById(모두_저장되어있는_카테고리ID_목록)).willReturn(List.of(카테고리1, 카테고리2));
 
-        Category 저장되어있는_카테고리_1 = mock(Category.class);
-        Category 저장되어있는_카테고리_2 = mock(Category.class);
-        given(저장되어있는_카테고리_1.getId()).willReturn(저장되어있는_카테고리_1_아이디);
-        given(저장되어있는_카테고리_2.getId()).willReturn(저장되어있는_카테고리_2_아이디);
+        Set<Long> 일부만_저장되어있는_카테고리ID_목록 = Set.of(저장되어있는_카테고리ID, 저장되어있지_않은_카테고리ID);
+        일부만_저장되어있는_카테고리_목록 = 일부만_저장되어있는_카테고리ID_목록.stream().map(StoreCategory::new).collect(Collectors.toList());
+        given(categoryRepository.findAllById(일부만_저장되어있는_카테고리ID_목록)).willReturn(List.of(카테고리1));
 
-        카테고리_정상_목록 = List.of(new StoreCategory(저장되어있는_카테고리_1_아이디), new StoreCategory(저장되어있는_카테고리_2_아이디));
-        카테고리_정상_요청에_대한_조회결과 = List.of(저장되어있는_카테고리_1, 저장되어있는_카테고리_2);
+        Set<Long> 최대개수_초과하는_카테고리ID_목록 = LongStream.rangeClosed(1, 스토어_카테고리_최대개수 + 1).boxed().collect(Collectors.toSet());
+        최대개수_초과하는_카테고리_목록 = 최대개수_초과하는_카테고리ID_목록.stream().map(StoreCategory::new).collect(Collectors.toList());
 
-        카테고리_비정상_목록 = List.of(new StoreCategory(저장되어있는_카테고리_1_아이디), new StoreCategory(저장되어있지_않은_카테고리_아이디));
-        카테고리_비정상_요청에_대한_조회결과 = List.of(저장되어있는_카테고리_1);
-
-        카테고리_최대개수_초과_목록 = LongStream.rangeClosed(1, 카테고리_아이디_등록_최대개수 + 1).mapToObj(StoreCategory::new).collect(Collectors.toList());
     }
 
     @Test
@@ -128,7 +130,7 @@ class StoreValidatorTest {
         // given
         존재하는_셀러다();
         중복되지않은_스토어명이다();
-        최대개수_초과하는_카테고리목록을_등록요청을_한다();
+        최대개수_초과하는_카테고리목록이다();
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::등록을_검사하다);
@@ -145,8 +147,7 @@ class StoreValidatorTest {
         // given
         존재하는_셀러다();
         중복되지않은_스토어명이다();
-        일부_존재하지않는_카테고리아이디로_등록요청을_한다();
-        일부_존재하지않는_카테고리아이디로_카테고리_조회시_저장된카테고리만_조회된다();
+        일부_존재하지않는_카테고리목록이다();
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::등록을_검사하다);
@@ -163,7 +164,7 @@ class StoreValidatorTest {
         // given
         존재하는_셀러다();
         중복되지않은_스토어명이다();
-        모두_존재하는_카테고리아이디로_등록요청을_한다();
+        모두_존재하는_카테고리목록이다();
 
         // when
         등록을_검사하다();
@@ -177,22 +178,22 @@ class StoreValidatorTest {
     @Test
     void 다른_스토어명으로_수정시_실패() {
         // given
-        저장된_스토어가_조회된다();
+        스토어가_조회된다();
+        다른_스토어명으로_수정을_요청한다();
         다른_스토어가_사용중인_스토어명이다();
-        다른_스토어의_이름으로_수정을_요청한다();
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::수정을_검사하다);
 
         // then
         이름으로_스토어_조회를_수행했다();
-        수정했더니_이런_에러가_떨어졌다(exception, ErrorCode.DUPLICATE_STORE_NAME);
+        assertEquals(exception.getErrorCode(), ErrorCode.DUPLICATE_STORE_NAME);
     }
 
     @Test
     void 스토어명_그대로_수정시_중복이라고_판단하지_않음() {
         // given
-        저장된_스토어가_조회된다();
+        스토어가_조회된다();
 
         // when
         수정을_검사하다();
@@ -204,8 +205,8 @@ class StoreValidatorTest {
     @Test
     void 유니크한_이름으로_스토어명_수정시_중복이라고_판단하지_않음() {
         // given
-        저장된_스토어가_조회된다();
-        지금까지_이런_스토어명은_없었다("정말 맛없는 가게");
+        스토어가_조회된다();
+        기존에_등록되어있지_않았던_유니크한_스토어명이다("정말 맛없는 가게");
 
         // when
         수정을_검사하다();
@@ -217,8 +218,8 @@ class StoreValidatorTest {
     @Test
     void 카테고리_ID_개수가_5개를_초과하여_수정_실패() {
         // given
-        저장된_스토어가_조회된다();
-        최대개수_초과하는_카테고리목록을_수정요청을_한다();
+        스토어가_조회된다();
+        최대개수_초과하는_카테고리목록이다();
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::수정을_검사하다);
@@ -226,14 +227,14 @@ class StoreValidatorTest {
         // then
         이름으로_스토어_조회를_수행하지_않았다();
         카테고리아이디로_카테고리목록을_찾는로직을_수행하지_않았다();
-        수정했더니_이런_에러가_떨어졌다(exception, ErrorCode.EXCEED_MAX_STORE_CATEGORY_CNT);
+        assertEquals(exception.getErrorCode(), ErrorCode.EXCEED_MAX_STORE_CATEGORY_CNT);
     }
 
     @Test
     void 하나라도_카테고리_ID가_존재하지_않아_수정_실패() {
         // given
-        저장된_스토어가_조회된다();
-        일부_존재하지않는_카테고리아이디로_수정요청을_한다();
+        스토어가_조회된다();
+        일부_존재하지않는_카테고리목록이다();
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::수정을_검사하다);
@@ -241,14 +242,14 @@ class StoreValidatorTest {
         // then
         이름으로_스토어_조회를_수행하지_않았다();
         카테고리아이디로_카테고리목록을_찾는로직을_수행했다();
-        수정했더니_이런_에러가_떨어졌다(exception, ErrorCode.CATEGORY_NOT_FOUND);
+        assertEquals(exception.getErrorCode(), ErrorCode.CATEGORY_NOT_FOUND);
     }
 
     @Test
     void 모든_카테고리_ID가_존재하여_수정_성공() {
         // given
-        저장된_스토어가_조회된다();
-        모두_존재하는_카테고리아이디로_수정요청을_한다();
+        스토어가_조회된다();
+        모두_존재하는_카테고리목록이다();
 
         // when
         수정을_검사하다();
@@ -270,65 +271,40 @@ class StoreValidatorTest {
         given(userRepository.existsById(anyLong())).willReturn(true);
     }
 
+    private void 중복된_스토어명이다() {
+        given(storeRepository.existsByBasicName(저장할_스토어.getBasic().getName())).willReturn(true);
+    }
+
     private void 중복되지않은_스토어명이다() {
         given(storeRepository.existsByBasicName(anyString())).willReturn(false);
     }
 
-    private void 중복된_스토어명이다() {
-        given(storeRepository.existsByBasicName(스토어.getBasic().getName())).willReturn(true);
+    private void 일부_존재하지않는_카테고리목록이다() {
+        given(저장할_스토어.getCategories()).willReturn(일부만_저장되어있는_카테고리_목록);
     }
 
-    private void 일부_존재하지않는_카테고리아이디로_등록요청을_한다() {
-        given(스토어.getCategories()).willReturn(카테고리_비정상_목록);
+    private void 모두_존재하는_카테고리목록이다() {
+        given(저장할_스토어.getCategories()).willReturn(모두_저장되어있는_카테고리_목록);
     }
 
-    private void 일부_존재하지않는_카테고리아이디로_카테고리_조회시_저장된카테고리만_조회된다() {
-        given(categoryRepository.findAllById(카테고리_비정상_목록.stream().map(StoreCategory::getCategoryId).collect(Collectors.toSet())))
-                .willReturn(카테고리_비정상_요청에_대한_조회결과);
+    private void 최대개수_초과하는_카테고리목록이다() {
+        given(저장할_스토어.getCategories()).willReturn(최대개수_초과하는_카테고리_목록);
     }
 
-    private void 모두_존재하는_카테고리아이디로_등록요청을_한다() {
-        given(스토어.getCategories()).willReturn(카테고리_정상_목록);
-        given(categoryRepository.findAllById(카테고리_정상_목록.stream().map(StoreCategory::getCategoryId).collect(Collectors.toSet())))
-                .willReturn(카테고리_정상_요청에_대한_조회결과);
-    }
-
-    private void 저장된_스토어가_조회된다() {
+    private void 스토어가_조회된다() {
         given(storeRepository.findById(1L)).willReturn(Optional.ofNullable(저장된_스토어));
     }
 
-    private void 다른_스토어의_이름으로_수정을_요청한다() {
-        given(스토어.getBasic().getName()).willReturn(저장되어있는_다른_스토어명);
+    private void 다른_스토어명으로_수정을_요청한다() {
+        given(저장할_스토어.getBasic().getName()).willReturn("저장되어있는 다른 스토어 이름");
     }
 
     private void 다른_스토어가_사용중인_스토어명이다() {
-        given(storeRepository.existsByBasicName(저장되어있는_다른_스토어명)).willReturn(true);
+        given(storeRepository.existsByBasicName(anyString())).willReturn(true);
     }
 
-    private void 지금까지_이런_스토어명은_없었다(String uniqueName) {
-        given(스토어.getBasic().getName()).willReturn(uniqueName);
-    }
-
-    private void 일부_존재하지않는_카테고리아이디로_수정요청을_한다() {
-        given(스토어.getCategories())
-                .willReturn(카테고리_비정상_목록);
-        given(categoryRepository.findAllById(카테고리_비정상_목록.stream().map(StoreCategory::getCategoryId).collect(Collectors.toSet())))
-                .willReturn(카테고리_비정상_요청에_대한_조회결과);
-    }
-
-    private void 최대개수_초과하는_카테고리목록을_등록요청을_한다() {
-        given(스토어.getCategories()).willReturn(카테고리_최대개수_초과_목록);
-    }
-
-    private void 최대개수_초과하는_카테고리목록을_수정요청을_한다() {
-        given(스토어.getCategories()).willReturn(카테고리_최대개수_초과_목록);
-    }
-
-    private void 모두_존재하는_카테고리아이디로_수정요청을_한다() {
-        given(스토어.getCategories())
-                .willReturn(카테고리_정상_목록);
-        given(categoryRepository.findAllById(카테고리_정상_목록.stream().map(StoreCategory::getCategoryId).collect(Collectors.toSet())))
-                .willReturn(카테고리_정상_요청에_대한_조회결과);
+    private void 기존에_등록되어있지_않았던_유니크한_스토어명이다(String uniqueName) {
+        given(저장할_스토어.getBasic().getName()).willReturn(uniqueName);
     }
 
     /**
@@ -336,11 +312,11 @@ class StoreValidatorTest {
      */
 
     public void 등록을_검사하다() {
-        storeValidator.validate(스토어);
+        storeValidator.validate(저장할_스토어);
     }
 
     private void 수정을_검사하다() {
-        storeValidator.validate(저장된_스토어, 스토어);
+        storeValidator.validate(저장된_스토어, 저장할_스토어);
     }
 
     /**
@@ -371,7 +347,4 @@ class StoreValidatorTest {
         then(categoryRepository).should(never()).findAllById(anyCollection());
     }
 
-    private void 수정했더니_이런_에러가_떨어졌다(HoneyBreadException exception, ErrorCode errorCode) {
-        assertEquals(exception.getErrorCode(), errorCode);
-    }
 }
