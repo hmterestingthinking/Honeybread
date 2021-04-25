@@ -23,6 +23,8 @@ public enum ErrorCode {
     USER_STORE_FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND, "-21001", "User Store Favorite Not Found"),
 
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "-22000", "Store Not Found"),
+
+    RECENT_DELIVERY_ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "40001", "Recent Delivery Address Not Found"),
     ;
     private final HttpStatus status;
     private final String code;
