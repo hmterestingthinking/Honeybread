@@ -15,7 +15,7 @@ public class OrderPriceDeliveryTipRepositoryImpl extends QuerydslRepositorySuppo
     }
 
     @Override
-    public Optional<OrderPriceDeliveryTip> getTipByIncludePrice(final long storeId, final Money target) {
+    public Optional<OrderPriceDeliveryTip> getTipByOrderPrice(final long storeId, final Money target) {
         return Optional.ofNullable(
             from(orderPriceDeliveryTip)
                 .where(

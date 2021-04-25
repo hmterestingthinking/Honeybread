@@ -65,7 +65,7 @@ class OrderPriceDeliveryTipRepositoryTest {
         repository.save(orderPriceDeliveryTip);
 
         //when
-        final Optional<OrderPriceDeliveryTip> findTip = repository.getTipByIncludePrice(storeId, Money.wons(orderPrice));
+        final Optional<OrderPriceDeliveryTip> findTip = repository.getTipByOrderPrice(storeId, Money.wons(orderPrice));
 
         //then
         assertTrue(findTip.isPresent());

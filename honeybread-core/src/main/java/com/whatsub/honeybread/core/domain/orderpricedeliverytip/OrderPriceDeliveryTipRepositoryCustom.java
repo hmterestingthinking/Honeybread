@@ -5,5 +5,5 @@ import com.whatsub.honeybread.core.domain.model.Money;
 import java.util.Optional;
 
 public interface OrderPriceDeliveryTipRepositoryCustom {
-    Optional<OrderPriceDeliveryTip> getTipByIncludePrice(final long storeId, final Money target);
+    Optional<OrderPriceDeliveryTip> getTipByOrderPrice(final long storeId, final Money target);
 }

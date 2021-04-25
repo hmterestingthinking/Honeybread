@@ -103,6 +103,19 @@ class OrderPriceDeliveryTipControllerTest {
         주문금액별_배달비가_삭제되어야함();
     }
 
+    @Test
+    void 최종주문가격에_해당하는_주문금액별_배달비_검색() throws Exception {
+        //given
+        final int price = 10000;
+
+        //when
+        final ResultActions resultActions = 주문금액별_배달비_검색(price);
+
+        //then
+        결과응답이_예상과_같아야함(HttpStatus.OK, resultActions);
+        주문금액별_배달비가_검색되어야함();
+    }
+
     /**
      * given
      */
@@ -114,6 +127,17 @@ class OrderPriceDeliveryTipControllerTest {
         return new OrderPriceDeliveryTipRequest(null, null, null);
     }
 
+    private void 주문금액별_배달비가_StoreId로_조회됨(final int size) {
+        final List<OrderPriceDeliveryTipResponse> list = IntStream.range(0, size)
+            .mapToObj(ignore -> mock(OrderPriceDeliveryTipResponse.class))
+            .collect(Collectors.toList());
+        given(queryService.getAllByStoreId(anyLong()))
+            .willReturn(list);
+    }
+
+    private void 주문금액별_배달비가_검색되어야함() {
+        then(queryService).should().getTipByOrderPrice(anyLong(), any(Money.class));
+    }
 
     /**
      * then
@@ -166,18 +190,18 @@ class OrderPriceDeliveryTipControllerTest {
         ).andDo(print());
     }
 
-    private void 주문금액별_배달비가_StoreId로_조회됨(final int size) {
-        final List<OrderPriceDeliveryTipResponse> list = IntStream.range(0, size)
-                .mapToObj(ignore -> mock(OrderPriceDeliveryTipResponse.class))
-                .collect(Collectors.toList());
-        given(queryService.getAllByStoreId(anyLong()))
-                .willReturn(list);
-    }
-
     private ResultActions 주문금액별_배달비_전체_조회() throws Exception {
         return mockMvc.perform(get(BASE_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+    }
+
+    private ResultActions 주문금액별_배달비_검색(final int price) throws Exception {
+        return mockMvc.perform(get(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .param("price", String.valueOf(price))
         ).andDo(print());
     }
 
