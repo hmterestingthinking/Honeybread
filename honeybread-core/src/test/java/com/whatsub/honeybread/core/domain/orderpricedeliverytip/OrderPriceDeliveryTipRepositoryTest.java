@@ -2,6 +2,7 @@ package com.whatsub.honeybread.core.domain.orderpricedeliverytip;
 
 import com.whatsub.honeybread.core.domain.model.Money;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -70,6 +71,21 @@ class OrderPriceDeliveryTipRepositoryTest {
         //then
         assertTrue(findTip.isPresent());
         assertEquals(orderPriceDeliveryTip, findTip.get());
+    }
+
+    @Test
+    @DisplayName("특정 금액 이상인(toPrice가 null) 가격 범위가 있는지 확인")
+    void 가격범위가_정해지지않은경우가_있는지_확인() {
+        //given
+        final long storeId = 1L;
+        final OrderPriceDeliveryTip orderPriceDeliveryTip = 주문가격별_배달팁_생성(storeId, Money.wons(10000), null);
+        repository.save(orderPriceDeliveryTip);
+
+        //when
+        final boolean result = repository.existsByStoreIdAndToPriceIsNull(storeId);
+
+        //then
+        assertTrue(result);
     }
 
     private List<OrderPriceDeliveryTip> 주문가격별_배달팁을_사이즈만큼_생성(final int size) {

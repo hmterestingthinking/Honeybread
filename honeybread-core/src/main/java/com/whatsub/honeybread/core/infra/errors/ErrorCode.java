@@ -28,6 +28,7 @@ public enum ErrorCode {
 
     DUPLICATE_ORDER_PRICE_DELIVERY_TIP(HttpStatus.CONFLICT, "-40000", "Duplicate Order Price Delivery Tip"),
     ORDER_PRICE_DELIVERY_TIP_NOT_FOUND(HttpStatus.NOT_FOUND, "-40001", "Order Price Delivery Tip Not Found"),
+    PRICE_RANGE_ALREADY_EXISTS(HttpStatus.CONFLICT, "-40002", "Price Range Already Exists"),
 
     ;
     private final HttpStatus status;
