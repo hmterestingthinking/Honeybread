@@ -3,6 +3,7 @@ package com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDeliveryTip;
 import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDeliveryTipRepository;
+import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDeliveryTipValidator;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip.dto.OrderPriceDeliveryTipRequest;

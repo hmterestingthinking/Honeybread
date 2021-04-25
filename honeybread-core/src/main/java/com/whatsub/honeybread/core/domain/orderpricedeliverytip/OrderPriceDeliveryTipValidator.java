@@ -1,7 +1,6 @@
-package com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip;
+package com.whatsub.honeybread.core.domain.orderpricedeliverytip;
 
 import com.whatsub.honeybread.core.domain.model.Money;
-import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDeliveryTip;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -19,7 +18,7 @@ public class OrderPriceDeliveryTipValidator {
 
     private void validatePrices(final BeanPropertyBindingResult errors, final Money fromPrice, final Money toPrice) {
         if(toPrice != null && fromPrice.isGreaterThan(toPrice)) {
-            errors.reject("invalid.price.criteria", "fromPrice값은 toPrice값보다 작아야합니다.");
+            errors.reject("invalid.price.range", "fromPrice값은 toPrice값보다 작아야합니다.");
         }
     }
 }

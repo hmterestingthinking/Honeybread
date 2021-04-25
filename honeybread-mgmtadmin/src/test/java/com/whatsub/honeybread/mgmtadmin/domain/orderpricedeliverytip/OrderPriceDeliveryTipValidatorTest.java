@@ -2,6 +2,7 @@ package com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip;
 
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDeliveryTip;
+import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDeliveryTipValidator;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.params.ParameterizedTest;
