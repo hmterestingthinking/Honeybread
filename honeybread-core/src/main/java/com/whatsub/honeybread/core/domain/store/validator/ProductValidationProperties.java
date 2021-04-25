@@ -1,4 +1,4 @@
-package com.whatsub.honeybread.mgmtadmin.domain.store;
+package com.whatsub.honeybread.core.domain.store.validator;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
