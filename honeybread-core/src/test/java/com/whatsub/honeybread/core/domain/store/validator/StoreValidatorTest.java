@@ -98,7 +98,7 @@ class StoreValidatorTest {
     }
 
     @Test
-    void 존재하지_않는_셀러는_등록_실패() {
+    void 존재하지_않는_셀러는_등록유효성검사_실패() {
         // given
         존재하지_않는_셀러다();
 
@@ -107,14 +107,14 @@ class StoreValidatorTest {
 
         // then
         존재하는_셀러인지_검사를_수행했다();
-        then(exception.getErrorCode()).equals(ErrorCode.USER_NOT_FOUND);
+        assertEquals(exception.getErrorCode(), ErrorCode.USER_NOT_FOUND);
     }
 
     @Test
-    void 이미_존재하는_스토어명은_등록_실패() {
+    void 이미_존재하는_스토어명은_등록유효성검사_실패() {
         // given
         존재하는_셀러다();
-        중복된_스토어명이다();
+        이미_등록된_스토어명이다();
 
         // when
         HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::등록을_검사하다);
@@ -122,11 +122,11 @@ class StoreValidatorTest {
         // then
         존재하는_셀러인지_검사를_수행했다();
         스토어명이_중복되는지_검사를_수행했다();
-        then(exception.getErrorCode()).equals(ErrorCode.DUPLICATE_STORE_NAME);
+        assertEquals(exception.getErrorCode(), ErrorCode.DUPLICATE_STORE_NAME);
     }
 
     @Test
-    void 카테고리_ID_개수가_5개를_초과하여_등록_실패() {
+    void 카테고리_ID_개수가_최대_개수를_초과하여_등록유효성검사_실패() {
         // given
         존재하는_셀러다();
         중복되지않은_스토어명이다();
@@ -139,11 +139,11 @@ class StoreValidatorTest {
         존재하는_셀러인지_검사를_수행했다();
         스토어명이_중복되는지_검사를_수행했다();
         카테고리아이디로_카테고리목록을_찾는로직을_수행하지_않았다();
-        then(exception.getErrorCode()).equals(ErrorCode.EXCEED_MAX_STORE_CATEGORY_CNT);
+        assertEquals(exception.getErrorCode(), ErrorCode.EXCEED_MAX_STORE_CATEGORY_CNT);
     }
 
     @Test
-    void 카테고리ID가_하나라도_존재하지_않으면_등록_실패() {
+    void 카테고리ID_중_한개라도_존재하지_않으면_등록유효성검사_실패() {
         // given
         존재하는_셀러다();
         중복되지않은_스토어명이다();
@@ -156,11 +156,11 @@ class StoreValidatorTest {
         존재하는_셀러인지_검사를_수행했다();
         스토어명이_중복되는지_검사를_수행했다();
         카테고리아이디로_카테고리목록을_찾는로직을_수행했다();
-        then(exception.getErrorCode()).equals(ErrorCode.CATEGORY_NOT_FOUND);
+        assertEquals(exception.getErrorCode(), ErrorCode.CATEGORY_NOT_FOUND);
     }
 
     @Test
-    void 모든_조건이_만족하여_등록_성공() {
+    void 모든_조건이_만족하여_등록유효성검사_성공() {
         // given
         존재하는_셀러다();
         중복되지않은_스토어명이다();
@@ -176,22 +176,7 @@ class StoreValidatorTest {
     }
 
     @Test
-    void 다른_스토어명으로_수정시_실패() {
-        // given
-        스토어가_조회된다();
-        다른_스토어명으로_수정을_요청한다();
-        다른_스토어가_사용중인_스토어명이다();
-
-        // when
-        HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::수정을_검사하다);
-
-        // then
-        이름으로_스토어_조회를_수행했다();
-        assertEquals(exception.getErrorCode(), ErrorCode.DUPLICATE_STORE_NAME);
-    }
-
-    @Test
-    void 스토어명_그대로_수정시_중복이라고_판단하지_않음() {
+    void 스토어명_그대로_수정시_스토어명_유효성검사를_하지_않음() {
         // given
         스토어가_조회된다();
 
@@ -203,7 +188,21 @@ class StoreValidatorTest {
     }
 
     @Test
-    void 유니크한_이름으로_스토어명_수정시_중복이라고_판단하지_않음() {
+    void 이미_존재하는_스토어명은_수정유효성검사_실패() {
+        // given
+        스토어가_조회된다();
+        변경된_스토어명이_이미_등록된_스토어명이다();
+
+        // when
+        HoneyBreadException exception = assertThrows(HoneyBreadException.class, this::수정을_검사하다);
+
+        // then
+        이름으로_스토어_조회를_수행했다();
+        assertEquals(exception.getErrorCode(), ErrorCode.DUPLICATE_STORE_NAME);
+    }
+
+    @Test
+    void 기존에_없던_스토어명은_스토어명_중복_에러가_발생하지_않음() {
         // given
         스토어가_조회된다();
         기존에_등록되어있지_않았던_유니크한_스토어명이다("정말 맛없는 가게");
@@ -216,7 +215,7 @@ class StoreValidatorTest {
     }
 
     @Test
-    void 카테고리_ID_개수가_5개를_초과하여_수정_실패() {
+    void 카테고리_ID_개수가_최대개수를_초과하여_수정유효성검사_실패() {
         // given
         스토어가_조회된다();
         최대개수_초과하는_카테고리목록이다();
@@ -231,7 +230,7 @@ class StoreValidatorTest {
     }
 
     @Test
-    void 하나라도_카테고리_ID가_존재하지_않아_수정_실패() {
+    void 카테고리ID_중_한개라도_존재하지_않으면_수정유효성검사_실패() {
         // given
         스토어가_조회된다();
         일부_존재하지않는_카테고리목록이다();
@@ -246,7 +245,7 @@ class StoreValidatorTest {
     }
 
     @Test
-    void 모든_카테고리_ID가_존재하여_수정_성공() {
+    void 모든_조건이_만족하여_수정_유효성검사_성공() {
         // given
         스토어가_조회된다();
         모두_존재하는_카테고리목록이다();
@@ -271,8 +270,8 @@ class StoreValidatorTest {
         given(userRepository.existsById(anyLong())).willReturn(true);
     }
 
-    private void 중복된_스토어명이다() {
-        given(storeRepository.existsByBasicName(저장할_스토어.getBasic().getName())).willReturn(true);
+    private void 이미_등록된_스토어명이다() {
+        given(storeRepository.existsByBasicName(anyString())).willReturn(true);
     }
 
     private void 중복되지않은_스토어명이다() {
@@ -295,11 +294,8 @@ class StoreValidatorTest {
         given(storeRepository.findById(1L)).willReturn(Optional.ofNullable(저장된_스토어));
     }
 
-    private void 다른_스토어명으로_수정을_요청한다() {
-        given(저장할_스토어.getBasic().getName()).willReturn("저장되어있는 다른 스토어 이름");
-    }
-
-    private void 다른_스토어가_사용중인_스토어명이다() {
+    private void 변경된_스토어명이_이미_등록된_스토어명이다() {
+        given(저장할_스토어.getBasic().getName()).willReturn("변경!");
         given(storeRepository.existsByBasicName(anyString())).willReturn(true);
     }
 
