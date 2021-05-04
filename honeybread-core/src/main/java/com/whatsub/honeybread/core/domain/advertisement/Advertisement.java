@@ -2,20 +2,10 @@ package com.whatsub.honeybread.core.domain.advertisement;
 
 import com.whatsub.honeybread.core.domain.base.BaseEntity;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Getter
@@ -40,6 +30,21 @@ public class Advertisement extends BaseEntity {
     )
     private TimePeriod period = TimePeriod.EMPTY;
 
+    @BatchSize(size = 50)
     @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "advertisement_id")
     private List<AdvertisedStore> advertisedStores = List.of();
+
+    @Builder
+    private Advertisement(
+        AdvertisementType type,
+        int maximumStoreCounts,
+        TimePeriod period,
+        List<AdvertisedStore> advertisedStores
+    ) {
+        this.type = type;
+        this.maximumStoreCounts = maximumStoreCounts;
+        this.period = period;
+        this.advertisedStores = advertisedStores;
+    }
 }
