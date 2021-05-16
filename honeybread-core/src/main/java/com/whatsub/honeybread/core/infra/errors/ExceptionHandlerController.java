@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionHandlerController {
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ErrorResponse> validation(ValidationException e) {
+    public ResponseEntity<ErrorResponse> validation(final ValidationException e) {
         log.error("Validation Exception occur", e);
         return ResponseEntity
             .status(ErrorCode.VALIDATION_ERROR.getStatus())
@@ -21,7 +21,7 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(HoneyBreadException.class)
-    public ResponseEntity<ErrorResponse> honeyBread(HoneyBreadException e) {
+    public ResponseEntity<ErrorResponse> honeyBread(final HoneyBreadException e) {
         log.error("HoneyBread Exception occur", e);
         return ResponseEntity
             .status(e.getErrorCode().getStatus())
@@ -29,7 +29,7 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> exception(Exception e) {
+    public ResponseEntity<ErrorResponse> exception(final Exception e) {
         log.error("Not Defined or Not Handled Exception occur", e);
         return ResponseEntity
             .status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus())

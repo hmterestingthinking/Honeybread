@@ -8,12 +8,12 @@ import javax.persistence.Converter;
 @Converter(autoApply = true)
 public class MoneyConverter implements AttributeConverter<Money, Long> {
     @Override
-    public Long convertToDatabaseColumn(Money money) {
+    public Long convertToDatabaseColumn(final Money money) {
         return money.getValue().longValue();
     }
 
     @Override
-    public Money convertToEntityAttribute(Long value) {
+    public Money convertToEntityAttribute(final Long value) {
         return Money.wons(value);
     }
 }

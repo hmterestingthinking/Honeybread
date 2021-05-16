@@ -15,7 +15,7 @@ public class ErrorField {
     String value;
     String reason;
 
-    static List<ErrorField> of(Errors errors) {
+    static List<ErrorField> of(final Errors errors) {
         if (errors == null) {
             return Collections.emptyList();
         }
@@ -29,7 +29,7 @@ public class ErrorField {
             .collect(Collectors.toList());
     }
 
-    private static String getOrEmpty(Object target) {
+    private static String getOrEmpty(final Object target) {
         if (Objects.isNull(target)) {
             return StringUtils.EMPTY;
         }

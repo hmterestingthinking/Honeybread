@@ -8,7 +8,7 @@ import org.springframework.validation.Errors;
 public class ValidationException extends HoneyBreadException {
     private final Errors errors;
 
-    public ValidationException(Errors errors) {
+    public ValidationException(final Errors errors) {
         super(ErrorCode.VALIDATION_ERROR);
         this.errors = errors;
     }
