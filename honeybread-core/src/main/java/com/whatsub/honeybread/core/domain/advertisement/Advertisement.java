@@ -37,10 +37,10 @@ public class Advertisement extends BaseEntity {
 
     @Builder
     private Advertisement(
-        AdvertisementType type,
-        int maximumStoreCounts,
-        TimePeriod period,
-        List<AdvertisedStore> advertisedStores
+        final AdvertisementType type,
+        final int maximumStoreCounts,
+        final TimePeriod period,
+        final List<AdvertisedStore> advertisedStores
     ) {
         this.type = type;
         this.maximumStoreCounts = maximumStoreCounts;

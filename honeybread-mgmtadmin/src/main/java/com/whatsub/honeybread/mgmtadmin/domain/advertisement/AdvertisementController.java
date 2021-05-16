@@ -30,8 +30,8 @@ public class AdvertisementController {
     @GetMapping
     public ResponseEntity<Page<AdvertisementResponse>> getAdvertisements(
         @PageableDefault(size = 20, direction = Sort.Direction.DESC, sort = "createdAt")
-        Pageable pageable,
-        AdvertisementSearch search
+        final Pageable pageable,
+        final AdvertisementSearch search
     ) {
         return ResponseEntity.ok(queryService.getAdvertisements(pageable, search));
     }

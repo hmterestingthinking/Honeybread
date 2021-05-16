@@ -24,7 +24,7 @@ public class AdvertisedStore extends BaseEntity {
     private Money winningBidPrice;
 
     @Builder
-    private AdvertisedStore(Long storeId, Money winningBidPrice) {
+    private AdvertisedStore(final Long storeId, final Money winningBidPrice) {
         this.storeId = storeId;
         this.winningBidPrice = winningBidPrice;
     }

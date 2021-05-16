@@ -1,10 +1,8 @@
 package com.whatsub.honeybread.mgmtadmin.domain.advertisement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatsub.honeybread.core.domain.advertisement.Advertisement;
 import com.whatsub.honeybread.core.domain.advertisement.AdvertisementType;
 import com.whatsub.honeybread.core.domain.advertisement.dto.AdvertisementSearch;
-import com.whatsub.honeybread.core.domain.advertisement.repository.AdvertisementRepository;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
 import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementResponse;
 import lombok.RequiredArgsConstructor;
@@ -52,11 +50,7 @@ class AdvertisementControllerTest {
         광고목록_조회시_성공한다(size);
 
         // when
-        final ResultActions result = mockMvc.perform(
-            get(BASE_URL)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
+        final ResultActions result = 광고목록_조회();
 
         // then
         result.andExpect(status().isOk())
@@ -82,6 +76,14 @@ class AdvertisementControllerTest {
     /**
      * When
      */
+    private ResultActions 광고목록_조회() throws Exception {
+        final ResultActions result = mockMvc.perform(
+            get(BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print());
+        return result;
+    }
 
     /**
      * Then
@@ -101,7 +103,7 @@ class AdvertisementControllerTest {
             .id(id)
             .type(AdvertisementType.OPEN_LIST)
             .maximumStoreCounts(50)
-            .period(   TimePeriod.of(
+            .period(TimePeriod.of(
                 LocalDateTime.of(2021, 4, 16, 12, 0, 0),
                 LocalDateTime.of(2021, 5, 16, 12, 0, 0)
             ))
