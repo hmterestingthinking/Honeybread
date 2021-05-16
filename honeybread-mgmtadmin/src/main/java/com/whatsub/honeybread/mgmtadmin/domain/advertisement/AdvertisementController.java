@@ -1,18 +1,20 @@
 package com.whatsub.honeybread.mgmtadmin.domain.advertisement;
 
-import com.google.common.collect.ImmutableMap;
 import com.whatsub.honeybread.common.support.HoneyBreadSwaggerTags;
+import com.whatsub.honeybread.core.domain.advertisement.dto.AdvertisementSearch;
 import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementResponse;
 import com.whatsub.honeybread.mgmtadmin.support.MgmtAdminSwaggerTags;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @Api(tags = HoneyBreadSwaggerTags.ALL)
 @RestController
@@ -21,16 +23,16 @@ import java.util.Map;
 public class AdvertisementController {
     private final AdvertisementQueryService queryService;
 
-    // 광고 목록 조회
-    // 광고 기간 / 타입 / 광고 대상 스토어 수
     @ApiOperation(
         value = "광고 목록 조회",
         tags = MgmtAdminSwaggerTags.ADVERTISEMENT
     )
     @GetMapping
-    public Page<AdvertisementResponse> getAdvertisements() {
-        return null;
+    public ResponseEntity<Page<AdvertisementResponse>> getAdvertisements(
+        @PageableDefault(size = 20, direction = Sort.Direction.DESC, sort = "createdAt")
+        Pageable pageable,
+        AdvertisementSearch search
+    ) {
+        return ResponseEntity.ok(queryService.getAdvertisements(pageable, search));
     }
-
-    // 광고 상세 조회
 }
