@@ -56,11 +56,11 @@ public class AdvertisementBidNotice extends BaseEntity {
 
     @Builder
     private AdvertisementBidNotice(
-        AdvertisementType type,
-        int maximumStoreCounts,
-        Money minimumBidPrice,
-        Money bidPriceUnit,
-        TimePeriod period
+        final AdvertisementType type,
+        final int maximumStoreCounts,
+        final Money minimumBidPrice,
+        final Money bidPriceUnit,
+        final TimePeriod period
     ) {
         this.type = type;
         this.maximumStoreCounts = maximumStoreCounts;
@@ -69,7 +69,7 @@ public class AdvertisementBidNotice extends BaseEntity {
         this.period = period;
     }
 
-    public void update(AdvertisementBidNotice entity) {
+    public void update(final AdvertisementBidNotice entity) {
         this.type = entity.getType();
         this.maximumStoreCounts = entity.getMaximumStoreCounts();
         this.minimumBidPrice = entity.getMinimumBidPrice();

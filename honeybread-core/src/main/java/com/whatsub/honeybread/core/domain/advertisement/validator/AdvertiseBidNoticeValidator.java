@@ -17,8 +17,8 @@ public class AdvertiseBidNoticeValidator {
     private static final Money MINIMUM_BID_PRICE_UNIT = Money.wons(10_000);
     private static final Money BID_PRICE_UNIT = Money.wons(10_000);
 
-    public void validate(AdvertisementBidNotice entity) {
-        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(entity, entity.getClass().getSimpleName());
+    public void validate(final AdvertisementBidNotice entity) {
+        final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(entity, entity.getClass().getSimpleName());
 
         validateMaximumStore(entity.getMaximumStoreCounts(), errors);
         validateBidPriceUnit(entity.getBidPriceUnit(), errors);
@@ -32,7 +32,7 @@ public class AdvertiseBidNoticeValidator {
     /**
      * 낙찰 가능한 최대 스토어의 수는 최소 50 이어야 한다.
      */
-    private void validateMaximumStore(int maximumStoreCounts, BeanPropertyBindingResult errors) {
+    private void validateMaximumStore(final int maximumStoreCounts, final BeanPropertyBindingResult errors) {
         if (maximumStoreCounts < MAXIMUM_STORE_COUNTS) {
             errors.rejectValue(
                 "maximumStoreCounts",
@@ -47,7 +47,7 @@ public class AdvertiseBidNoticeValidator {
      * 입찰 단위는 최소 10_000 원 이어야 한다.
      * 입찰 단위는 10_000 원 단위어야 한다.
      */
-    private void validateBidPriceUnit(Money bidPriceUnit, BeanPropertyBindingResult errors) {
+    private void validateBidPriceUnit(final Money bidPriceUnit, final BeanPropertyBindingResult errors) {
         if (bidPriceUnit.isLessThan(MINIMUM_BID_PRICE_UNIT)) {
             errors.rejectValue(
                 "bidPriceUnit",
@@ -70,7 +70,7 @@ public class AdvertiseBidNoticeValidator {
     /**
      * 광고기간은 최소 30일 이어야 한다.
      */
-    private void validatePeriod(TimePeriod period, Errors errors) {
+    private void validatePeriod(final TimePeriod period, final Errors errors) {
         if (ChronoUnit.DAYS.between(period.getFrom(), period.getTo()) < MINIMUM_BID_NOTICE_DAYS) {
             errors.rejectValue(
                 "period",

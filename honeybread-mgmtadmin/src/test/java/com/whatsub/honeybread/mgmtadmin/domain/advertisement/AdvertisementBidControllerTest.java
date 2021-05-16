@@ -319,7 +319,7 @@ class AdvertisementBidControllerTest {
     }
 
     private void 입찰공고_수정시_입찰이_진행중이다() {
-        willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY))
+        willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_REGIST))
             .given(service).update(anyLong(), any(AdvertisementBidNoticeRequest.class));
     }
 
@@ -333,7 +333,7 @@ class AdvertisementBidControllerTest {
     }
 
     private void 입찰공고_삭제시_입찰이_진행중이다() {
-        willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY))
+        willThrow(new HoneyBreadException(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_REGIST))
             .given(service).delete(anyLong());
     }
 

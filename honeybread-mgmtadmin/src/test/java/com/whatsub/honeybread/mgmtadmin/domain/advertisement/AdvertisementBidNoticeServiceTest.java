@@ -303,7 +303,7 @@ class AdvertisementBidNoticeServiceTest {
     }
 
     private void 입찰공고_진행_에러코드_확인(HoneyBreadException ex) {
-        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_MODIFY);
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.ADVERTISEMENT_BID_NOTICE_CANNOT_REGIST);
     }
 
     private void 입찰공고_찾지못함_에러코드_확인(HoneyBreadException ex) {

@@ -19,7 +19,7 @@ public class AdvertisementBidNoticeRepositoryImpl
     }
 
     @Override
-    public Page<AdvertisementBidNotice> findAll(Pageable pageable, AdvertisementBidNoticeSearch search) {
+    public Page<AdvertisementBidNotice> findAll(final Pageable pageable, final AdvertisementBidNoticeSearch search) {
         return applyPagination(pageable,
             query ->
                 query

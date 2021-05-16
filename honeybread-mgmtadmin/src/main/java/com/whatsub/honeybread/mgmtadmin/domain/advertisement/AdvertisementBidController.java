@@ -25,8 +25,8 @@ import javax.validation.Valid;
 @RequestMapping("advertisements/bid-notices")
 @RequiredArgsConstructor
 public class AdvertisementBidController {
-    private final AdvertisementBidNoticeService noticeService;
-    private final AdvertisementBidNoticeQueryService noticeQueryService;
+    private final AdvertisementBidNoticeService service;
+    private final AdvertisementBidNoticeQueryService queryService;
 
     @ApiOperation(
         value = "입찰 공고 목록",
@@ -35,11 +35,10 @@ public class AdvertisementBidController {
     @GetMapping
     public ResponseEntity<Page<AdvertisementBidNoticeResponse>> getBidNotices(
         @PageableDefault(size = 20, direction = Sort.Direction.DESC, sort = "createdAt")
-        Pageable pageable,
-        AdvertisementBidNoticeSearch search
+        final Pageable pageable,
+        final AdvertisementBidNoticeSearch search
     ) {
-        Page<AdvertisementBidNoticeResponse> response = noticeQueryService.getAdvertisementBidNotices(pageable, search);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(queryService.getAdvertisementBidNotices(pageable, search));
     }
 
     @ApiOperation(
@@ -47,9 +46,8 @@ public class AdvertisementBidController {
         tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
     )
     @GetMapping("/{id}")
-    public ResponseEntity<AdvertisementBidNoticeResponse> getBidNotice(@PathVariable Long id) {
-        AdvertisementBidNoticeResponse response = noticeQueryService.getAdvertisementBidNotice(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<AdvertisementBidNoticeResponse> getBidNotice(@PathVariable final Long id) {
+        return ResponseEntity.ok(queryService.getAdvertisementBidNotice(id));
     }
 
     @ApiOperation(
@@ -58,13 +56,13 @@ public class AdvertisementBidController {
     )
     @PostMapping
     public ResponseEntity<Void> createBidNotice(
-        @Valid @RequestBody AdvertisementBidNoticeRequest request,
-        BindingResult result
+        @Valid @RequestBody final AdvertisementBidNoticeRequest request,
+        final BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
-        noticeService.create(request);
+        service.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -74,14 +72,14 @@ public class AdvertisementBidController {
     )
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateBidNotice(
-        @PathVariable Long id,
-        @Valid @RequestBody AdvertisementBidNoticeRequest request,
-        BindingResult result
+        @PathVariable final Long id,
+        @Valid @RequestBody final AdvertisementBidNoticeRequest request,
+        final BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
-        noticeService.update(id, request);
+        service.update(id, request);
         return ResponseEntity.ok().build();
     }
 
@@ -90,8 +88,8 @@ public class AdvertisementBidController {
         tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBidNotice(@PathVariable Long id) {
-        noticeService.delete(id);
+    public ResponseEntity<Void> deleteBidNotice(@PathVariable final Long id) {
+        service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -100,8 +98,8 @@ public class AdvertisementBidController {
         tags = MgmtAdminSwaggerTags.ADVERTISEMENT_BID
     )
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> closeBidNotice(@PathVariable Long id) {
-        noticeService.close(id);
+    public ResponseEntity<Void> closeBidNotice(@PathVariable final Long id) {
+        service.close(id);
         return ResponseEntity.ok().build();
     }
 }
