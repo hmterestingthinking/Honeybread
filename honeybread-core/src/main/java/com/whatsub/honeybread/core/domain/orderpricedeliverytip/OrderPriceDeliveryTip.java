@@ -30,6 +30,15 @@ public class OrderPriceDeliveryTip extends BaseEntity {
     @Column(nullable = false)
     private Money tip;
 
+    public static OrderPriceDeliveryTip createZeroTip(Long storeId) {
+        return OrderPriceDeliveryTip.builder()
+            .storeId(storeId)
+            .toPrice(Money.ZERO)
+            .fromPrice(Money.ZERO)
+            .tip(Money.ZERO)
+            .build();
+    }
+
     @Builder
     private OrderPriceDeliveryTip(Long storeId, Money fromPrice, Money toPrice, Money tip) {
         this.storeId = storeId;

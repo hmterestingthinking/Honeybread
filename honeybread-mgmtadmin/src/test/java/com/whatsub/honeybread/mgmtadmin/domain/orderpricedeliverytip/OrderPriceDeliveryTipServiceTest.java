@@ -49,8 +49,8 @@ class OrderPriceDeliveryTipServiceTest {
         //given
         final OrderPriceDeliveryTipRequest request = 주문가격별_배달팁_요청_생성();
         주문가격별_배달팁이_중복되지_않음();
-        //when
 
+        //when
         service.create(storeId, request);
         
         //then

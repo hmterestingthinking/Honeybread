@@ -27,12 +27,10 @@ public class OrderPriceDeliveryTipQueryService {
     }
 
     public OrderPriceDeliveryTipResponse getTipByOrderPrice(final long storeId, final Money orderPrice) {
-        final Optional<OrderPriceDeliveryTip> tipByOrderPrice = repository.getTipByOrderPrice(storeId, orderPrice);
-        if(tipByOrderPrice.isPresent()) {
-            return OrderPriceDeliveryTipResponse.of(tipByOrderPrice.get());
-        } else {
-            return new OrderPriceDeliveryTipResponse(storeId, Money.ZERO, Money.ZERO, Money.ZERO);
-        }
+        return OrderPriceDeliveryTipResponse.of(
+            repository.getTipByOrderPrice(storeId, orderPrice)
+                .orElse(OrderPriceDeliveryTip.createZeroTip(storeId))
+        );
     }
 
 }
