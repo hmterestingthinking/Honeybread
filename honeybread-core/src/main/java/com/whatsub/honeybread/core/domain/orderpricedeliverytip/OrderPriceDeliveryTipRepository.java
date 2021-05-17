@@ -8,5 +8,5 @@ import java.util.List;
 public interface OrderPriceDeliveryTipRepository extends JpaRepository<OrderPriceDeliveryTip, Long>, OrderPriceDeliveryTipRepositoryCustom {
     boolean existsByStoreIdAndFromPriceAndToPrice(final long storeId, final Money from, final Money to);
     List<OrderPriceDeliveryTip> findByStoreId(final long storeId);
-    boolean existsByStoreIdAndToPriceIsNull(long storeId);
+    boolean existsByStoreIdAndToPriceIsNull(final long storeId);
 }
