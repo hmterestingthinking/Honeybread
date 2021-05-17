@@ -92,7 +92,7 @@ public class StoreRepositoryTest {
         int 조회되어야하는_데이터_개수 = Math.min(N, 페이지_사이즈);
 
         // when
-        StoreSearch search = new StoreSearch("허니브래드", null, null);
+        StoreSearch search = new StoreSearch(허니브레드, null, null);
         Page<Store> stores = repository.getStores(pageRequest, search);
 
         // then
