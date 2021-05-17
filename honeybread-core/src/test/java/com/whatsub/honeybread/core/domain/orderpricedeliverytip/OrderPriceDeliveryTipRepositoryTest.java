@@ -63,7 +63,7 @@ class OrderPriceDeliveryTipRepositoryTest {
         //given
         final long storeId = 1L;
         final OrderPriceDeliveryTip orderPriceDeliveryTip =
-            주문가격별_배달팁_생성(storeId, Money.wons(fromPrice), toPrice == 0 ? null : Money.wons(toPrice));
+            주문가격별_배달팁_생성(storeId, Money.wons(fromPrice), Money.wons(toPrice));
         repository.save(orderPriceDeliveryTip);
 
         //when
@@ -79,7 +79,7 @@ class OrderPriceDeliveryTipRepositoryTest {
     void 가격범위가_정해지지않은경우가_있는지_확인() {
         //given
         final long storeId = 1L;
-        final OrderPriceDeliveryTip orderPriceDeliveryTip = 주문가격별_배달팁_생성(storeId, Money.wons(10000), null);
+        final OrderPriceDeliveryTip orderPriceDeliveryTip = 주문가격별_배달팁_생성(storeId, Money.wons(10000), Money.wons(0));
         repository.save(orderPriceDeliveryTip);
 
         //when
@@ -103,7 +103,7 @@ class OrderPriceDeliveryTipRepositoryTest {
     private OrderPriceDeliveryTip 주문가격별_배달팁_생성(final Long storeId, final Money fromPrice, final Money toPrice) {
         return OrderPriceDeliveryTip.builder()
                 .fromPrice(fromPrice)
-                .toPrice(toPrice)
+                .toPrice(toPrice.getValue().intValue() == 0 ? null : toPrice)
                 .storeId(storeId)
                 .tip(Money.wons(1000))
                 .build();
