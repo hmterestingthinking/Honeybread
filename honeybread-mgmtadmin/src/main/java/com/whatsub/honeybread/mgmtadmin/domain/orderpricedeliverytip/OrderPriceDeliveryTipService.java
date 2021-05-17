@@ -42,9 +42,9 @@ public class OrderPriceDeliveryTipService {
     }
 
     private void checkPriceRange(final Long storeId, final OrderPriceDeliveryTipRequest request) {
-        if(repository.getTipByOrderPrice(storeId, request.getFromPrice()).isPresent()
-            || repository.getTipByOrderPrice(storeId, request.getToPrice()).isPresent()
-            || repository.existsByStoreIdAndToPriceIsNull(storeId)) {
+        if(repository.existsByStoreIdAndToPriceIsNull(storeId)
+            || repository.getTipByOrderPrice(storeId, request.getFromPrice()).isPresent()
+            || repository.getTipByOrderPrice(storeId, request.getToPrice()).isPresent()) {
             throw new HoneyBreadException(ErrorCode.PRICE_RANGE_ALREADY_EXISTS);
         }
     }
