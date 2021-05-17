@@ -1,6 +1,7 @@
 package com.whatsub.honeybread.core.domain.orderpricedeliverytip;
 
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.support.QuerydslRepositorySupport;
 
@@ -26,8 +27,11 @@ public class OrderPriceDeliveryTipRepositoryImpl extends QuerydslRepositorySuppo
     }
 
     private Predicate includePrice(final Money price) {
-        return orderPriceDeliveryTip.fromPrice.loe(price).and(orderPriceDeliveryTip.toPrice.gt(price))
-            .or(orderPriceDeliveryTip.fromPrice.loe(price).and(orderPriceDeliveryTip.toPrice.isNull()));
+        final BooleanExpression between = orderPriceDeliveryTip.fromPrice.loe(price)
+            .and(orderPriceDeliveryTip.toPrice.gt(price));
+        final BooleanExpression moreThan = orderPriceDeliveryTip.fromPrice.loe(price)
+            .and(orderPriceDeliveryTip.toPrice.isNull());
+        return between.or(moreThan);
     }
 
     private Predicate eqStoreId(final long storeId) {
