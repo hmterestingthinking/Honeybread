@@ -20,8 +20,9 @@ public class OrderPriceDeliveryTipRepositoryImpl extends QuerydslRepositorySuppo
             from(orderPriceDeliveryTip)
                 .where(
                     eqStoreId(storeId),
-                    includePrice(target))
-                .fetchOne());
+                    includePrice(target)
+                ).fetchOne()
+        );
     }
 
     private Predicate includePrice(final Money price) {
