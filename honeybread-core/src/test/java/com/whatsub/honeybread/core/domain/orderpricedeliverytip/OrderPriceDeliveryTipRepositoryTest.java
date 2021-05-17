@@ -49,9 +49,10 @@ class OrderPriceDeliveryTipRepositoryTest {
 
         //when
         repository.saveAll(orderPriceDeliveryTipList);
+        final List<OrderPriceDeliveryTip> findList = repository.findByStoreId(anyLong());
 
         //then
-        assertEquals(size, repository.findByStoreId(anyLong()).size());
+        assertEquals(size, findList.size());
     }
 
     @ParameterizedTest
