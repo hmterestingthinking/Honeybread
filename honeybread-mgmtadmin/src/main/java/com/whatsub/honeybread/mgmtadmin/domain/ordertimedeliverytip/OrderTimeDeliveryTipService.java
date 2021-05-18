@@ -24,4 +24,14 @@ public class OrderTimeDeliveryTipService {
         final OrderTimeDeliveryTip orderTimeDeliveryTip = request.toEntity(storeId);
         repository.save(orderTimeDeliveryTip);
     }
+
+    @Transactional
+    public void remove(final long storeId) {
+        repository.delete(findByStoreId(storeId));
+    }
+
+    private OrderTimeDeliveryTip findByStoreId(final long storeId) {
+        return repository.findByStoreId(storeId)
+            .orElseThrow(() -> new HoneyBreadException(ErrorCode.ORDER_TIME_DELIVERY_TIP_NOT_FOUND));
+    }
 }

@@ -27,6 +27,7 @@ public enum ErrorCode {
     MENU_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "-31001", "Menu Group NotFound"),
 
     DUPLICATE_ORDER_TIME_DELIVERY_TIP(HttpStatus.CONFLICT, "-41000", "Duplicate Order Time Delivery Tip"),
+    ORDER_TIME_DELIVERY_TIP_NOT_FOUND(HttpStatus.NOT_FOUND, "-41001", "Order Time Delivery Tip Not Found"),
 
     ;
     private final HttpStatus status;

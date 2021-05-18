@@ -8,6 +8,7 @@ import org.springframework.test.context.TestConstructor;
 
 import java.time.LocalTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -38,6 +39,28 @@ class OrderTimeDeliveryTipRepositoryTest {
 
         //then
         assertTrue(result);
+    }
+
+    @Test
+    void 시간별_배달팁_storeId로_검색() {
+        //given
+        final long storeId = anyLong();
+        final OrderTimeDeliveryTip orderTimeDeliveryTip = OrderTimeDeliveryTip.builder()
+            .storeId(storeId)
+            .tip(Money.wons(anyLong()))
+            .deliveryTimePeriod(DeliveryTimePeriod.builder()
+                .from(LocalTime.of(anyInt(), anyInt()))
+                .to(LocalTime.of(anyInt(), anyInt()))
+                .build())
+            .build();
+
+        repository.save(orderTimeDeliveryTip);
+
+        //when
+        final OrderTimeDeliveryTip findTip = repository.findByStoreId(storeId).get();
+
+        //then
+        assertEquals(orderTimeDeliveryTip, findTip);
     }
 
 }

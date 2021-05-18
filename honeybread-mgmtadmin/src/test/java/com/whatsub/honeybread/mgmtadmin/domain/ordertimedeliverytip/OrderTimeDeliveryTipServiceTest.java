@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
 import java.time.LocalTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,6 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -60,7 +62,7 @@ class OrderTimeDeliveryTipServiceTest {
 
         시간별_배달팁이_중복됨();
 
-       //when
+        //when
         final HoneyBreadException actual
             = assertThrows(HoneyBreadException.class, () -> service.create(storeId, request));
 
@@ -68,6 +70,52 @@ class OrderTimeDeliveryTipServiceTest {
         시간별_배달팁이_생성되지_않아야함();
         시간별_배달팁_중복체크가_되어야함();
         반환된_에러가_예상과_같은지확인(ErrorCode.DUPLICATE_ORDER_TIME_DELIVERY_TIP, actual);
+    }
+
+    @Test
+    void 시간별_배달팁_삭제() {
+        //given
+        final long storeId = 1L;
+        시간별_배달팁이_storeId로_검색();
+
+        //when
+        service.remove(storeId);
+
+        //then
+        시간별_배달팁이_삭제되어야함();
+        시간별_배달팁이_storeId로_검색되어야함();
+    }
+
+    @Test
+    void 시간별_배달팁_삭제_실패() {
+        //given
+        final long storeId = 1L;
+
+        //when
+        final HoneyBreadException actual
+            = assertThrows(HoneyBreadException.class, () -> service.remove(storeId));
+
+        //then
+        시간별_배달팁이_삭제되지_않아야함();
+        시간별_배달팁이_storeId로_검색되어야함();
+        반환된_에러가_예상과_같은지확인(ErrorCode.ORDER_TIME_DELIVERY_TIP_NOT_FOUND, actual);
+    }
+
+    private void 시간별_배달팁이_삭제되지_않아야함() {
+        then(repository).should(never()).delete(any(OrderTimeDeliveryTip.class));
+    }
+
+    private void 시간별_배달팁이_storeId로_검색() {
+        given(repository.findByStoreId(anyLong()))
+            .willReturn(Optional.of(mock(OrderTimeDeliveryTip.class)));
+    }
+
+    private void 시간별_배달팁이_storeId로_검색되어야함() {
+        then(repository).should().findByStoreId(anyLong());
+    }
+
+    private void 시간별_배달팁이_삭제되어야함() {
+        then(repository).should().delete(any(OrderTimeDeliveryTip.class));
     }
 
     private void 반환된_에러가_예상과_같은지확인(final ErrorCode duplicateOrderPriceDeliveryTip,
