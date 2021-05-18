@@ -46,9 +46,9 @@ class OrderPriceDeliveryTipRepositoryTest {
         //given
         final int size = 5;
         final List<OrderPriceDeliveryTip> orderPriceDeliveryTipList = 주문가격별_배달팁을_사이즈만큼_생성(5);
+        repository.saveAll(orderPriceDeliveryTipList);
 
         //when
-        repository.saveAll(orderPriceDeliveryTipList);
         final List<OrderPriceDeliveryTip> findList = repository.findByStoreId(anyLong());
 
         //then
