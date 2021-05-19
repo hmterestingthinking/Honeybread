@@ -1,12 +1,14 @@
 package com.whatsub.honeybread.mgmtadmin.domain.advertisement;
 
 import com.whatsub.honeybread.core.domain.advertisement.AdvertisementBidNotice;
+import com.whatsub.honeybread.core.domain.advertisement.event.AdvertisementBidNoticeClosed;
 import com.whatsub.honeybread.core.domain.advertisement.repository.AdvertisementBidNoticeRepository;
 import com.whatsub.honeybread.core.domain.advertisement.validator.AdvertiseBidNoticeValidator;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.advertisement.dto.AdvertisementBidNoticeRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdvertisementBidNoticeService {
     private final AdvertisementBidNoticeRepository repository;
     private final AdvertiseBidNoticeValidator validator;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public Long create(final AdvertisementBidNoticeRequest request) {
@@ -43,6 +46,7 @@ public class AdvertisementBidNoticeService {
     public void close(final Long id) {
         final AdvertisementBidNotice entity = findAdvertiseBidNotice(id);
         entity.close();
+        eventPublisher.publishEvent(new AdvertisementBidNoticeClosed(entity.getId()));
     }
 
     private AdvertisementBidNotice findAdvertiseBidNotice(final Long id) {

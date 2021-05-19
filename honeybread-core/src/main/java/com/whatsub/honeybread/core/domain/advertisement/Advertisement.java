@@ -7,6 +7,7 @@ import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -46,5 +47,26 @@ public class Advertisement extends BaseEntity {
         this.maximumStoreCounts = maximumStoreCounts;
         this.period = period;
         this.advertisedStores = advertisedStores;
+    }
+
+    public static Advertisement create(
+        final AdvertisementBidNotice bidNotice,
+        final List<AdvertiseBidStore> advertiseBidStores
+    ) {
+        return Advertisement.builder()
+            .type(bidNotice.getType())
+            .maximumStoreCounts(bidNotice.getMaximumStoreCounts())
+            .period(bidNotice.getPeriod())
+            .advertisedStores(
+                advertiseBidStores.stream()
+                    .map(bidStore ->
+                        AdvertisedStore.builder()
+                            .storeId(bidStore.getStoreId())
+                            .winningBidPrice(bidStore.getBidPrice())
+                            .build()
+                    )
+                    .collect(Collectors.toList())
+            )
+            .build();
     }
 }
