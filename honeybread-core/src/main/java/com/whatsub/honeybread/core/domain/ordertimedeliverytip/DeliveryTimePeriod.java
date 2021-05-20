@@ -16,6 +16,7 @@ public class DeliveryTimePeriod {
 
     private static final int HOURS_PER_DAY = 24;
     private static final int MINUTES_PER_HOUR = 60;
+    private static final LocalTime EIGHT_PM = LocalTime.of(20, 0);
 
     @Column(nullable = false)
     private LocalTime fromTime;
@@ -27,18 +28,24 @@ public class DeliveryTimePeriod {
     private Integer fromMinuteByMidnight;
 
     @Column(nullable = false)
-    private Integer toMinuteAtMidnight;
+    private Integer toMinuteByMidnight;
 
     @Builder
     private DeliveryTimePeriod(final LocalTime from, final LocalTime to) {
         this.fromTime = from;
         this.toTime = to;
-        this.fromMinuteByMidnight = convertMinuteByMidnight(from) - HOURS_PER_DAY * MINUTES_PER_HOUR;
-        this.toMinuteAtMidnight = convertMinuteByMidnight(to) - HOURS_PER_DAY * MINUTES_PER_HOUR;
+        this.fromMinuteByMidnight = isBeforeMidnight(from)
+            ? convertMinuteByMidnight(from) - HOURS_PER_DAY * MINUTES_PER_HOUR : convertMinuteByMidnight(from);
+        this.toMinuteByMidnight = isBeforeMidnight(to)
+            ? convertMinuteByMidnight(to) - HOURS_PER_DAY * MINUTES_PER_HOUR : convertMinuteByMidnight(to);
     }
 
-    private int convertMinuteByMidnight(final LocalTime time) {
+    public static int convertMinuteByMidnight(final LocalTime time) {
         return time.getHour() * MINUTES_PER_HOUR + time.getMinute();
+    }
+
+    private boolean isBeforeMidnight(final LocalTime time) {
+        return time.isAfter(EIGHT_PM) && time.isBefore(LocalTime.MIDNIGHT.minusMinutes(1));
     }
 
 }

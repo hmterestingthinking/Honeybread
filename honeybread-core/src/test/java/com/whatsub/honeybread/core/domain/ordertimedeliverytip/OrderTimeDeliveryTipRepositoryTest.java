@@ -63,4 +63,26 @@ class OrderTimeDeliveryTipRepositoryTest {
         assertEquals(orderTimeDeliveryTip, findTip);
     }
 
+    @Test
+    void 시간별_배달팁_storeId_time_으로_검색() {
+        //given
+        final long storeId = 1L;
+        final OrderTimeDeliveryTip orderTimeDeliveryTip = OrderTimeDeliveryTip.builder()
+            .storeId(storeId)
+            .tip(Money.wons(anyLong()))
+            .deliveryTimePeriod(DeliveryTimePeriod.builder()
+                .from(LocalTime.of(23, 0))
+                .to(LocalTime.of(8, 0))
+                .build())
+            .build();
+
+        repository.save(orderTimeDeliveryTip);
+
+        //when
+        final OrderTimeDeliveryTip findTip = repository.getTipByTime(storeId, LocalTime.of(3, 57)).get();
+
+        //then
+        assertEquals(orderTimeDeliveryTip, findTip);
+    }
+
 }

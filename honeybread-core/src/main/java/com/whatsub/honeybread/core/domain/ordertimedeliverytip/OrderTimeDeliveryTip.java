@@ -29,6 +29,13 @@ public class OrderTimeDeliveryTip extends BaseEntity {
     @Column(nullable = false)
     private Money tip;
 
+    public static OrderTimeDeliveryTip createZeroTip(Long storeId) {
+        return OrderTimeDeliveryTip.builder()
+            .storeId(storeId)
+            .tip(Money.ZERO)
+            .build();
+    }
+
     @Builder
     private OrderTimeDeliveryTip(final Long storeId, final DeliveryTimePeriod deliveryTimePeriod, final Money tip) {
         this.storeId = storeId;

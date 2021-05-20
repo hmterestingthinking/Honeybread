@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface OrderTimeDeliveryTipRepository extends JpaRepository<OrderTimeDeliveryTip, Long> {
+public interface OrderTimeDeliveryTipRepository extends JpaRepository<OrderTimeDeliveryTip, Long>, OrderTimeDeliveryTipRepositoryCustom {
     boolean existsByStoreId(final long storeId);
     Optional<OrderTimeDeliveryTip> findByStoreId(final long storeId);
 }
