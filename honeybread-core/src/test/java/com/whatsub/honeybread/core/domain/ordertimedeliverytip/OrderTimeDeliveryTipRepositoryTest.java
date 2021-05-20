@@ -7,7 +7,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -84,5 +87,35 @@ class OrderTimeDeliveryTipRepositoryTest {
         //then
         assertEquals(orderTimeDeliveryTip, findTip);
     }
+
+    @Test
+    void 시간별_배달팁_storeId_으로_전체검색() {
+        //given
+        final long storeId = 1L;
+        final int size = 10;
+        final List<OrderTimeDeliveryTip> orderTimeDeliveryTips = 시간별_배달팁_size만큼_생성(storeId, size);
+
+        repository.saveAll(orderTimeDeliveryTips);
+
+        //when
+        final List<OrderTimeDeliveryTip> findList = repository.findAllByStoreId(storeId);
+
+        //then
+        assertEquals(10, findList.size());
+    }
+
+    private List<OrderTimeDeliveryTip> 시간별_배달팁_size만큼_생성(final long storeId, final int size) {
+        return IntStream.range(0, size)
+            .mapToObj(i -> OrderTimeDeliveryTip.builder()
+                .storeId(storeId)
+                .tip(Money.ZERO)
+                .deliveryTimePeriod(DeliveryTimePeriod.builder()
+                    .to(LocalTime.now())
+                    .from(LocalTime.now()).build()
+                ).build())
+            .collect(toList());
+
+    }
+
 
 }

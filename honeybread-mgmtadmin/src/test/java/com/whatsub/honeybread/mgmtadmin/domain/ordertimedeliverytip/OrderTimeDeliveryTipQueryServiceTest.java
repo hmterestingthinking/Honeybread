@@ -10,12 +10,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(classes = OrderTimeDeliveryTipQueryService.class)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -50,6 +54,29 @@ class OrderTimeDeliveryTipQueryServiceTest {
 
         //then
         assertEquals(0, response.getTip().getValue().intValue());
+    }
+
+    @Test
+    void 시간별_배달팁_전체_검색() {
+        //given
+        final int size = 10;
+        시간별_배달팁_리스트_사이즈만큼_생성(size);
+
+        //when
+        final List<OrderTimeDeliveryTipResponse> responses = queryService.getAllByStoreId(anyLong());
+
+        //then
+        assertEquals(10, responses.size());
+    }
+
+    /**
+     * given
+     */
+    private void 시간별_배달팁_리스트_사이즈만큼_생성(final int size) {
+        final List<OrderTimeDeliveryTip> list = IntStream.range(0, size)
+            .mapToObj(ignore -> mock(OrderTimeDeliveryTip.class))
+            .collect(Collectors.toList());
+        given(repository.findAllByStoreId(anyLong())).willReturn(list);
     }
 
     private void 시간별_배달팁_검색_결과_없음() {
