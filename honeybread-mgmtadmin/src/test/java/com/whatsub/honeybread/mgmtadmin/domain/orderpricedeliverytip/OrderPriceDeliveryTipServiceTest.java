@@ -6,14 +6,15 @@ import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDelive
 import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDeliveryTipValidator;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
+import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip.dto.OrderPriceDeliveryTipRequest;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
+import org.springframework.validation.Errors;
 
 import java.util.Optional;
 
@@ -23,6 +24,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
@@ -57,7 +60,6 @@ class OrderPriceDeliveryTipServiceTest {
         주문가격별_배달팁이_생성되어야함();
         주문가격별_배달팁이_중복되는지_확인되어야함();
         주문가격별_배달팁_유효성검사가_실행되어야함();
-        주문가격별_배달팁_생성시_이미존재하는_가격범위가_있는지_확인되어야함();
     }
 
     @Test
@@ -79,7 +81,7 @@ class OrderPriceDeliveryTipServiceTest {
     void 주문가격별_배달팁_생성_가격범위_중복_생성_실패() {
         //given
         final OrderPriceDeliveryTipRequest request = 주문가격별_배달팁_요청_생성();
-        주문가격별_배달팁_가격범위가_중복됨();
+        유효성검사_실패();
 
         //when
         final HoneyBreadException actual = assertThrows(HoneyBreadException.class, () -> service.create(storeId, request));
@@ -87,9 +89,8 @@ class OrderPriceDeliveryTipServiceTest {
         //then
         주문가격별_배달팁이_생성되지않아야함();
         주문가격별_배달팁이_중복되는지_확인되어야함();
-        주문가격별_배달팁_생성시_이미존재하는_가격범위가_있는지_확인되어야함();
         주문가격별_배달팁_유효성검사가_실행되어야함();
-        반환된_에러가_예상과_같은지확인(ErrorCode.PRICE_RANGE_ALREADY_EXISTS, actual);
+        반환된_에러가_예상과_같은지확인(ErrorCode.VALIDATION_ERROR, actual);
     }
 
     @Test
@@ -145,9 +146,9 @@ class OrderPriceDeliveryTipServiceTest {
                 .willReturn(true);
     }
 
-    private void 주문가격별_배달팁_가격범위가_중복됨() {
-        given(repository.existsByStoreIdAndToPriceIsNull(anyLong()))
-            .willReturn(true);
+    private void 유효성검사_실패() {
+        willThrow(new ValidationException(mock(Errors.class)))
+            .given(validator).validate(any(OrderPriceDeliveryTip.class));
     }
 
     /**
@@ -183,11 +184,6 @@ class OrderPriceDeliveryTipServiceTest {
         then(repository).should(never()).save(any(OrderPriceDeliveryTip.class));
     }
 
-
-    private void 주문가격별_배달팁_생성시_이미존재하는_가격범위가_있는지_확인되어야함() {
-        then(repository).should(times(2)).getTipByOrderPrice(anyLong(), any(Money.class));
-        then(repository).should().existsByStoreIdAndToPriceIsNull(anyLong());
-    }
 
     private void 주문가격별_배달팁_유효성검사가_실행되어야함() {
         then(validator).should().validate(any(OrderPriceDeliveryTip.class));

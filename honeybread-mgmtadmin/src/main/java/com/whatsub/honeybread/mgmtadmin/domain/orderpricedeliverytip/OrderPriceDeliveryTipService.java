@@ -27,7 +27,6 @@ public class OrderPriceDeliveryTipService {
         }
         final OrderPriceDeliveryTip entity = request.toEntity(storeId);
         validator.validate(entity);
-        checkPriceRange(storeId, request);
         repository.save(entity);
     }
 
@@ -39,14 +38,6 @@ public class OrderPriceDeliveryTipService {
     private OrderPriceDeliveryTip findById(final Long id) {
         return repository.findById(id).orElseThrow(
                 () -> new HoneyBreadException(ErrorCode.ORDER_PRICE_DELIVERY_TIP_NOT_FOUND));
-    }
-
-    private void checkPriceRange(final Long storeId, final OrderPriceDeliveryTipRequest request) {
-        if(repository.existsByStoreIdAndToPriceIsNull(storeId)
-            || repository.getTipByOrderPrice(storeId, request.getFromPrice()).isPresent()
-            || repository.getTipByOrderPrice(storeId, request.getToPrice()).isPresent()) {
-            throw new HoneyBreadException(ErrorCode.PRICE_RANGE_ALREADY_EXISTS);
-        }
     }
 
 }
