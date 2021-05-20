@@ -1,4 +1,4 @@
-package com.whatsub.honeybread.mgmtadmin.domain.orderpricedeliverytip;
+package com.whatsub.honeybread.core.domain.orderpricedeliverytip;
 
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.orderpricedeliverytip.OrderPriceDeliveryTip;
