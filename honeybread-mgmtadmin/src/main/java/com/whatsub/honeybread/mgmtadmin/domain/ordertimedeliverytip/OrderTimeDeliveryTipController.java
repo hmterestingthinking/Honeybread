@@ -2,11 +2,13 @@ package com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip;
 
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip.dto.OrderTimeDeliveryTipRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip.dto.OrderTimeDeliveryTipResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +40,12 @@ public class OrderTimeDeliveryTipController {
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         service.remove(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<OrderTimeDeliveryTipResponse> getTipByStoreId(@PathVariable("storeId") long storeId) {
+        final OrderTimeDeliveryTipResponse tipByStoreId = queryService.getTipByStoreId(storeId);
+        return ResponseEntity.ok(tipByStoreId);
     }
 
 }

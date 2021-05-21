@@ -2,7 +2,10 @@ package com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsub.honeybread.core.domain.model.Money;
+import com.whatsub.honeybread.core.infra.errors.ErrorCode;
+import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
 import com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip.dto.OrderTimeDeliveryTipRequest;
+import com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip.dto.OrderTimeDeliveryTipResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,11 +20,15 @@ import java.time.LocalTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -37,6 +44,9 @@ class OrderTimeDeliveryTipControllerTest {
 
     @MockBean
     OrderTimeDeliveryTipService service;
+
+    @MockBean
+    OrderTimeDeliveryTipQueryService queryService;
 
     @Test
     void 시간별_배달팁_생성() throws Exception {
@@ -75,6 +85,53 @@ class OrderTimeDeliveryTipControllerTest {
         //then
         결과응답이_예상과_같아야함(HttpStatus.NO_CONTENT, resultActions);
         시간별_배달팁이_삭제되어야함();
+    }
+
+    @Test
+    void 시간별_배달팁_StoreId_조회() throws Exception {
+        //given
+        시간별_배달팁이_StoreId로_조회_성공();
+
+        //when
+        final ResultActions resultActions = 시간별_배달팁_StoreId_조회_요청();
+
+        //then
+        시간별_배달팁_조회_검증(resultActions);
+        결과응답이_예상과_같아야함(HttpStatus.OK, resultActions);
+
+    }
+
+    @Test
+    void 시간별_배달팁_StoreId_조회_실패() throws Exception {
+        //given
+        시간별_배달팁이_StoreId로_조회_실패();
+
+        //when
+        final ResultActions resultActions = 시간별_배달팁_StoreId_조회_요청();
+
+        //then
+        결과응답이_예상과_같아야함(HttpStatus.NOT_FOUND, resultActions);
+    }
+
+    private void 시간별_배달팁이_StoreId로_조회_실패() {
+        given(queryService.getTipByStoreId(anyLong()))
+            .willThrow(new HoneyBreadException(ErrorCode.ORDER_TIME_DELIVERY_TIP_NOT_FOUND));
+    }
+
+    private void 시간별_배달팁_조회_검증(final ResultActions resultActions) throws Exception {
+        resultActions.andExpect(jsonPath("$").exists());
+    }
+
+    private void 시간별_배달팁이_StoreId로_조회_성공() {
+        given(queryService.getTipByStoreId(anyLong()))
+            .willReturn(mock(OrderTimeDeliveryTipResponse.class));
+    }
+
+    private ResultActions 시간별_배달팁_StoreId_조회_요청() throws Exception {
+        return mockMvc.perform(get(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+        ).andDo(print());
     }
 
     private void 시간별_배달팁이_삭제되어야함() {
