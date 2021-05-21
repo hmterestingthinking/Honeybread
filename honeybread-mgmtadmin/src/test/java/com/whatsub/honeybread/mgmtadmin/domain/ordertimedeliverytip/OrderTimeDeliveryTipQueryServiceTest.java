@@ -106,6 +106,7 @@ class OrderTimeDeliveryTipQueryServiceTest {
     /**
      * then
      */
+
     private void 반환된_에러가_예상과_같은지확인(final ErrorCode duplicateOrderPriceDeliveryTip,
                                    final HoneyBreadException actual) {
         assertEquals(duplicateOrderPriceDeliveryTip, actual.getErrorCode());

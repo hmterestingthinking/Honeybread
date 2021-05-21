@@ -127,14 +127,9 @@ class OrderTimeDeliveryTipControllerTest {
         결과응답이_예상과_같아야함(HttpStatus.OK, resultActions);
     }
 
-    private ResultActions 시간별_배달팁_StoreId_Time_조회_요청() throws Exception {
-        final LocalTime time = LocalTime.of(anyInt(), anyInt());
-        return mockMvc.perform(get(BASE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .param("time", time.toString())
-        ).andDo(print());
-    }
+    /**
+     * given
+     */
 
     private void 시간별_배달팁이_StoreId_Time으로_조회_성공() {
         given(queryService.getTipByTime(anyLong(), any(LocalTime.class)))
@@ -147,35 +142,27 @@ class OrderTimeDeliveryTipControllerTest {
             .willThrow(new HoneyBreadException(ErrorCode.ORDER_TIME_DELIVERY_TIP_NOT_FOUND));
     }
 
-    private void 시간별_배달팁_조회_검증(final ResultActions resultActions) throws Exception {
-        resultActions.andExpect(jsonPath("$").exists());
-    }
-
     private void 시간별_배달팁이_StoreId로_조회_성공() {
         given(queryService.getTipByStoreId(anyLong()))
             .willReturn(mock(OrderTimeDeliveryTipResponse.class));
     }
 
-    private ResultActions 시간별_배달팁_StoreId_조회_요청() throws Exception {
-        return mockMvc.perform(get(BASE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-    }
-
-    private void 시간별_배달팁이_삭제되어야함() {
-        then(service).should().remove(anyLong());
-    }
-
-    private ResultActions 시간별_배달팁_삭제_요청(final long id) throws Exception {
-        return mockMvc.perform(delete(BASE_URL + "/" + id)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-    }
-
     private OrderTimeDeliveryTipRequest 시간별_배달팁_생성_실패_요청() {
         return new OrderTimeDeliveryTipRequest(null, null, null);
+    }
+
+    private OrderTimeDeliveryTipRequest 시간별_배달팁_생성_요청() {
+        return new OrderTimeDeliveryTipRequest(LocalTime.of(23, 0),
+            LocalTime.of(23, 0),
+            Money.wons(1000));
+    }
+
+    /**
+     * then
+     */
+
+    public void 결과응답이_예상과_같아야함(final HttpStatus expect, final ResultActions resultActions) throws Exception {
+        resultActions.andExpect(status().is(expect.value()));
     }
 
     private void 시간별_배달팁이_생성되지_않아야함() {
@@ -186,6 +173,18 @@ class OrderTimeDeliveryTipControllerTest {
         then(service).should().create(anyLong(), any(OrderTimeDeliveryTipRequest.class));
     }
 
+    private void 시간별_배달팁_조회_검증(final ResultActions resultActions) throws Exception {
+        resultActions.andExpect(jsonPath("$").exists());
+    }
+
+    private void 시간별_배달팁이_삭제되어야함() {
+        then(service).should().remove(anyLong());
+    }
+
+    /**
+     * request
+     */
+
     private ResultActions 시간별_배달팁_생성_요청(final OrderTimeDeliveryTipRequest request) throws Exception {
         return mockMvc.perform(post(BASE_URL)
             .contentType(MediaType.APPLICATION_JSON)
@@ -194,15 +193,26 @@ class OrderTimeDeliveryTipControllerTest {
         ).andDo(print());
     }
 
-    private OrderTimeDeliveryTipRequest 시간별_배달팁_생성_요청() {
-        return new OrderTimeDeliveryTipRequest(LocalTime.of(23, 0),
-            LocalTime.of(23, 0),
-            Money.wons(1000));
+    private ResultActions 시간별_배달팁_삭제_요청(final long id) throws Exception {
+        return mockMvc.perform(delete(BASE_URL + "/" + id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+        ).andDo(print());
     }
 
-    public void 결과응답이_예상과_같아야함(final HttpStatus expect, final ResultActions resultActions) throws Exception {
-        resultActions.andExpect(status().is(expect.value()));
+    private ResultActions 시간별_배달팁_StoreId_조회_요청() throws Exception {
+        return mockMvc.perform(get(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+        ).andDo(print());
     }
 
-
+    private ResultActions 시간별_배달팁_StoreId_Time_조회_요청() throws Exception {
+        final LocalTime time = LocalTime.of(anyInt(), anyInt());
+        return mockMvc.perform(get(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .param("time", time.toString())
+        ).andDo(print());
+    }
 }

@@ -101,13 +101,30 @@ class OrderTimeDeliveryTipServiceTest {
         반환된_에러가_예상과_같은지확인(ErrorCode.ORDER_TIME_DELIVERY_TIP_NOT_FOUND, actual);
     }
 
-    private void 시간별_배달팁이_삭제되지_않아야함() {
-        then(repository).should(never()).delete(any(OrderTimeDeliveryTip.class));
-    }
+    /**
+     * given
+     */
 
     private void 시간별_배달팁이_storeId로_검색() {
         given(repository.findByStoreId(anyLong()))
             .willReturn(Optional.of(mock(OrderTimeDeliveryTip.class)));
+    }
+
+    private void 시간별_배달팁이_중복됨() {
+        given(repository.existsByStoreId(anyLong()))
+            .willReturn(true);
+    }
+
+    private OrderTimeDeliveryTipRequest 시간별_배달팁_요청_생성(final LocalTime from, final LocalTime to, final int price) {
+        return new OrderTimeDeliveryTipRequest(from, to, Money.wons(price));
+    }
+
+    /**
+     * then
+     */
+
+    private void 시간별_배달팁이_삭제되지_않아야함() {
+        then(repository).should(never()).delete(any(OrderTimeDeliveryTip.class));
     }
 
     private void 시간별_배달팁이_storeId로_검색되어야함() {
@@ -127,21 +144,12 @@ class OrderTimeDeliveryTipServiceTest {
         then(repository).should(never()).save(any(OrderTimeDeliveryTip.class));
     }
 
-    private void 시간별_배달팁이_중복됨() {
-        given(repository.existsByStoreId(anyLong()))
-            .willReturn(true);
-    }
-
     private void 시간별_배달팁_중복체크가_되어야함() {
         then(repository).should().existsByStoreId(anyLong());
     }
 
     private void 시간별_배달팁이_생성되어야함() {
         then(repository).should().save(any(OrderTimeDeliveryTip.class));
-    }
-
-    private OrderTimeDeliveryTipRequest 시간별_배달팁_요청_생성(final LocalTime from, final LocalTime to, final int price) {
-        return new OrderTimeDeliveryTipRequest(from, to, Money.wons(price));
     }
 
 }

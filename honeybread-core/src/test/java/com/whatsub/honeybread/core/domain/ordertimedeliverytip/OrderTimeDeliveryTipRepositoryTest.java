@@ -26,14 +26,7 @@ class OrderTimeDeliveryTipRepositoryTest {
     @Test
     void 시간별_배달팁_storeId_등록여부_체크() {
         //given
-        final OrderTimeDeliveryTip orderTimeDeliveryTip = OrderTimeDeliveryTip.builder()
-            .storeId(anyLong())
-            .tip(Money.wons(anyLong()))
-            .deliveryTimePeriod(DeliveryTimePeriod.builder()
-                .from(LocalTime.of(anyInt(), anyInt()))
-                .to(LocalTime.of(anyInt(), anyInt()))
-                .build())
-            .build();
+        final OrderTimeDeliveryTip orderTimeDeliveryTip = getOrderTimeDeliveryTip();
 
         repository.save(orderTimeDeliveryTip);
 
@@ -48,14 +41,7 @@ class OrderTimeDeliveryTipRepositoryTest {
     void 시간별_배달팁_storeId로_검색() {
         //given
         final long storeId = anyLong();
-        final OrderTimeDeliveryTip orderTimeDeliveryTip = OrderTimeDeliveryTip.builder()
-            .storeId(storeId)
-            .tip(Money.wons(anyLong()))
-            .deliveryTimePeriod(DeliveryTimePeriod.builder()
-                .from(LocalTime.of(anyInt(), anyInt()))
-                .to(LocalTime.of(anyInt(), anyInt()))
-                .build())
-            .build();
+        final OrderTimeDeliveryTip orderTimeDeliveryTip = getOrderTimeDeliveryTip();
 
         repository.save(orderTimeDeliveryTip);
 
@@ -88,4 +74,14 @@ class OrderTimeDeliveryTipRepositoryTest {
         assertEquals(orderTimeDeliveryTip, findTip);
     }
 
+    private OrderTimeDeliveryTip getOrderTimeDeliveryTip() {
+        return OrderTimeDeliveryTip.builder()
+            .storeId(anyLong())
+            .tip(Money.wons(anyLong()))
+            .deliveryTimePeriod(DeliveryTimePeriod.builder()
+                .from(LocalTime.of(anyInt(), anyInt()))
+                .to(LocalTime.of(anyInt(), anyInt()))
+                .build())
+            .build();
+    }
 }
