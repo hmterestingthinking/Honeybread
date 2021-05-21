@@ -136,7 +136,6 @@ class OrderTimeDeliveryTipControllerTest {
             .willReturn(mock(OrderTimeDeliveryTipResponse.class));
     }
 
-
     private void 시간별_배달팁이_StoreId로_조회_실패() {
         given(queryService.getTipByStoreId(anyLong()))
             .willThrow(new HoneyBreadException(ErrorCode.ORDER_TIME_DELIVERY_TIP_NOT_FOUND));

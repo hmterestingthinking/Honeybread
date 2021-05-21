@@ -28,8 +28,11 @@ public class OrderTimeDeliveryTipRepositoryImpl extends QuerydslRepositorySuppor
 
     private Predicate includeTime(final LocalTime time) {
         final int minuteByMidnight = DeliveryTimePeriod.convertMinuteByMidnight(time);
-        return orderTimeDeliveryTip.deliveryTimePeriod.fromMinuteByMidnight.loe(minuteByMidnight)
-            .and(orderTimeDeliveryTip.deliveryTimePeriod.toMinuteByMidnight.gt(minuteByMidnight));
+        return orderTimeDeliveryTip.deliveryTimePeriod.fromMinuteByMidnight
+            .loe(minuteByMidnight)
+            .and(
+                orderTimeDeliveryTip.deliveryTimePeriod.toMinuteByMidnight.gt(minuteByMidnight)
+            );
     }
 
     private Predicate eqStoreId(final long storeId) {

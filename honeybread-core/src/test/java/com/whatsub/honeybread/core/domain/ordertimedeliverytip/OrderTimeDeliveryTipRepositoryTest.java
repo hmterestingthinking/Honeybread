@@ -7,10 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestConstructor;
 
 import java.time.LocalTime;
-import java.util.List;
-import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -26,7 +23,7 @@ class OrderTimeDeliveryTipRepositoryTest {
     @Test
     void 시간별_배달팁_storeId_등록여부_체크() {
         //given
-        final OrderTimeDeliveryTip orderTimeDeliveryTip = getOrderTimeDeliveryTip();
+        final OrderTimeDeliveryTip orderTimeDeliveryTip = 시간별_배달팁_생성();
 
         repository.save(orderTimeDeliveryTip);
 
@@ -41,7 +38,7 @@ class OrderTimeDeliveryTipRepositoryTest {
     void 시간별_배달팁_storeId로_검색() {
         //given
         final long storeId = anyLong();
-        final OrderTimeDeliveryTip orderTimeDeliveryTip = getOrderTimeDeliveryTip();
+        final OrderTimeDeliveryTip orderTimeDeliveryTip = 시간별_배달팁_생성();
 
         repository.save(orderTimeDeliveryTip);
 
@@ -74,7 +71,7 @@ class OrderTimeDeliveryTipRepositoryTest {
         assertEquals(orderTimeDeliveryTip, findTip);
     }
 
-    private OrderTimeDeliveryTip getOrderTimeDeliveryTip() {
+    private OrderTimeDeliveryTip 시간별_배달팁_생성() {
         return OrderTimeDeliveryTip.builder()
             .storeId(anyLong())
             .tip(Money.wons(anyLong()))
