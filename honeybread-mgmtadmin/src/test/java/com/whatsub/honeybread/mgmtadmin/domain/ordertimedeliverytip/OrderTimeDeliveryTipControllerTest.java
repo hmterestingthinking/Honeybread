@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,6 +62,30 @@ class OrderTimeDeliveryTipControllerTest {
         //then
         결과응답이_예상과_같아야함(HttpStatus.BAD_REQUEST, resultActions);
         시간별_배달팁이_생성되지_않아야함();
+    }
+
+    @Test
+    void 시간별_배달팁_삭제() throws Exception {
+        //given
+        final long id = 1;
+
+        //when
+        final ResultActions resultActions = 시간별_배달팁_삭제_요청(id);
+
+        //then
+        결과응답이_예상과_같아야함(HttpStatus.NO_CONTENT, resultActions);
+        시간별_배달팁이_삭제되어야함();
+    }
+
+    private void 시간별_배달팁이_삭제되어야함() {
+        then(service).should().remove(anyLong());
+    }
+
+    private ResultActions 시간별_배달팁_삭제_요청(final long id) throws Exception {
+        return mockMvc.perform(delete(BASE_URL + "/" + id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+        ).andDo(print());
     }
 
     private OrderTimeDeliveryTipRequest 시간별_배달팁_생성_실패_요청() {

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 public class OrderTimeDeliveryTipController {
 
     private final OrderTimeDeliveryTipService service;
+    private final OrderTimeDeliveryTipQueryService queryService;
 
     @PostMapping
     public ResponseEntity<Void> create(@PathVariable("storeId") long storeId,
@@ -30,6 +32,12 @@ public class OrderTimeDeliveryTipController {
         }
         service.create(storeId, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
+        service.remove(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

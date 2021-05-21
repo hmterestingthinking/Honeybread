@@ -18,12 +18,6 @@ public class OrderTimeDeliveryTipQueryService {
 
     private final OrderTimeDeliveryTipRepository repository;
 
-    public List<OrderTimeDeliveryTipResponse> getAllByStoreId(final long storeId) {
-        return repository.findAllByStoreId(storeId).stream()
-            .map(OrderTimeDeliveryTipResponse::of)
-            .collect(Collectors.toList());
-    }
-
     public OrderTimeDeliveryTipResponse getTipByTime(final long storeId, final LocalTime time) {
         return OrderTimeDeliveryTipResponse.of(
             repository.getTipByTime(storeId, time)

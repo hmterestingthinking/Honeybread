@@ -8,5 +8,4 @@ import java.util.Optional;
 public interface OrderTimeDeliveryTipRepository extends JpaRepository<OrderTimeDeliveryTip, Long>, OrderTimeDeliveryTipRepositoryCustom {
     boolean existsByStoreId(final long storeId);
     Optional<OrderTimeDeliveryTip> findByStoreId(final long storeId);
-    List<OrderTimeDeliveryTip> findAllByStoreId(final long storeId);
 }

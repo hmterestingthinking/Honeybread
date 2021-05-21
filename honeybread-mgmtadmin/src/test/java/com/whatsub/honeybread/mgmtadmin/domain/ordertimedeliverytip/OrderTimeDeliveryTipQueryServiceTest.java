@@ -56,28 +56,9 @@ class OrderTimeDeliveryTipQueryServiceTest {
         assertEquals(0, response.getTip().getValue().intValue());
     }
 
-    @Test
-    void 시간별_배달팁_전체_검색() {
-        //given
-        final int size = 10;
-        시간별_배달팁_리스트_사이즈만큼_생성(size);
-
-        //when
-        final List<OrderTimeDeliveryTipResponse> responses = queryService.getAllByStoreId(anyLong());
-
-        //then
-        assertEquals(10, responses.size());
-    }
-
     /**
      * given
      */
-    private void 시간별_배달팁_리스트_사이즈만큼_생성(final int size) {
-        final List<OrderTimeDeliveryTip> list = IntStream.range(0, size)
-            .mapToObj(ignore -> mock(OrderTimeDeliveryTip.class))
-            .collect(Collectors.toList());
-        given(repository.findAllByStoreId(anyLong())).willReturn(list);
-    }
 
     private void 시간별_배달팁_검색_결과_없음() {
         given(repository.getTipByTime(anyLong(), any()))
