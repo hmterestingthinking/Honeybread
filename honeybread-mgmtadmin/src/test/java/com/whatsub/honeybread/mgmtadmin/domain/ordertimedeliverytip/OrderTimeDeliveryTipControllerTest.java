@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalTime;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -112,6 +113,34 @@ class OrderTimeDeliveryTipControllerTest {
         //then
         결과응답이_예상과_같아야함(HttpStatus.NOT_FOUND, resultActions);
     }
+
+    @Test
+    void 시간별_배달팁_StoreId_Time_조회() throws Exception {
+        //given
+        시간별_배달팁이_StoreId_Time으로_조회_성공();
+
+        //when
+        final ResultActions resultActions = 시간별_배달팁_StoreId_Time_조회_요청();
+
+        //then
+        시간별_배달팁_조회_검증(resultActions);
+        결과응답이_예상과_같아야함(HttpStatus.OK, resultActions);
+    }
+
+    private ResultActions 시간별_배달팁_StoreId_Time_조회_요청() throws Exception {
+        final LocalTime time = LocalTime.of(anyInt(), anyInt());
+        return mockMvc.perform(get(BASE_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .param("time", time.toString())
+        ).andDo(print());
+    }
+
+    private void 시간별_배달팁이_StoreId_Time으로_조회_성공() {
+        given(queryService.getTipByTime(anyLong(), any(LocalTime.class)))
+            .willReturn(mock(OrderTimeDeliveryTipResponse.class));
+    }
+
 
     private void 시간별_배달팁이_StoreId로_조회_실패() {
         given(queryService.getTipByStoreId(anyLong()))
