@@ -15,18 +15,18 @@ public class Money implements Serializable, Comparable<Money> {
         this.value = BigDecimal.ZERO;
     }
 
-    private Money(BigDecimal value) {
+    private Money(final BigDecimal value) {
         this.value = BigDecimal.valueOf(value.longValue());
     }
 
-    public static Money wons(Integer value) {
+    public static Money wons(final Integer value) {
         if (value == null || value <= 0) {
             return Money.ZERO;
         }
         return wons(value.longValue());
     }
 
-    public static Money wons(long value) {
+    public static Money wons(final long value) {
         if (value <= 0) {
             return Money.ZERO;
         }
@@ -37,24 +37,24 @@ public class Money implements Serializable, Comparable<Money> {
         return BigDecimal.valueOf(this.value.longValue());
     }
 
-    public boolean isGreaterThan(Money other) {
+    public boolean isGreaterThan(final Money other) {
         return compareTo(other) > 0;
     }
 
-    public boolean isGreaterThanOrEquals(Money other) {
+    public boolean isGreaterThanOrEquals(final Money other) {
         return isGreaterThan(other) || equals(other);
     }
 
-    public boolean isLessThan(Money other) {
+    public boolean isLessThan(final Money other) {
         return compareTo(other) < 0;
     }
 
-    public boolean isLessThanOrEquals(Money other) {
+    public boolean isLessThanOrEquals(final Money other) {
         return isLessThan(other) || equals(other);
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (this == object) {
             return true;
         }
@@ -76,7 +76,7 @@ public class Money implements Serializable, Comparable<Money> {
     }
 
     @Override
-    public int compareTo(Money other) {
+    public int compareTo(final Money other) {
         if (other == null) {
             return 1;
         }

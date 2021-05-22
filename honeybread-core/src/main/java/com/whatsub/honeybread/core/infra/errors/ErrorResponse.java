@@ -14,23 +14,23 @@ public class ErrorResponse {
     List<ErrorField> errors;
     String code;
 
-    static ErrorResponse of(ErrorCode errorCode) {
+    static ErrorResponse of(final ErrorCode errorCode) {
         return new ErrorResponse(errorCode);
     }
 
-    static ErrorResponse of(ErrorCode errorCode, Errors errors) {
+    static ErrorResponse of(final ErrorCode errorCode, final Errors errors) {
         return new ErrorResponse(errorCode, ErrorField.of(errors));
     }
 
-    static ErrorResponse of(ErrorCode errorCode, List<ErrorField> errorFields) {
+    static ErrorResponse of(final ErrorCode errorCode, final List<ErrorField> errorFields) {
         return new ErrorResponse(errorCode, errorFields);
     }
 
-    private ErrorResponse(ErrorCode errorCode, List<ErrorField> errorFields) {
+    private ErrorResponse(final ErrorCode errorCode, final List<ErrorField> errorFields) {
         this(errorCode.getMessage(), errorCode.getStatus().value(), errorFields, errorCode.getCode());
     }
 
-    private ErrorResponse(ErrorCode errorCode) {
+    private ErrorResponse(final ErrorCode errorCode) {
         this(errorCode.getMessage(), errorCode.getStatus().value(), List.of(), errorCode.getCode());
     }
 }
