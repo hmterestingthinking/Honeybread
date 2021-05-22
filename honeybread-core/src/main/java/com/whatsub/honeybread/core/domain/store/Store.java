@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -55,6 +56,7 @@ public class Store extends BaseEntity {
     private BankAccount bankAccount;
 
     // 카테고리
+    @BatchSize(size = 5)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private List<StoreCategory> categories = List.of();

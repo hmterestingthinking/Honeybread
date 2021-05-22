@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestConstructor;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -188,7 +189,7 @@ public class StoreRepositoryTest {
                 ))
                 .status(any())
                 .bankAccount(new BankAccount(any(), anyString()))
-                .categories(anyList())
+                .categories(List.of(new StoreCategory(1L),new StoreCategory(2L)))
                 .payMethods(anyList())
                 .build();
     }
@@ -212,7 +213,7 @@ public class StoreRepositoryTest {
                 ))
                 .status(any())
                 .bankAccount(new BankAccount(any(), anyString()))
-                .categories(anyList())
+                .categories(List.of(new StoreCategory(1L),new StoreCategory(2L)))
                 .payMethods(anyList())
                 .build();
     }
@@ -236,7 +237,7 @@ public class StoreRepositoryTest {
                 ))
                 .status(상태)
                 .bankAccount(new BankAccount(any(), anyString()))
-                .categories(anyList())
+                .categories(List.of(new StoreCategory(1L),new StoreCategory(2L)))
                 .payMethods(anyList())
                 .build();
     }
@@ -254,7 +255,7 @@ public class StoreRepositoryTest {
                 ))
                 .status(any())
                 .bankAccount(new BankAccount(any(), anyString()))
-                .categories(anyList())
+                .categories(List.of(new StoreCategory(1L),new StoreCategory(2L)))
                 .payMethods(anyList())
                 .build();
         스토어.updateUuid(uuid);
@@ -280,7 +281,7 @@ public class StoreRepositoryTest {
                 ))
                 .status(상태)
                 .bankAccount(new BankAccount(any(), anyString()))
-                .categories(anyList())
+                .categories(List.of(new StoreCategory(1L),new StoreCategory(2L)))
                 .payMethods(anyList())
                 .build();
     }
