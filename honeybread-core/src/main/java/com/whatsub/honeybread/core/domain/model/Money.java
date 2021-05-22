@@ -37,7 +37,11 @@ public class Money implements Serializable, Comparable<Money> {
         return BigDecimal.valueOf(this.value.longValue());
     }
 
-    public boolean isGreaterThan(final Money other) {
+    public boolean isUnitOf(Money unit) {
+        return value.remainder(unit.value).equals(BigDecimal.ZERO);
+    }
+
+    public boolean isGreaterThan(Money other) {
         return compareTo(other) > 0;
     }
 
