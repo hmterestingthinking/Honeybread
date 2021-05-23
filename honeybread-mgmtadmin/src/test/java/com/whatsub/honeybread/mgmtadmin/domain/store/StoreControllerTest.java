@@ -996,6 +996,23 @@ public class StoreControllerTest {
     }
 
     @Test
+    void 잘못된_운영기간을_입력하면_수정_실패() throws Exception {
+        // given
+        모든_프로퍼티가_정상적으로_입력된_수정요청이다();
+        다음과같은_운영기간으로_요청했다( TimePeriod.of(
+                LocalDateTime.of(2021, 5, 22, 19, 0, 0),
+                LocalDateTime.of(2021, 5, 22, 19, 0, 0)
+        ));
+
+        // when
+        ResultActions result = 수정_요청하다(스토어_수정요청);
+
+        // then
+        수정요청_서비스가_수행되지_않았다();
+        요청의_응답은_BAD_REQUEST(result);
+    }
+
+    @Test
     void 상태를_입력하지_않으면_수정_실패() throws Exception {
         // given
         모든_프로퍼티가_정상적으로_입력된_수정요청이다();
@@ -1858,7 +1875,7 @@ public class StoreControllerTest {
         모든_프로퍼티가_정상적으로_입력된_등록수정_요청이다();
 
         다음과같은_운영상태로_요청했다(OperationStatus.OPERATING);
-        다음과같은_운영기간으로_요청했다(TimePeriod.of(LocalDateTime.now(), LocalDateTime.now()));
+        다음과같은_운영기간으로_요청했다(TimePeriod.of(LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
         다음과같은_상태정보로_요청했다(StoreStatus.ACTIVATED);
         다음과같은_카테고리목록으로_수정을_요청했다(Set.of(1L));
         다음과같은_결제방식목록으로_수정을_요청했다(Set.of(PayType.ACCOUNT_TRANSFER));

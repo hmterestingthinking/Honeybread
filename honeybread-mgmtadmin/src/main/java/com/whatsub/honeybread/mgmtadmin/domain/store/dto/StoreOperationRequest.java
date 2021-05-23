@@ -3,6 +3,7 @@ package com.whatsub.honeybread.mgmtadmin.domain.store.dto;
 import com.whatsub.honeybread.core.domain.model.TimePeriod;
 import com.whatsub.honeybread.core.domain.store.OperationStatus;
 import com.whatsub.honeybread.core.domain.store.StoreOperation;
+import com.whatsub.honeybread.core.support.validation.ValidTimePeriod;
 import lombok.Value;
 
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ public class StoreOperationRequest {
     OperationStatus status;
 
     @NotNull(message = "운영시간 정보는 필수 입력입니다.")
+    @ValidTimePeriod
     TimePeriod period;
 
     public StoreOperation toStoreOperation() {
