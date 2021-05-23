@@ -10,11 +10,11 @@ import java.time.LocalTime;
 @Value
 public class OrderTimeDeliveryTipSearch {
 
-    @NotNull
+    @NotNull(message = "time값은 null일 수 없습니다.")
     @DateTimeFormat(pattern = "HH:mm")
     LocalTime time;
 
-    @NotNull
+    @NotNull(message = "요일값은 null일 수 없습니다.")
     DayOfWeek dayOfWeek;
 
 }

@@ -14,16 +14,16 @@ import java.util.List;
 @Value
 public class OrderTimeDeliveryTipRequest {
 
-    @NotNull
+    @NotNull(message = "from값은 null일 수 없습니다.")
     LocalTime from;
 
-    @NotNull
+    @NotNull(message = "to값은 null일 수 없습니다.")
     LocalTime to;
 
-    @NotNull
+    @NotNull(message = "tip은 null일 수 없습니다.")
     Money tip;
 
-    @NotEmpty
+    @NotEmpty(message = "요일은 1개 이상이어야합니다.")
     List<DayOfWeek> days;
 
     boolean isAllTheTime;
