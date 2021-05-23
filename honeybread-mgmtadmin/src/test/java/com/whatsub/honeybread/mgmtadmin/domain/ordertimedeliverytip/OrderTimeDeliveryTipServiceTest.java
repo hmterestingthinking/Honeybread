@@ -46,15 +46,10 @@ class OrderTimeDeliveryTipServiceTest {
     @Test
     void 시간별_배달팁_생성() {
         //given
-        final long storeId = 1L;
-        final OrderTimeDeliveryTipRequest request =
-            시간별_배달팁_요청_생성(LocalTime.of(23,00)
-                , LocalTime.of( 5, 0)
-                , 1000
-                , List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY));
+        final OrderTimeDeliveryTipRequest request = 시간별_배달팁_요청_생성();
 
         //when
-        service.create(storeId, request);
+        service.create(anyLong(), request);
 
         //then
         시간별_배달팁이_생성되어야함();
@@ -65,18 +60,13 @@ class OrderTimeDeliveryTipServiceTest {
     @Test
     void 시간별_배달팁_생성시_storeId_중복_생성_실패() {
         //given
-        final long storeId = 1L;
-        final OrderTimeDeliveryTipRequest request =
-            시간별_배달팁_요청_생성(LocalTime.of(23,00)
-                , LocalTime.of( 5, 0)
-                , 1000
-                , List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY));
+        final OrderTimeDeliveryTipRequest request = 시간별_배달팁_요청_생성();
 
         시간별_배달팁이_중복됨();
 
         //when
         final HoneyBreadException actual
-            = assertThrows(HoneyBreadException.class, () -> service.create(storeId, request));
+            = assertThrows(HoneyBreadException.class, () -> service.create(anyLong(), request));
 
         //then
         시간별_배달팁이_생성되지_않아야함();
@@ -87,18 +77,13 @@ class OrderTimeDeliveryTipServiceTest {
     @Test
     void 시간별_배달팁_생성시_유효성검사_실패() {
         //given
-        final long storeId = 1L;
-        final OrderTimeDeliveryTipRequest request =
-            시간별_배달팁_요청_생성(LocalTime.of(23,00)
-                , LocalTime.of( 5, 0)
-                , 1000
-                , List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY));
+        final OrderTimeDeliveryTipRequest request = 시간별_배달팁_요청_생성();
 
         시간별_배달팁_유효성검사_실패();
 
         //when
         final HoneyBreadException actual
-            = assertThrows(HoneyBreadException.class, () -> service.create(storeId, request));
+            = assertThrows(HoneyBreadException.class, () -> service.create(anyLong(), request));
 
         //then
         시간별_배달팁이_생성되지_않아야함();
@@ -110,11 +95,10 @@ class OrderTimeDeliveryTipServiceTest {
     @Test
     void 시간별_배달팁_삭제() {
         //given
-        final long storeId = 1L;
         시간별_배달팁이_storeId로_검색();
 
         //when
-        service.remove(storeId);
+        service.remove(anyLong());
 
         //then
         시간별_배달팁이_삭제되어야함();
@@ -124,7 +108,7 @@ class OrderTimeDeliveryTipServiceTest {
     @Test
     void 시간별_배달팁_삭제_실패() {
         //given
-        final long storeId = 1L;
+        final long storeId = anyLong();
 
         //when
         final HoneyBreadException actual
@@ -140,6 +124,13 @@ class OrderTimeDeliveryTipServiceTest {
      * given
      */
 
+    private OrderTimeDeliveryTipRequest 시간별_배달팁_요청_생성() {
+        final OrderTimeDeliveryTipRequest request = mock(OrderTimeDeliveryTipRequest.class);
+        given(request.toEntity(anyLong()))
+            .willReturn(mock(OrderTimeDeliveryTip.class));
+        return request;
+    }
+
     private void 시간별_배달팁이_storeId로_검색() {
         given(repository.findByStoreId(anyLong()))
             .willReturn(Optional.of(mock(OrderTimeDeliveryTip.class)));
@@ -148,13 +139,6 @@ class OrderTimeDeliveryTipServiceTest {
     private void 시간별_배달팁이_중복됨() {
         given(repository.existsByStoreId(anyLong()))
             .willReturn(true);
-    }
-
-    private OrderTimeDeliveryTipRequest 시간별_배달팁_요청_생성(final LocalTime from,
-                                                      final LocalTime to,
-                                                      final int price,
-                                                      List<DayOfWeek> days) {
-        return new OrderTimeDeliveryTipRequest(from, to, Money.wons(price), days, false, false);
     }
 
     private void 시간별_배달팁_유효성검사_실패() {
