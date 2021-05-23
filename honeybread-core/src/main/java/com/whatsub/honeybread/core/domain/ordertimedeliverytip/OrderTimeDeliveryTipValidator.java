@@ -13,7 +13,6 @@ public class OrderTimeDeliveryTipValidator {
 
     private static final LocalTime EIGHT_PM = LocalTime.of(20, 00);
     private static final LocalTime NINE_AM = LocalTime.of(9, 00);
-    private OrderTimeDeliveryTipRepository repository;
 
     public void validate(OrderTimeDeliveryTip entity) {
         final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(entity, entity.getClass().getSimpleName());
