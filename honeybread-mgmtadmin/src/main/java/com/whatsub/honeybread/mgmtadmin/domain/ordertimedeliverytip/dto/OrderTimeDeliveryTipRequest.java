@@ -3,6 +3,7 @@ package com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip.dto;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.ordertimedeliverytip.DeliveryTimePeriod;
 import com.whatsub.honeybread.core.domain.ordertimedeliverytip.OrderTimeDeliveryTip;
+import io.swagger.annotations.ApiModel;
 import lombok.Value;
 
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +12,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 
+@ApiModel("시간별 배달팁 등록 요청")
 @Value
 public class OrderTimeDeliveryTipRequest {
 
