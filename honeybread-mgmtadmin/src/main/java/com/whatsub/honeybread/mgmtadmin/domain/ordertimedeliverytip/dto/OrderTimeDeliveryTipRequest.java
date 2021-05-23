@@ -5,8 +5,11 @@ import com.whatsub.honeybread.core.domain.ordertimedeliverytip.DeliveryTimePerio
 import com.whatsub.honeybread.core.domain.ordertimedeliverytip.OrderTimeDeliveryTip;
 import lombok.Value;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 
 @Value
 public class OrderTimeDeliveryTipRequest {
@@ -20,6 +23,13 @@ public class OrderTimeDeliveryTipRequest {
     @NotNull
     Money tip;
 
+    @NotEmpty
+    List<DayOfWeek> days;
+
+    boolean isAllTheTime;
+
+    boolean isAllDay;
+
     public OrderTimeDeliveryTip toEntity(final long storeId) {
         return OrderTimeDeliveryTip.builder()
             .storeId(storeId)
@@ -27,6 +37,9 @@ public class OrderTimeDeliveryTipRequest {
             .deliveryTimePeriod(DeliveryTimePeriod.builder()
                 .to(to)
                 .from(from)
+                .days(days)
+                .isAllTheTime(isAllTheTime)
+                .isAllDay(isAllDay)
                 .build()
             ).build();
     }

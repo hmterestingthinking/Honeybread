@@ -5,9 +5,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Embeddable
 @Getter
@@ -16,7 +25,7 @@ public class DeliveryTimePeriod {
 
     private static final int HOURS_PER_DAY = 24;
     private static final int MINUTES_PER_HOUR = 60;
-    private static final LocalTime EIGHT_PM = LocalTime.of(20, 0);
+    private static final List<DayOfWeek> ALL_DAYS = List.of(DayOfWeek.values());
 
     @Column(nullable = false)
     private LocalTime fromTime;
@@ -30,10 +39,23 @@ public class DeliveryTimePeriod {
     @Column(nullable = false)
     private Integer toMinuteByMidnight;
 
+    @ElementCollection
+    @CollectionTable(name = "order_time_delivery_tip_day_of_weeks", joinColumns = @JoinColumn(name = "store_id"))
+    @Enumerated(EnumType.STRING)
+    private List<DayOfWeek> days;
+
+    private boolean isAllTheTime;
+
     @Builder
-    private DeliveryTimePeriod(final LocalTime from, final LocalTime to) {
+    private DeliveryTimePeriod(final LocalTime from,
+                               final LocalTime to,
+                               final List<DayOfWeek> days,
+                               final boolean isAllTheTime,
+                               final boolean isAllDay) {
         this.fromTime = from;
         this.toTime = to;
+        this.days = isAllDay ? ALL_DAYS : days;
+        this.isAllTheTime = isAllTheTime;
         this.fromMinuteByMidnight = isBeforeMidnight(from)
             ? convertMinuteByMidnight(from) - HOURS_PER_DAY * MINUTES_PER_HOUR : convertMinuteByMidnight(from);
         this.toMinuteByMidnight = isBeforeMidnight(to)
@@ -45,7 +67,7 @@ public class DeliveryTimePeriod {
     }
 
     private boolean isBeforeMidnight(final LocalTime time) {
-        return time.isAfter(EIGHT_PM) && time.isBefore(LocalTime.MIDNIGHT.minusMinutes(1));
+        return time.isAfter(LocalTime.NOON) && time.isBefore(LocalTime.MIDNIGHT.minusMinutes(1));
     }
 
 }

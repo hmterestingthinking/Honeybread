@@ -3,8 +3,8 @@ package com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip;
 import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip.dto.OrderTimeDeliveryTipRequest;
 import com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip.dto.OrderTimeDeliveryTipResponse;
+import com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip.dto.OrderTimeDeliveryTipSearch;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.time.LocalTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,11 +49,13 @@ public class OrderTimeDeliveryTipController {
         return ResponseEntity.ok(tipByStoreId);
     }
 
-    @GetMapping(params = "time")
+    @GetMapping(params = {"time", "dayOfWeek"})
     public ResponseEntity<OrderTimeDeliveryTipResponse> getTipByTime(
             @PathVariable("storeId") long storeId,
-            @DateTimeFormat(pattern = "HH:mm") @RequestParam("time") LocalTime time) {
-        final OrderTimeDeliveryTipResponse tipByStoreId = queryService.getTipByTime(storeId, time);
+            OrderTimeDeliveryTipSearch search) {
+        final OrderTimeDeliveryTipResponse tipByStoreId = queryService.getTipByTime(storeId,
+                                                                                    search.getTime(),
+                                                                                    search.getDayOfWeek());
         return ResponseEntity.ok(tipByStoreId);
     }
 

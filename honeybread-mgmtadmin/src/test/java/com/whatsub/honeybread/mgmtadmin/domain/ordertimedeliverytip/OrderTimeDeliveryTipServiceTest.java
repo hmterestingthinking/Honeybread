@@ -12,7 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,7 +43,8 @@ class OrderTimeDeliveryTipServiceTest {
         final OrderTimeDeliveryTipRequest request =
             시간별_배달팁_요청_생성(LocalTime.of(23,00)
                 , LocalTime.of( 5, 0)
-                , 1000);
+                , 1000
+                , List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY));
 
         //when
         service.create(storeId, request);
@@ -58,7 +61,8 @@ class OrderTimeDeliveryTipServiceTest {
         final OrderTimeDeliveryTipRequest request =
             시간별_배달팁_요청_생성(LocalTime.of(23,00)
                 , LocalTime.of( 5, 0)
-                , 1000);
+                , 1000
+                , List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY));
 
         시간별_배달팁이_중복됨();
 
@@ -115,8 +119,11 @@ class OrderTimeDeliveryTipServiceTest {
             .willReturn(true);
     }
 
-    private OrderTimeDeliveryTipRequest 시간별_배달팁_요청_생성(final LocalTime from, final LocalTime to, final int price) {
-        return new OrderTimeDeliveryTipRequest(from, to, Money.wons(price));
+    private OrderTimeDeliveryTipRequest 시간별_배달팁_요청_생성(final LocalTime from,
+                                                      final LocalTime to,
+                                                      final int price,
+                                                      List<DayOfWeek> days) {
+        return new OrderTimeDeliveryTipRequest(from, to, Money.wons(price), days, false, false);
     }
 
     /**

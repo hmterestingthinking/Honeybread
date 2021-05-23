@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 
+import java.time.DayOfWeek;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,7 +38,7 @@ class OrderTimeDeliveryTipQueryServiceTest {
         시간별_배달팁_검색_성공(price);
 
         //when
-        final OrderTimeDeliveryTipResponse response = queryService.getTipByTime(anyLong(), any());
+        final OrderTimeDeliveryTipResponse response = queryService.getTipByTime(anyLong(), any(), any(DayOfWeek.class));
 
         //then
         assertEquals(price, response.getTip().getValue().intValue());
@@ -49,7 +50,7 @@ class OrderTimeDeliveryTipQueryServiceTest {
         시간별_배달팁_검색_결과_없음();
 
         //when
-        final OrderTimeDeliveryTipResponse response = queryService.getTipByTime(anyLong(), any());
+        final OrderTimeDeliveryTipResponse response = queryService.getTipByTime(anyLong(), any(), any(DayOfWeek.class));
 
         //then
         assertEquals(0, response.getTip().getValue().intValue());
@@ -86,7 +87,7 @@ class OrderTimeDeliveryTipQueryServiceTest {
      */
 
     private void 시간별_배달팁_검색_결과_없음() {
-        given(repository.getTipByTime(anyLong(), any()))
+        given(repository.getTipByTime(anyLong(), any(), any(DayOfWeek.class)))
             .willReturn(Optional.empty());
     }
 
@@ -99,7 +100,7 @@ class OrderTimeDeliveryTipQueryServiceTest {
         final OrderTimeDeliveryTip tip = OrderTimeDeliveryTip.builder()
             .tip(Money.wons(price))
             .build();
-        given(repository.getTipByTime(anyLong(), any()))
+        given(repository.getTipByTime(anyLong(), any(), any()))
             .willReturn(Optional.of(tip));
     }
 

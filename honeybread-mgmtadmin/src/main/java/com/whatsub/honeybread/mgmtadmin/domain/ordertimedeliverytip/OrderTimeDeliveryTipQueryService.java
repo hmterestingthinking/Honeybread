@@ -9,9 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,9 +19,9 @@ public class OrderTimeDeliveryTipQueryService {
 
     private final OrderTimeDeliveryTipRepository repository;
 
-    public OrderTimeDeliveryTipResponse getTipByTime(final long storeId, final LocalTime time) {
+    public OrderTimeDeliveryTipResponse getTipByTime(final long storeId, final LocalTime time, final DayOfWeek dayOfWeek) {
         return OrderTimeDeliveryTipResponse.of(
-            repository.getTipByTime(storeId, time)
+            repository.getTipByTime(storeId, time, dayOfWeek)
                 .orElse(OrderTimeDeliveryTip.createZeroTip(storeId))
         );
     }

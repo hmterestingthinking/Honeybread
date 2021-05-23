@@ -16,10 +16,11 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -132,7 +133,7 @@ class OrderTimeDeliveryTipControllerTest {
      */
 
     private void 시간별_배달팁이_StoreId_Time으로_조회_성공() {
-        given(queryService.getTipByTime(anyLong(), any(LocalTime.class)))
+        given(queryService.getTipByTime(anyLong(), any(LocalTime.class), any(DayOfWeek.class)))
             .willReturn(mock(OrderTimeDeliveryTipResponse.class));
     }
 
@@ -147,13 +148,16 @@ class OrderTimeDeliveryTipControllerTest {
     }
 
     private OrderTimeDeliveryTipRequest 시간별_배달팁_생성_실패_요청() {
-        return new OrderTimeDeliveryTipRequest(null, null, null);
+        return new OrderTimeDeliveryTipRequest(null, null, null, null, false, false);
     }
 
     private OrderTimeDeliveryTipRequest 시간별_배달팁_생성_요청() {
         return new OrderTimeDeliveryTipRequest(LocalTime.of(23, 0),
             LocalTime.of(23, 0),
-            Money.wons(1000));
+            Money.wons(1000),
+            List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY),
+            false,
+            false);
     }
 
     /**
@@ -207,11 +211,13 @@ class OrderTimeDeliveryTipControllerTest {
     }
 
     private ResultActions 시간별_배달팁_StoreId_Time_조회_요청() throws Exception {
-        final LocalTime time = LocalTime.of(anyInt(), anyInt());
+        final LocalTime time = LocalTime.of(0, 0);
+        final DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
         return mockMvc.perform(get(BASE_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .param("time", time.toString())
+            .param("dayOfWeek", dayOfWeek.toString())
         ).andDo(print());
     }
 }
