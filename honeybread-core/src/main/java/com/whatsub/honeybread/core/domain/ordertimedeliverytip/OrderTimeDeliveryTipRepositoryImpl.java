@@ -36,7 +36,7 @@ public class OrderTimeDeliveryTipRepositoryImpl extends QuerydslRepositorySuppor
     }
 
     private Predicate includeTime(final LocalTime time) {
-        final int minuteByMidnight = DeliveryTimePeriod.convertMinuteByMidnight(time);
+        final int minuteByMidnight = DeliveryTimePeriodUtil.convertMinuteByMidnight(time);
         final BooleanExpression between = orderTimeDeliveryTip.deliveryTimePeriod.fromMinuteByMidnight
             .loe(minuteByMidnight)
             .and(

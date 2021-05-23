@@ -3,14 +3,17 @@ package com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip;
 import com.whatsub.honeybread.core.domain.model.Money;
 import com.whatsub.honeybread.core.domain.ordertimedeliverytip.OrderTimeDeliveryTip;
 import com.whatsub.honeybread.core.domain.ordertimedeliverytip.OrderTimeDeliveryTipRepository;
+import com.whatsub.honeybread.core.domain.ordertimedeliverytip.OrderTimeDeliveryTipValidator;
 import com.whatsub.honeybread.core.infra.errors.ErrorCode;
 import com.whatsub.honeybread.core.infra.exception.HoneyBreadException;
+import com.whatsub.honeybread.core.infra.exception.ValidationException;
 import com.whatsub.honeybread.mgmtadmin.domain.ordertimedeliverytip.dto.OrderTimeDeliveryTipRequest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
+import org.springframework.validation.Errors;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -23,6 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 
@@ -35,6 +39,9 @@ class OrderTimeDeliveryTipServiceTest {
 
     @MockBean
     OrderTimeDeliveryTipRepository repository;
+
+    @MockBean
+    OrderTimeDeliveryTipValidator validator;
 
     @Test
     void 시간별_배달팁_생성() {
@@ -52,6 +59,7 @@ class OrderTimeDeliveryTipServiceTest {
         //then
         시간별_배달팁이_생성되어야함();
         시간별_배달팁_중복체크가_되어야함();
+        시간별_배달팁_유효성검사가_실행되어야함();
     }
 
     @Test
@@ -74,6 +82,29 @@ class OrderTimeDeliveryTipServiceTest {
         시간별_배달팁이_생성되지_않아야함();
         시간별_배달팁_중복체크가_되어야함();
         반환된_에러가_예상과_같은지확인(ErrorCode.DUPLICATE_ORDER_TIME_DELIVERY_TIP, actual);
+    }
+
+    @Test
+    void 시간별_배달팁_생성시_유효성검사_실패() {
+        //given
+        final long storeId = 1L;
+        final OrderTimeDeliveryTipRequest request =
+            시간별_배달팁_요청_생성(LocalTime.of(23,00)
+                , LocalTime.of( 5, 0)
+                , 1000
+                , List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY));
+
+        시간별_배달팁_유효성검사_실패();
+
+        //when
+        final HoneyBreadException actual
+            = assertThrows(HoneyBreadException.class, () -> service.create(storeId, request));
+
+        //then
+        시간별_배달팁이_생성되지_않아야함();
+        시간별_배달팁_중복체크가_되어야함();
+        반환된_에러가_예상과_같은지확인(ErrorCode.VALIDATION_ERROR, actual);
+        시간별_배달팁_유효성검사가_실행되어야함();
     }
 
     @Test
@@ -126,6 +157,11 @@ class OrderTimeDeliveryTipServiceTest {
         return new OrderTimeDeliveryTipRequest(from, to, Money.wons(price), days, false, false);
     }
 
+    private void 시간별_배달팁_유효성검사_실패() {
+        willThrow(new ValidationException(mock(Errors.class)))
+            .given(validator).validate(any(OrderTimeDeliveryTip.class));
+    }
+
     /**
      * then
      */
@@ -157,6 +193,10 @@ class OrderTimeDeliveryTipServiceTest {
 
     private void 시간별_배달팁이_생성되어야함() {
         then(repository).should().save(any(OrderTimeDeliveryTip.class));
+    }
+
+    private void 시간별_배달팁_유효성검사가_실행되어야함() {
+        then(validator).should().validate(any(OrderTimeDeliveryTip.class));
     }
 
 }

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -16,15 +15,12 @@ import javax.persistence.JoinColumn;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeliveryTimePeriod {
 
-    private static final int HOURS_PER_DAY = 24;
-    private static final int MINUTES_PER_HOUR = 60;
     private static final List<DayOfWeek> ALL_DAYS = List.of(DayOfWeek.values());
 
     @Column(nullable = false)
@@ -56,18 +52,8 @@ public class DeliveryTimePeriod {
         this.toTime = to;
         this.days = isAllDay ? ALL_DAYS : days;
         this.isAllTheTime = isAllTheTime;
-        this.fromMinuteByMidnight = isBeforeMidnight(from)
-            ? convertMinuteByMidnight(from) - HOURS_PER_DAY * MINUTES_PER_HOUR : convertMinuteByMidnight(from);
-        this.toMinuteByMidnight = isBeforeMidnight(to)
-            ? convertMinuteByMidnight(to) - HOURS_PER_DAY * MINUTES_PER_HOUR : convertMinuteByMidnight(to);
-    }
-
-    public static int convertMinuteByMidnight(final LocalTime time) {
-        return time.getHour() * MINUTES_PER_HOUR + time.getMinute();
-    }
-
-    private boolean isBeforeMidnight(final LocalTime time) {
-        return time.isAfter(LocalTime.NOON) && time.isBefore(LocalTime.MIDNIGHT.minusMinutes(1));
+        this.fromMinuteByMidnight = DeliveryTimePeriodUtil.convertMinuteByMidnight(from);
+        this.toMinuteByMidnight = DeliveryTimePeriodUtil.convertMinuteByMidnight(to);
     }
 
 }
