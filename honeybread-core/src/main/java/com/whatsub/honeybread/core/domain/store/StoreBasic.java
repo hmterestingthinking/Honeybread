@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
@@ -17,12 +18,15 @@ import javax.persistence.Embedded;
 public class StoreBasic {
 
     // 스토어명
+    @Column(nullable = false)
     private String name;
 
     // 전화번호
+    @Column(nullable = false)
     private String tel;
 
     // 대표 이미지
+    @Column(nullable = false)
     private String imageUrl;
 
     // 주소
@@ -31,7 +35,7 @@ public class StoreBasic {
 
     // 안내 관련 정보
     @Embedded
-    private StoreAnnouncement storeIntroduce;
+    private StoreAnnouncement storeAnnouncement;
 
     // 영업 관련 정보
     @Embedded

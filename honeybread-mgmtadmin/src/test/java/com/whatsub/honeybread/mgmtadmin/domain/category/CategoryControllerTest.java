@@ -387,7 +387,7 @@ class CategoryControllerTest {
         // then
         verify(service).delete(anyLong());
 
-        result.andExpect(status().isOk());
+        result.andExpect(status().isNoContent());
     }
 
     @Test

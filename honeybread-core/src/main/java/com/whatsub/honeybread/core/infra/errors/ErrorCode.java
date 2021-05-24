@@ -23,6 +23,9 @@ public enum ErrorCode {
     USER_STORE_FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND, "-21001", "User Store Favorite Not Found"),
 
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "-22000", "Store Not Found"),
+    DUPLICATE_STORE_NAME(HttpStatus.CONFLICT, "-22001", "Duplicate Store Name"),
+    EXCEED_MAX_STORE_CATEGORY_CNT(HttpStatus.BAD_REQUEST, "-22002", "Exceed Max Category Count"),
+
 
     ADVERTISEMENT_BID_NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "-23000", "Advertise Bid Notice Not Found"),
     ADVERTISEMENT_BID_NOTICE_CANNOT_REGIST(HttpStatus.NOT_ACCEPTABLE, "-23001", "In-progress Advertise Bid Notice Cannot be Modified"),
